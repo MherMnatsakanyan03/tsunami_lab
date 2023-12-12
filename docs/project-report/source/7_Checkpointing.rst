@@ -103,12 +103,30 @@ shown in paraview as one constant color.
 
 We were not able to find the solution this week but we hope to find the problem in the near future.
 
+Update: We managed to find the error, which was (again, a stupid mistake) that we forgot to actually acquire
+the ID's of the dimensions for `l_h`, `l_hu` and `l_hv`.
+
+To fix that, we added the following lines to the `readCheckpoint`-function:
+
+.. code:: c++
+
+    handleNetCdfError(nc_inq_varid(l_ncid, "bathymetry", &l_b_varid), "Error getting bathymetry value id:");
+    handleNetCdfError(nc_inq_varid(l_ncid, "height", &l_h_varid), "Error getting height value id:");
+    handleNetCdfError(nc_inq_varid(l_ncid, "momentum_x", &l_hu_varid), "Error getting momentum_x value id:");
+    handleNetCdfError(nc_inq_varid(l_ncid, "momentum_y", &l_hv_varid), "Error getting momentum_y value id:");
+
 7.1.4 Extension 2
 ^^^^^^^^^^^^^^^^^
 
 Considering the usage of the :code:`setup::Checkpoint` this task left us somewhat confused, which is why the
 checkpointing is still done via calling the setup, meaning that the same command in the commando-line will
 start a new simulation which will by itself write new checkpoints, overwriting the old one.
+
+Update: We decided to do it like follows:
+
+If a folder "checkpoints" exists and is not empty (a checkpoint file exists), then the system automatically
+picks that checkpoint-file and continues to write. The programm creates a new output-file where the old
+simulation is loaded to and the programm continues the simulation.
 
 
 Task 7.2: Coarse Output
@@ -178,3 +196,5 @@ We admit that we completely lost sight of this task and forgot to run the simula
 Considering the assignments last week the simulation would run normal. We open and close
 the file at every writing operation which saves the file, making a simulation possible
 even after a crash. The only thing not working yet is the actuall checkpointing.
+
+Update: The checkpointing does work now.
