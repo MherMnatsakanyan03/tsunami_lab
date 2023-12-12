@@ -40,7 +40,6 @@ Installing the project is very simple. All you need to do is:
       * :code:`'dambreak2d'` 
       * :code:`'artificial2d'` 
       * :code:`'tsunami2d'` 
-      * :code:`'checkpoint'` This setup will load the last checkpoint which was generated, depending on what 2d-simulation was started before.
    #. possible inputs for :code:`SOLVER` are "fwave" and "roe". Not using this parameter will use "fwave" by default.
    #. possible inputs for :code:`STATE_LEFT` are "open" or "closed"
    #. possible inputs for :code:`STATE_RIGHT` are "open" or "closed"
@@ -48,3 +47,4 @@ Installing the project is very simple. All you need to do is:
    #. possible inputs for :code:`STATE_BOTTOM` are "open" or "closed"
    #. input for :code:`STAION` is the path, where you want the station-data to be saved to
    #. input for :code:`RESOLUTION` is a number by which the size of all arrays will be divided by to save some space while writing
+   #. When checkpointing, you need to change the `checkpoint_timer`-variable inside :code:`main.cpp`, depending on when you need to set a checkpoint. If a checkpoint-file exists (a not-empty "checkpoints"-folder), the system will automatically try to continue from that checkpoint.
