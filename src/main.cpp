@@ -102,7 +102,7 @@ int main(int i_argc,
     std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
     std::cout << "####################################" << std::endl;
 
-    if (std::filesystem::exists("checkpoints"))
+    if (std::filesystem::exists("checkpoints") && !std::filesystem::is_empty("checkpoints"))
     {
         checkpointing = true;
     }
