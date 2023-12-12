@@ -50,6 +50,7 @@ int dimension;
 int resolution_div = 1;
 bool simulate_real_tsunami = false;
 bool checkpointing = false;
+double checkpoint_timer = 3600.0;
 // std::string bat_path = "data/artificialtsunami/artificialtsunami_bathymetry_1000.nc";
 // std::string dis_path = "data/artificialtsunami/artificialtsunami_displ_1000.nc";
 // std::string bat_path = "data/real_tsunamis/chile_gebco20_usgs_250m_bath_fixed.nc";
@@ -676,7 +677,7 @@ int main(int i_argc,
         auto l_currentTime = std::chrono::steady_clock::now();
         std::chrono::duration<double> l_elapsedTime = l_currentTime - l_lastCheckpointTime;
 
-        if (l_elapsedTime.count() >= 3600.0 && dimension == 2)
+        if (l_elapsedTime.count() >= checkpoint_timer && dimension == 2)
         {
             netcdf_manager->writeCheckpoint(l_nx,
                                             l_ny,
