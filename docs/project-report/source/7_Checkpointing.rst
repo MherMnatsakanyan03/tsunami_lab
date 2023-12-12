@@ -103,7 +103,7 @@ shown in paraview as one constant color.
 
 We were not able to find the solution this week but we hope to find the problem in the near future.
 
-Update: We managed to find the error, which was (again, a stupid mistake) that we forgot to actually acquire
+**Update**: We managed to find the error, which was (again, a stupid mistake) that we forgot to actually acquire
 the ID's of the dimensions for `l_h`, `l_hu` and `l_hv`.
 
 To fix that, we added the following lines to the `readCheckpoint`-function:
@@ -122,7 +122,7 @@ Considering the usage of the :code:`setup::Checkpoint` this task left us somewha
 checkpointing is still done via calling the setup, meaning that the same command in the commando-line will
 start a new simulation which will by itself write new checkpoints, overwriting the old one.
 
-Update: We decided to do it like follows:
+**Update**: We decided to do it like follows:
 
 If a folder "checkpoints" exists and is not empty (a checkpoint file exists), then the system automatically
 picks that checkpoint-file and continues to write. The programm creates a new output-file where the old
@@ -197,4 +197,4 @@ Considering the assignments last week the simulation would run normal. We open a
 the file at every writing operation which saves the file, making a simulation possible
 even after a crash. The only thing not working yet is the actuall checkpointing.
 
-Update: The checkpointing does work now.
+**Update**: The checkpointing does work now.
