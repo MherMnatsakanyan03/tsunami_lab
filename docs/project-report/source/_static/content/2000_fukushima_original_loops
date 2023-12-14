@@ -1,0 +1,22 @@
+entering time loop
+  simulation time / #time steps: 0 / 0
+        Time to write: 0.0178728s
+        Time since programm started: 5e-08s
+  simulation time / #time steps: 1630.75 / 500
+        Time to write: 0.0212762s
+        Time since programm started: 33.7773s
+  simulation time / #time steps: 3261.49 / 1000
+        Time to write: 0.0201857s
+        Time since programm started: 67.5543s
+  simulation time / #time steps: 4892.29 / 1500
+        Time to write: 0.0193719s
+        Time since programm started: 101.444s
+  simulation time / #time steps: 6523.15 / 2000
+        Time to write: 0.0181163s
+        Time since programm started: 135.632s
+  simulation time / #time steps: 8154 / 2500
+        Time to write: 0.0195148s
+        Time since programm started: 169.083s
+  simulation time / #time steps: 9784.86 / 3000
+        Time to write: 0.0194947s
+        Time since programm started: 202.346s
