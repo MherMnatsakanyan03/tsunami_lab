@@ -725,6 +725,10 @@ int main(int i_argc,
         }
         if (l_timeStep % simulated_frame == 0)
         {
+
+            // Start of local timer
+            auto l_localStartTime = std::chrono::steady_clock::now();
+
             std::cout << "  simulation time / #time steps: "
                       << l_simTime << " / " << l_timeStep << std::endl;
 
@@ -777,6 +781,13 @@ int main(int i_argc,
                                       filename);
             }
             l_nOut++;
+
+            // End of local timer
+            auto l_localEndTime = std::chrono::steady_clock::now();
+            std::chrono::duration<double> l_localElapsedTime = l_localEndTime - l_localStartTime;
+            std::cout << "\tTime to write: " << l_localElapsedTime.count() << "s" << std::endl;
+            // Global timer
+            std::cout << "\tTime since programm started: " << l_elapsedTime.count() << "s" << std::endl;
         }
 
         if (l_simTime >= multiplier)
