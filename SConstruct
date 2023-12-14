@@ -45,6 +45,16 @@ if(plattform_choice == 1):
   env.Append(LIBPATH=['/opt/homebrew/lib'])
 
 
+# set compiler
+cxx_compiler = ARGUMENTS.get('comp', "g++")
+
+if cxx_compiler == 'g++':
+  pass
+else:
+  env['CXX'] = "/opt/intel/oneapi/compiler/2023.2.2/linux/bin/intel64/icpc"
+  env.Append( CXXFLAGS = ['-qopt-report=5'])
+
+
 # Add NetCDF include
 env.Append(LIBS=['netcdf'])
 # Added parallelization
@@ -67,6 +77,8 @@ if 'debug' in env['mode']:
                            '-O0' ] )
 else:
   env.Append( CXXFLAGS = [ '-O2' ] )
+  #env.Append( CXXFLAGS = [ '-O3' ] )
+  #env.Append( CXXFLAGS = [ '-Ofast' ] )
 
 # add sanitizers
 if 'san' in  env['mode']:
