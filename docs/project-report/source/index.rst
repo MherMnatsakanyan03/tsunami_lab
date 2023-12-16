@@ -17,3 +17,4 @@ Welcome to Tsunami WS23's documentation!
    5_large_data.rst
    6_Tsunami_simulation.rst
    7_Checkpointing.rst
+   8_Optimization_and_Draft.rst
