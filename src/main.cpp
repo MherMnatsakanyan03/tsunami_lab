@@ -37,6 +37,7 @@
 #include "setups/artificialTsunami2d/ArtificialTsunami2d.h"
 #include "setups/checkpoint/Checkpoint.h"
 
+bool do_write = true;
 // declaration of variables
 tsunami_lab::t_idx simulated_frame = 25;
 int solver_choice = 0;
@@ -73,7 +74,7 @@ int main(int i_argc,
         targetPath = currentPath / "csv_dump";
     }
 
-    if (!std::filesystem::exists(targetPath))
+    if (!std::filesystem::exists(targetPath) && do_write)
     {
         std::filesystem::create_directory(targetPath);
     }
@@ -615,7 +616,7 @@ int main(int i_argc,
                                       l_b);
         }
     }
-    if (dimension == 2 && !checkpointing)
+    if (dimension == 2 && !checkpointing && do_write)
     {
         /* if (std::filesystem::exists("netCDF_dump"))
         {
@@ -657,7 +658,10 @@ int main(int i_argc,
     }
 
     // create csv_dump folder
-    std::filesystem::create_directory("csv_dump");
+    if (do_write)
+    {
+        std::filesystem::create_directory("csv_dump");
+    }
 
     // clear station_data
     if (std::filesystem::exists("station_data"))
@@ -666,7 +670,10 @@ int main(int i_argc,
     }
 
     // create station_data folder
-    std::filesystem::create_directory("station_data");
+    if (do_write)
+    {
+        std::filesystem::create_directory("station_data");
+    }
 
     int multiplier = 0;
     auto l_lastCheckpointTime = std::chrono::steady_clock::now();
@@ -677,7 +684,7 @@ int main(int i_argc,
         auto l_currentTime = std::chrono::steady_clock::now();
         std::chrono::duration<double> l_elapsedTime = l_currentTime - l_lastCheckpointTime;
 
-        if (l_elapsedTime.count() >= checkpoint_timer && dimension == 2)
+        if (l_elapsedTime.count() >= checkpoint_timer && dimension == 2 && do_write)
         {
             netcdf_manager->writeCheckpoint(l_nx,
                                             l_ny,
@@ -732,7 +739,7 @@ int main(int i_argc,
             std::cout << "  simulation time / #time steps: "
                       << l_simTime << " / " << l_timeStep << std::endl;
 
-            if (dimension == 1)
+            if (dimension == 1 && do_write)
             {
                 std::string l_path = targetPath.string() + "/" + "solution_" + std::to_string(l_nOut) + ".csv";
                 std::cout << "  writing wave field to " << l_path << std::endl;
@@ -753,7 +760,7 @@ int main(int i_argc,
 
                 l_file.close();
             }
-            else if (dimension == 2)
+            else if (dimension == 2 && do_write)
             {
                 netcdf_manager->write(l_nx,
                                       l_ny,
@@ -790,7 +797,7 @@ int main(int i_argc,
             std::cout << "\tTime since programm started: " << l_elapsedTime.count() << "s" << std::endl;
         }
 
-        if (l_simTime >= multiplier)
+        if (l_simTime >= multiplier && do_write)
         {
             l_stations->writeStationOutput(l_dxy,
                                            l_nx,
