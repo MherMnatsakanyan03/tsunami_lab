@@ -72,9 +72,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
 
     // init new cell quantities
     // #pragma omp parallel for
-    for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
+    for (t_idx l_y = 1; l_y < m_nCells_y + 1; l_y++)
     {
-        for (t_idx l_y = 1; l_y < m_nCells_y + 1; l_y++)
+        // #pragma omp parallel for
+        for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
         {
             l_hNew[getCoordinates(l_x, l_y)] = l_hOld[getCoordinates(l_x, l_y)];
             l_huNew[getCoordinates(l_x, l_y)] = l_huOld[getCoordinates(l_x, l_y)];
@@ -148,9 +149,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
 
     // init new cell quantities
     // #pragma omp parallel for
-    for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
+    for (t_idx l_y = 1; l_y < m_nCells_y + 1; l_y++)
     {
-        for (t_idx l_y = 1; l_y < m_nCells_y + 1; l_y++)
+        // #pragma omp parallel for
+        for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
         {
             l_hNew[getCoordinates(l_x, l_y)] = l_hOld[getCoordinates(l_x, l_y)];
             l_huNew[getCoordinates(l_x, l_y)] = l_huOld[getCoordinates(l_x, l_y)];
