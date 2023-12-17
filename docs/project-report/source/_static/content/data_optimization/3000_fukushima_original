@@ -1,0 +1,70 @@
+./build/tsunami_lab -d 2d -s "tsunami2d" 3000
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+runtime configuration
+  number of cells in x-direction: 899
+  number of cells in y-direction: 499
+  cell size:                      3003.06
+entering time loop
+  simulation time / #time steps: 0 / 0
+        Time to write: 0.0128268s
+        Time since programm started: 6.3e-08s
+  simulation time / #time steps: 2450.94 / 500
+        Time to write: 0.00893688s
+        Time since programm started: 4.51436s
+  simulation time / #time steps: 4901.87 / 1000
+        Time to write: 0.00840115s
+        Time since programm started: 8.98778s
+  simulation time / #time steps: 7352.8 / 1500
+        Time to write: 0.00913358s
+        Time since programm started: 13.4587s
+  simulation time / #time steps: 9803.88 / 2000
+        Time to write: 0.00868913s
+        Time since programm started: 17.9302s
+  simulation time / #time steps: 12255.1 / 2500
+        Time to write: 0.00729643s
+        Time since programm started: 22.3916s
+  simulation time / #time steps: 14706.2 / 3000
+        Time to write: 0.00919409s
+        Time since programm started: 26.927s
+  simulation time / #time steps: 17157.4 / 3500
+        Time to write: 0.0085433s
+        Time since programm started: 31.5027s
+  simulation time / #time steps: 19608.6 / 4000
+        Time to write: 0.0086103s
+        Time since programm started: 36.0491s
+  simulation time / #time steps: 22059.7 / 4500
+        Time to write: 0.00878938s
+        Time since programm started: 40.7373s
+  simulation time / #time steps: 24510.9 / 5000
+        Time to write: 0.00815774s
+        Time since programm started: 45.3177s
+  simulation time / #time steps: 26962.1 / 5500
+        Time to write: 0.0080758s
+        Time since programm started: 49.8383s
+  simulation time / #time steps: 29413.3 / 6000
+        Time to write: 0.00716537s
+        Time since programm started: 54.3759s
+  simulation time / #time steps: 31864.4 / 6500
+        Time to write: 0.00876412s
+        Time since programm started: 59.0182s
+  simulation time / #time steps: 34315.6 / 7000
+        Time to write: 0.00735614s
+        Time since programm started: 63.5221s
+finished time loop
+freeing memory
+delete checkpoints
+delete checkpoints
+finished, exiting

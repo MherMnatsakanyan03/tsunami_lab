@@ -2,7 +2,7 @@
 ===============
 
 Links:
-------------
+-----------
 
 `Github Repo <https://github.com/MherMnatsakanyan03/tsunami_lab.git>`_
 
