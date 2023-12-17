@@ -5,6 +5,8 @@
 # Entry-point for builds.
 ##
 import SCons
+import platform
+
 
 print( '####################################' )
 print( '### Tsunami Lab                  ###' )
@@ -31,7 +33,14 @@ if vars.UnknownVariables():
   exit(1)
 
 # defines plattform: 0 = Linux, 1 = Mac
-plattform_choice = 0;
+os_system = platform.system()
+if os_system == "Linux":
+    plattform_choice = 0
+elif os_system == "Darwin":  # Darwin is the underlying OS for MacOS
+    plattform_choice = 1
+else:
+    print(f"Unsupported OS: {os_system}")
+    exit(1)
 
 # create environment
 env = Environment( variables = vars )
