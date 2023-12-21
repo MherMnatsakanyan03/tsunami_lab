@@ -1,0 +1,75 @@
+runnning build script
+Linux
+scons: done reading SConscript files.
+scons: Building targets ...
+scons: `.' is up to date.
+scons: done building targets.
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+using fwave-solver
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+runtime configuration
+  number of cells in x-direction: 899
+  number of cells in y-direction: 499
+  cell size:                      3003.06
+entering time loop
+  simulation time / #time steps: 0 / 0
+	Time to write: 0.0568999s
+	Time since programm started: 4.23e-07s
+  simulation time / #time steps: 2450.94 / 500
+	Time to write: 0.0343119s
+	Time since programm started: 42.5826s
+  simulation time / #time steps: 4901.87 / 1000
+	Time to write: 0.0338713s
+	Time since programm started: 87.1351s
+  simulation time / #time steps: 7352.8 / 1500
+	Time to write: 0.0387013s
+	Time since programm started: 129.589s
+  simulation time / #time steps: 9803.88 / 2000
+	Time to write: 0.0346361s
+	Time since programm started: 175.571s
+  simulation time / #time steps: 12255.1 / 2500
+	Time to write: 0.0363435s
+	Time since programm started: 219.263s
+  simulation time / #time steps: 14706.2 / 3000
+	Time to write: 0.0383819s
+	Time since programm started: 260.298s
+  simulation time / #time steps: 17157.4 / 3500
+	Time to write: 0.0337227s
+	Time since programm started: 299.699s
+  simulation time / #time steps: 19608.6 / 4000
+	Time to write: 0.0316715s
+	Time since programm started: 335.908s
+  simulation time / #time steps: 22059.7 / 4500
+	Time to write: 0.0377432s
+	Time since programm started: 372.101s
+  simulation time / #time steps: 24510.9 / 5000
+	Time to write: 0.0328595s
+	Time since programm started: 404.337s
+  simulation time / #time steps: 26962.1 / 5500
+	Time to write: 0.0299834s
+	Time since programm started: 437.534s
+  simulation time / #time steps: 29413.3 / 6000
+	Time to write: 0.0336898s
+	Time since programm started: 469.309s
+  simulation time / #time steps: 31864.4 / 6500
+	Time to write: 0.034165s
+	Time since programm started: 499.504s
+  simulation time / #time steps: 34315.6 / 7000
+	Time to write: 0.0411987s
+	Time since programm started: 529.915s
+finished time loop
+freeing memory
+delete checkpoints
+finished, exiting

@@ -1,0 +1,84 @@
+Requirement already satisfied: scons in /home/xo78roy/.local/lib/python3.8/site-packages (4.6.0)
+Requirement already satisfied: setuptools in /cluster/miniconda3-py38/lib/python3.8/site-packages (from scons) (46.4.0.post20200518)
+scons: Reading SConscript files ...
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+
+runnning build script
+Linux
+scons: done reading SConscript files.
+scons: Building targets ...
+/cluster/intel/parallel_studio_xe_2020.2.108/compilers_and_libraries_2020/linux/bin/intel64/icpc -o build/src/io/csv/Csv.o -c -qopt-report=5 -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/io/csv/Csv.cpp
+scons: building terminated because of errors.
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+using fwave-solver
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+runtime configuration
+  number of cells in x-direction: 899
+  number of cells in y-direction: 499
+  cell size:                      3003.06
+entering time loop
+  simulation time / #time steps: 0 / 0
+	Time to write: 0.0529809s
+	Time since programm started: 5.29e-07s
+  simulation time / #time steps: 2450.94 / 500
+	Time to write: 0.040251s
+	Time since programm started: 30.5136s
+  simulation time / #time steps: 4901.87 / 1000
+	Time to write: 0.0325424s
+	Time since programm started: 62.0826s
+  simulation time / #time steps: 7352.8 / 1500
+	Time to write: 0.0326181s
+	Time since programm started: 94.2586s
+  simulation time / #time steps: 9803.88 / 2000
+	Time to write: 0.0427679s
+	Time since programm started: 122.99s
+  simulation time / #time steps: 12255.1 / 2500
+	Time to write: 0.0332516s
+	Time since programm started: 149.884s
+  simulation time / #time steps: 14706.2 / 3000
+	Time to write: 0.0311566s
+	Time since programm started: 176.628s
+  simulation time / #time steps: 17157.4 / 3500
+	Time to write: 0.0336119s
+	Time since programm started: 204.247s
+  simulation time / #time steps: 19608.6 / 4000
+	Time to write: 0.0384902s
+	Time since programm started: 231.929s
+  simulation time / #time steps: 22059.7 / 4500
+	Time to write: 0.0395677s
+	Time since programm started: 262.966s
+  simulation time / #time steps: 24510.9 / 5000
+	Time to write: 0.0323116s
+	Time since programm started: 289.827s
+  simulation time / #time steps: 26962.1 / 5500
+	Time to write: 0.0326705s
+	Time since programm started: 317.936s
+  simulation time / #time steps: 29413.3 / 6000
+	Time to write: 0.0384409s
+	Time since programm started: 345.864s
+  simulation time / #time steps: 31864.4 / 6500
+	Time to write: 0.0499305s
+	Time since programm started: 377.843s
+  simulation time / #time steps: 34315.6 / 7000
+	Time to write: 0.0332013s
+	Time since programm started: 408.733s
+finished time loop
+freeing memory
+delete checkpoints
+finished, exiting
