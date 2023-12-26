@@ -150,13 +150,6 @@ public:
   t_real getYOffset() const;
 
   /**
-   * @brief Gets the solver choice.
-   *
-   * @return The solver choice.
-   */
-  int getSolverChoice() const;
-
-  /**
    * @brief Gets the state boundary on the left.
    *
    * @return The state boundary on the left.

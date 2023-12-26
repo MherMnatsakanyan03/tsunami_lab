@@ -273,7 +273,6 @@ TEST_CASE("Test the NetCDF-checkpoint.", "[NetCDFReadAndWriteCheckpoint]")
                                 1,
                                 1,
                                 1,
-                                1,
                                 200,
                                 36000,
                                 500,
@@ -291,7 +290,6 @@ TEST_CASE("Test the NetCDF-checkpoint.", "[NetCDFReadAndWriteCheckpoint]")
     tsunami_lab::t_real *l_b1;
     tsunami_lab::t_real l_x_offset;
     tsunami_lab::t_real l_y_offset;
-    int l_solver_choice;
     int l_state_boundary_left;
     int l_state_boundary_right;
     int l_state_boundary_top;
@@ -314,7 +312,6 @@ TEST_CASE("Test the NetCDF-checkpoint.", "[NetCDFReadAndWriteCheckpoint]")
                                &l_b1,
                                &l_x_offset,
                                &l_y_offset,
-                               &l_solver_choice,
                                &l_state_boundary_left,
                                &l_state_boundary_right,
                                &l_state_boundary_top,
@@ -333,7 +330,6 @@ TEST_CASE("Test the NetCDF-checkpoint.", "[NetCDFReadAndWriteCheckpoint]")
     REQUIRE(l_ny == 4);
     REQUIRE(l_x_offset == 0);
     REQUIRE(l_y_offset == 0);
-    REQUIRE(l_solver_choice == 1);
     REQUIRE(l_state_boundary_left == 1);
     REQUIRE(l_state_boundary_right == 1);
     REQUIRE(l_state_boundary_top == 1);

@@ -33,9 +33,6 @@ private:
     //! number of cells in y-direction discretizing the computational domain
     t_idx m_nCells_y = 0;
 
-    //! choice of solver, 0 = roe, 1 = fwave
-    int m_solver_choice = 0;
-
     //! state of left boundary, 0 = open, 1 = closed
     int m_state_boundary_left = 0;
 
@@ -79,7 +76,6 @@ public:
      *
      * @param i_nCells_x number of cells in x-direction.
      * @param i_nCells_y number of cells in y-direction.
-     * @param solver_choice type int, defines the choice of solver. Possible values: 0 for "roe" and 1 for "fwave".
      * @param state_boundary_left type int, defines the state of the left boundary. Possible values: 0 = "open" and 1 = "closed".
      * @param state_boundary_right type int, defines the state of the right boundary. Possible values: 0 = "open" and 1 = "closed".
      * @param state_boundary_top type int, defines the state of the top boundary. Possible values: 0 = "open" and 1 = "closed".
@@ -87,7 +83,6 @@ public:
      **/
     WavePropagation2d(t_idx i_nCells_x,
                       t_idx i_nCells_y,
-                      int solver_choice,
                       int state_boundary_left,
                       int state_boundary_right,
                       int state_boundary_top,

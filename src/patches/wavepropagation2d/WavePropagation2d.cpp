@@ -12,11 +12,9 @@
 #include <string>
 
 #include "../../solvers/f-wave/F_wave.h"
-#include "../../solvers/roe/Roe.h"
 
 tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCells_x,
                                                            t_idx i_nCells_y,
-                                                           int solver_choice,
                                                            int state_boundary_left,
                                                            int state_boundary_right,
                                                            int state_boundary_top,
@@ -24,7 +22,6 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCells_x,
 {
     m_nCells_x = i_nCells_x;
     m_nCells_y = i_nCells_y;
-    m_solver_choice = solver_choice;
     m_state_boundary_left = state_boundary_left;
     m_state_boundary_right = state_boundary_right;
     m_state_boundary_top = state_boundary_top;
@@ -77,9 +74,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
         // #pragma omp parallel for
         for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
         {
-            l_hNew[getCoordinates(l_x, l_y)] = l_hOld[getCoordinates(l_x, l_y)];
-            l_huNew[getCoordinates(l_x, l_y)] = l_huOld[getCoordinates(l_x, l_y)];
-            l_hvNew[getCoordinates(l_x, l_y)] = l_hvOld[getCoordinates(l_x, l_y)];
+            t_idx l_coord = getCoordinates(l_x, l_y);
+            l_hNew[l_coord] = l_hOld[l_coord];
+            l_huNew[l_coord] = l_huOld[l_coord];
+            l_hvNew[l_coord] = l_hvOld[l_coord];
         }
     }
 
@@ -97,30 +95,14 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
             // compute net-updates
             t_real l_netUpdates[2][2];
 
-            if (m_solver_choice == 1)
-            {
-                solvers::Roe::netUpdates(l_hOld[l_cord_L],
-                                         l_hOld[l_cord_R],
-                                         l_huOld[l_cord_L],
-                                         l_huOld[l_cord_R],
-                                         l_netUpdates[0],
-                                         l_netUpdates[1]);
-            }
-            else if (m_solver_choice == 0)
-            {
-                solvers::FWave::netUpdates(l_hOld[l_cord_L],
-                                           l_hOld[l_cord_R],
-                                           l_huOld[l_cord_L],
-                                           l_huOld[l_cord_R],
-                                           l_b[l_cord_L],
-                                           l_b[l_cord_R],
-                                           l_netUpdates[0],
-                                           l_netUpdates[1]);
-            }
-            else
-            {
-                throw std::invalid_argument("Not a valid solver. Try again with either 'roe' or 'fwave'.");
-            }
+            solvers::FWave::netUpdates(l_hOld[l_cord_L],
+                                       l_hOld[l_cord_R],
+                                       l_huOld[l_cord_L],
+                                       l_huOld[l_cord_R],
+                                       l_b[l_cord_L],
+                                       l_b[l_cord_R],
+                                       l_netUpdates[0],
+                                       l_netUpdates[1]);
 
             // update the cells' quantities
             l_hNew[l_cord_L] -= i_scaling * l_netUpdates[0][0];
@@ -154,9 +136,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
         // #pragma omp parallel for
         for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
         {
-            l_hNew[getCoordinates(l_x, l_y)] = l_hOld[getCoordinates(l_x, l_y)];
-            l_huNew[getCoordinates(l_x, l_y)] = l_huOld[getCoordinates(l_x, l_y)];
-            l_hvNew[getCoordinates(l_x, l_y)] = l_hvOld[getCoordinates(l_x, l_y)];
+            t_idx l_coord = getCoordinates(l_x, l_y);
+            l_hNew[l_coord] = l_hOld[l_coord];
+            l_huNew[l_coord] = l_huOld[l_coord];
+            l_hvNew[l_coord] = l_hvOld[l_coord];
         }
     }
     // iterate over edges and update with Riemann solutions in y-direction
@@ -173,30 +156,14 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
             // compute net-updates
             t_real l_netUpdates[2][2];
 
-            if (m_solver_choice == 1)
-            {
-                solvers::Roe::netUpdates(l_hOld[l_cord_down],
-                                         l_hOld[l_cord_up],
-                                         l_hvOld[l_cord_down],
-                                         l_hvOld[l_cord_up],
-                                         l_netUpdates[0],
-                                         l_netUpdates[1]);
-            }
-            else if (m_solver_choice == 0)
-            {
-                solvers::FWave::netUpdates(l_hOld[l_cord_down],
-                                           l_hOld[l_cord_up],
-                                           l_hvOld[l_cord_down],
-                                           l_hvOld[l_cord_up],
-                                           l_b[l_cord_down],
-                                           l_b[l_cord_up],
-                                           l_netUpdates[0],
-                                           l_netUpdates[1]);
-            }
-            else
-            {
-                throw std::invalid_argument("Not a valid solver. Try again with either 'roe' or 'fwave'.");
-            }
+            solvers::FWave::netUpdates(l_hOld[l_cord_down],
+                                       l_hOld[l_cord_up],
+                                       l_hvOld[l_cord_down],
+                                       l_hvOld[l_cord_up],
+                                       l_b[l_cord_down],
+                                       l_b[l_cord_up],
+                                       l_netUpdates[0],
+                                       l_netUpdates[1]);
 
             // update the cells' quantities
             l_hNew[l_cord_down] -= i_scaling * l_netUpdates[0][0];

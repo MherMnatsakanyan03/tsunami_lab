@@ -7,8 +7,7 @@
 Import('env')
 
 # gather sources
-l_sources = ['solvers/roe/Roe.cpp',
-             'solvers/f-wave/F_wave.cpp',
+l_sources = ['solvers/f-wave/F_wave.cpp',
              'patches/wavepropagation1d/WavePropagation1d.cpp',
              'patches/wavepropagation2d/WavePropagation2d.cpp',
              'setups/dambreak1d/DamBreak1d.cpp',
@@ -32,7 +31,6 @@ env.standalone = env.Object("main.cpp")
 
 # gather unit tests
 l_tests = ['tests.cpp',
-           'solvers/roe/Roe.test.cpp',
            'solvers/f-wave/F_wave.test.cpp',
            'patches/wavepropagation1d/WavePropagation1d.test.cpp',
            'patches/wavepropagation2d/WavePropagation2d.test.cpp',
@@ -42,7 +40,7 @@ l_tests = ['tests.cpp',
            'setups/rarerare1d/RareRare1d.test.cpp',
            'setups/supercritical1d/Supercritical1d.test.cpp',
            'setups/tsunamievent1d/TsunamiEvent1d.test.cpp',
-            'setups/artificialTsunami2d/ArtificialTsunami2d.test.cpp',
+           'setups/artificialTsunami2d/ArtificialTsunami2d.test.cpp',
            'io/csv/Csv.test.cpp',
            'io/stations/Stations.test.cpp',
            'io/netCDF/NetCDF.test.cpp']
