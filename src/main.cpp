@@ -61,6 +61,10 @@ std::string dis_path = "data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc";
 int main(int i_argc,
          char *i_argv[])
 {
+
+    // setenv("OMP_PROC_BIND", "master", 1);
+    // setenv("OMP_PLACES", "cores", 1);
+
     std::filesystem::path currentPath = std::filesystem::current_path();
     std::filesystem::path targetPath;
 
@@ -648,12 +652,13 @@ int main(int i_argc,
 
     int multiplier = 0;
     auto l_lastCheckpointTime = std::chrono::steady_clock::now();
+    auto l_start_time = std::chrono::steady_clock::now();
 
     // iterate over time
     while (l_simTime < l_endTime)
     {
         auto l_currentTime = std::chrono::steady_clock::now();
-        std::chrono::duration<double> l_elapsedTime = l_currentTime - l_lastCheckpointTime;
+        std::chrono::duration<double> l_elapsedTime = l_currentTime - l_start_time;
 
         if (l_elapsedTime.count() >= checkpoint_timer && dimension == 2 && do_write)
         {
