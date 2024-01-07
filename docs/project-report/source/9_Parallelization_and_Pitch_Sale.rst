@@ -78,6 +78,13 @@ plan of adding hardware-acceleration, it would be better to use as little if-con
 As we will see in 9.1.3, parallelizing the outer loop is the fastest way to parallelize the code (in a simple
 way). That is the reason, why in the following we will only show the results of parallelizing the outer loop.
 
+.. image:: _static/content/images/week9/graph.png
+
+The graph shows the time it took to run the simulation with different numbers of threads. It is evident that the execution time 
+initially decreases with an increasing number of threads, indicating effective parallelization. However, beyond 
+a certain point, likely the number of physical cores in the system, there is a resurgence in execution time, 
+suggesting the limits of thread efficiency and increased overhead.
+
 
 9.1.3: Inner vs Outer Loop
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
