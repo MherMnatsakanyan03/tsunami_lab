@@ -19,3 +19,4 @@ Welcome to Tsunami WS23's documentation!
    7_Checkpointing.rst
    8_Optimization_and_Draft.rst
    9_Parallelization_and_Pitch_Sale.rst
+   10_OpenCL.rst

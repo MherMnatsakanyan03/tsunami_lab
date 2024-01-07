@@ -1,5 +1,5 @@
-9 Parallelization and Pitch Sale
-================================
+9 Parallelization
+=================
 
 Links:
 ------------
