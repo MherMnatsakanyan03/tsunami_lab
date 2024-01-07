@@ -73,10 +73,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
     {
         for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
         {
-            t_idx l_cord = getCoordinates(l_x, l_y);
-            l_hNew[l_cord] = l_hOld[l_cord];
-            l_huNew[l_cord] = l_huOld[l_cord];
-            l_hvNew[l_cord] = l_hvOld[l_cord];
+            t_idx l_coord = getCoordinates(l_x, l_y);
+            l_hNew[l_coord] = l_hOld[l_coord];
+            l_huNew[l_coord] = l_huOld[l_coord];
+            l_hvNew[l_coord] = l_hvOld[l_coord];
         }
     }
     t_real l_netUpdates[2][2];
@@ -88,26 +88,26 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
         for (t_idx l_x = 0; l_x < m_nCells_x + 1; l_x++)
         {
             // determine left and right cell-id
-            t_idx l_cord_L = getCoordinates(l_x, l_y);
-            t_idx l_cord_R = getCoordinates(l_x + 1, l_y);
+            t_idx l_coord_L = getCoordinates(l_x, l_y);
+            t_idx l_coord_R = getCoordinates(l_x + 1, l_y);
 
             // compute net-updates
 
-            solvers::FWave::netUpdates(l_hOld[l_cord_L],
-                                       l_hOld[l_cord_R],
-                                       l_huOld[l_cord_L],
-                                       l_huOld[l_cord_R],
-                                       l_b[l_cord_L],
-                                       l_b[l_cord_R],
+            solvers::FWave::netUpdates(l_hOld[l_coord_L],
+                                       l_hOld[l_coord_R],
+                                       l_huOld[l_coord_L],
+                                       l_huOld[l_coord_R],
+                                       l_b[l_coord_L],
+                                       l_b[l_coord_R],
                                        l_netUpdates[0],
                                        l_netUpdates[1]);
 
             // update the cells' quantities
-            l_hNew[l_cord_L] -= i_scaling * l_netUpdates[0][0];
-            l_huNew[l_cord_L] -= i_scaling * l_netUpdates[0][1];
+            l_hNew[l_coord_L] -= i_scaling * l_netUpdates[0][0];
+            l_huNew[l_coord_L] -= i_scaling * l_netUpdates[0][1];
 
-            l_hNew[l_cord_R] -= i_scaling * l_netUpdates[1][0];
-            l_huNew[l_cord_R] -= i_scaling * l_netUpdates[1][1];
+            l_hNew[l_coord_R] -= i_scaling * l_netUpdates[1][0];
+            l_huNew[l_coord_R] -= i_scaling * l_netUpdates[1][1];
         }
     }
 
@@ -133,10 +133,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
     {
         for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
         {
-            t_idx l_cord = getCoordinates(l_x, l_y);
-            l_hNew[l_cord] = l_hOld[l_cord];
-            l_huNew[l_cord] = l_huOld[l_cord];
-            l_hvNew[l_cord] = l_hvOld[l_cord];
+            t_idx l_coord = getCoordinates(l_x, l_y);
+            l_hNew[l_coord] = l_hOld[l_coord];
+            l_huNew[l_coord] = l_huOld[l_coord];
+            l_hvNew[l_coord] = l_hvOld[l_coord];
         }
     }
 // iterate over edges and update with Riemann solutions in y-direction
@@ -146,27 +146,27 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
         for (t_idx l_x = 0; l_x < m_nCells_x + 1; l_x++)
         {
             // determine left and right cell-id
-            t_idx l_cord_down = getCoordinates(l_x, l_y);
-            t_idx l_cord_up = getCoordinates(l_x, l_y + 1);
+            t_idx l_coord_down = getCoordinates(l_x, l_y);
+            t_idx l_coord_up = getCoordinates(l_x, l_y + 1);
 
             // compute net-updates
             t_real l_netUpdates[2][2];
 
-            solvers::FWave::netUpdates(l_hOld[l_cord_down],
-                                       l_hOld[l_cord_up],
-                                       l_hvOld[l_cord_down],
-                                       l_hvOld[l_cord_up],
-                                       l_b[l_cord_down],
-                                       l_b[l_cord_up],
+            solvers::FWave::netUpdates(l_hOld[l_coord_down],
+                                       l_hOld[l_coord_up],
+                                       l_hvOld[l_coord_down],
+                                       l_hvOld[l_coord_up],
+                                       l_b[l_coord_down],
+                                       l_b[l_coord_up],
                                        l_netUpdates[0],
                                        l_netUpdates[1]);
 
             // update the cells' quantities
-            l_hNew[l_cord_down] -= i_scaling * l_netUpdates[0][0];
-            l_hvNew[l_cord_down] -= i_scaling * l_netUpdates[0][1];
+            l_hNew[l_coord_down] -= i_scaling * l_netUpdates[0][0];
+            l_hvNew[l_coord_down] -= i_scaling * l_netUpdates[0][1];
 
-            l_hNew[l_cord_up] -= i_scaling * l_netUpdates[1][0];
-            l_hvNew[l_cord_up] -= i_scaling * l_netUpdates[1][1];
+            l_hNew[l_coord_up] -= i_scaling * l_netUpdates[1][0];
+            l_hvNew[l_coord_up] -= i_scaling * l_netUpdates[1][1];
         }
     }
 }
@@ -185,23 +185,23 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     case 0:
         for (t_idx l_y = 0; l_y < m_nCells_y; l_y++)
         {
-            t_idx l_cord_l = getCoordinates(0, l_y);
-            t_idx l_cord_r = getCoordinates(1, l_y);
-            l_h[l_cord_l] = l_h[l_cord_r];
-            l_hu[l_cord_l] = l_hu[l_cord_r];
-            l_hv[l_cord_l] = l_hv[l_cord_r];
-            l_b[l_cord_l] = l_b[l_cord_r];
+            t_idx l_coord_l = getCoordinates(0, l_y);
+            t_idx l_coord_r = getCoordinates(1, l_y);
+            l_h[l_coord_l] = l_h[l_coord_r];
+            l_hu[l_coord_l] = l_hu[l_coord_r];
+            l_hv[l_coord_l] = l_hv[l_coord_r];
+            l_b[l_coord_l] = l_b[l_coord_r];
         }
         break;
     // closed
     case 1:
         for (t_idx l_y = 0; l_y < m_nCells_y; l_y++)
         {
-            t_idx l_cord = getCoordinates(0, l_y);
-            l_h[l_cord] = 0;
-            l_hu[l_cord] = 0;
-            l_hv[l_cord] = 0;
-            l_b[l_cord] = 25;
+            t_idx l_coord = getCoordinates(0, l_y);
+            l_h[l_coord] = 0;
+            l_hu[l_coord] = 0;
+            l_hv[l_coord] = 0;
+            l_b[l_coord] = 25;
         }
         break;
 
@@ -218,23 +218,23 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     case 0:
         for (t_idx l_y = 0; l_y < m_nCells_y; l_y++)
         {
-            t_idx l_cord_l = getCoordinates(m_nCells_x, l_y);
-            t_idx l_cord_r = getCoordinates(m_nCells_x + 1, l_y);
-            l_h[l_cord_r] = l_h[l_cord_l];
-            l_hu[l_cord_r] = l_hu[l_cord_l];
-            l_hv[l_cord_r] = l_hv[l_cord_l];
-            l_b[l_cord_r] = l_b[l_cord_l];
+            t_idx l_coord_l = getCoordinates(m_nCells_x, l_y);
+            t_idx l_coord_r = getCoordinates(m_nCells_x + 1, l_y);
+            l_h[l_coord_r] = l_h[l_coord_l];
+            l_hu[l_coord_r] = l_hu[l_coord_l];
+            l_hv[l_coord_r] = l_hv[l_coord_l];
+            l_b[l_coord_r] = l_b[l_coord_l];
         }
         break;
     // closed
     case 1:
         for (t_idx l_y = 0; l_y < m_nCells_y; l_y++)
         {
-            t_idx l_cord = getCoordinates(m_nCells_x + 1, l_y);
-            l_h[l_cord] = 0;
-            l_hu[l_cord] = 0;
-            l_hv[l_cord] = 0;
-            l_b[l_cord] = 25;
+            t_idx l_coord = getCoordinates(m_nCells_x + 1, l_y);
+            l_h[l_coord] = 0;
+            l_hu[l_coord] = 0;
+            l_hv[l_coord] = 0;
+            l_b[l_coord] = 25;
         }
         break;
 
@@ -251,23 +251,23 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     case 0:
         for (t_idx l_x = 0; l_x < m_nCells_x; l_x++)
         {
-            t_idx l_cord_l = getCoordinates(l_x, 0);
-            t_idx l_cord_r = getCoordinates(l_x, 1);
-            l_h[l_cord_l] = l_h[l_cord_r];
-            l_hu[l_cord_l] = l_hu[l_cord_r];
-            l_hv[l_cord_l] = l_hv[l_cord_r];
-            l_b[l_cord_l] = l_b[l_cord_r];
+            t_idx l_coord_l = getCoordinates(l_x, 0);
+            t_idx l_coord_r = getCoordinates(l_x, 1);
+            l_h[l_coord_l] = l_h[l_coord_r];
+            l_hu[l_coord_l] = l_hu[l_coord_r];
+            l_hv[l_coord_l] = l_hv[l_coord_r];
+            l_b[l_coord_l] = l_b[l_coord_r];
         }
         break;
     // closed
     case 1:
         for (t_idx l_x = 0; l_x < m_nCells_x; l_x++)
         {
-            t_idx l_cord = getCoordinates(l_x, 0);
-            l_h[l_cord] = 0;
-            l_hu[l_cord] = 0;
-            l_hv[l_cord] = 0;
-            l_b[l_cord] = 25;
+            t_idx l_coord = getCoordinates(l_x, 0);
+            l_h[l_coord] = 0;
+            l_hu[l_coord] = 0;
+            l_hv[l_coord] = 0;
+            l_b[l_coord] = 25;
         }
         break;
 
@@ -284,23 +284,23 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
     case 0:
         for (t_idx l_x = 0; l_x < m_nCells_x; l_x++)
         {
-            t_idx l_cord_l = getCoordinates(l_x, m_nCells_y);
-            t_idx l_cord_r = getCoordinates(l_x, m_nCells_y + 1);
-            l_h[l_cord_r] = l_h[l_cord_l];
-            l_hu[l_cord_r] = l_hu[l_cord_l];
-            l_hv[l_cord_r] = l_hv[l_cord_l];
-            l_b[l_cord_r] = l_b[l_cord_l];
+            t_idx l_coord_l = getCoordinates(l_x, m_nCells_y);
+            t_idx l_coord_r = getCoordinates(l_x, m_nCells_y + 1);
+            l_h[l_coord_r] = l_h[l_coord_l];
+            l_hu[l_coord_r] = l_hu[l_coord_l];
+            l_hv[l_coord_r] = l_hv[l_coord_l];
+            l_b[l_coord_r] = l_b[l_coord_l];
         }
         break;
     // closed
     case 1:
         for (t_idx l_x = 0; l_x < m_nCells_x; l_x++)
         {
-            t_idx l_cord = getCoordinates(l_x, m_nCells_y + 1);
-            l_h[l_cord] = 0;
-            l_hu[l_cord] = 0;
-            l_hv[l_cord] = 0;
-            l_b[l_cord] = 25;
+            t_idx l_coord = getCoordinates(l_x, m_nCells_y + 1);
+            l_h[l_coord] = 0;
+            l_hu[l_coord] = 0;
+            l_hv[l_coord] = 0;
+            l_b[l_coord] = 25;
         }
         break;
 
