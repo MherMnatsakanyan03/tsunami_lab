@@ -35,7 +35,6 @@ TEST_CASE("Test the 2d wave propagation fwave-solver x-direction.", "[WaveProp2d
 
     tsunami_lab::patches::WavePropagation2d m_waveProp(100,
                                                        100,
-                                                       1,
                                                        0,
                                                        0,
                                                        0,
@@ -146,7 +145,6 @@ TEST_CASE("Test the 2d wave propagation fwave-solver y-direction.", "[WaveProp2d
 
     tsunami_lab::patches::WavePropagation2d m_waveProp(100,
                                                        100,
-                                                       1,
                                                        0,
                                                        0,
                                                        0,
@@ -260,7 +258,6 @@ TEST_CASE("Test the 2d wave propagation roe-solver x-direction.", "[WaveProp2dRo
                                                        0,
                                                        0,
                                                        0,
-                                                       0,
                                                        0);
 
     for (std::size_t l_cx = 0; l_cx < 50; l_cx++)
@@ -368,7 +365,6 @@ TEST_CASE("Test the 2d wave propagation roe-solver y-direction.", "[WaveProp2dRo
 
     tsunami_lab::patches::WavePropagation2d m_waveProp(100,
                                                        100,
-                                                       0,
                                                        0,
                                                        0,
                                                        0,

@@ -11,15 +11,12 @@
 #include <string>
 
 #include "../../solvers/f-wave/F_wave.h"
-#include "../../solvers/roe/Roe.h"
 
 tsunami_lab::patches::WavePropagation1d::WavePropagation1d(t_idx i_nCells,
-                                                           int solver_choice,
                                                            int state_boundary_left,
                                                            int state_boundary_right)
 {
     m_nCells = i_nCells;
-    m_solver_choice = solver_choice;
     m_state_boundary_left = state_boundary_left;
     m_state_boundary_right = state_boundary_right;
     // allocate memory including a single ghost cell on each side and initializing with 0
@@ -71,30 +68,14 @@ void tsunami_lab::patches::WavePropagation1d::timeStep(t_real i_scaling)
         // compute net-updates
         t_real l_netUpdates[2][2];
 
-        if (m_solver_choice == 1)
-        {
-            solvers::Roe::netUpdates(l_hOld[l_ceL],
-                                     l_hOld[l_ceR],
-                                     l_huOld[l_ceL],
-                                     l_huOld[l_ceR],
-                                     l_netUpdates[0],
-                                     l_netUpdates[1]);
-        }
-        else if (m_solver_choice == 0)
-        {
-            solvers::FWave::netUpdates(l_hOld[l_ceL],
-                                       l_hOld[l_ceR],
-                                       l_huOld[l_ceL],
-                                       l_huOld[l_ceR],
-                                       l_b[l_ceL],
-                                       l_b[l_ceR],
-                                       l_netUpdates[0],
-                                       l_netUpdates[1]);
-        }
-        else
-        {
-            throw std::invalid_argument("Not a valid solver. Try again with either 'roe' or 'fwave'.");
-        }
+        solvers::FWave::netUpdates(l_hOld[l_ceL],
+                                   l_hOld[l_ceR],
+                                   l_huOld[l_ceL],
+                                   l_huOld[l_ceR],
+                                   l_b[l_ceL],
+                                   l_b[l_ceR],
+                                   l_netUpdates[0],
+                                   l_netUpdates[1]);
 
         // update the cells' quantities
         l_hNew[l_ceL] -= i_scaling * l_netUpdates[0][0];

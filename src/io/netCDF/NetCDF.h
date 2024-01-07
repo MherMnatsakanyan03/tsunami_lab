@@ -147,7 +147,6 @@ public:
    * @param i_x_offset offset x-direction.
    * @param i_y_offset offset y-direction.
    * @param i_stride Stride (x-axis + 2).
-   * @param i_solver_choice Solver-choice (0 = roe, 1 = fwave)
    * @param i_state_boundary_left State of the left-boundary (0 = open, 1 = closed)
    * @param i_state_boundary_right State of the right-boundary (0 = open, 1 = closed)
    * @param i_state_boundary_top State of the top-boundary (0 = open, 1 = closed)
@@ -170,7 +169,6 @@ public:
                        t_real const *i_b,
                        t_real i_x_offset,
                        t_real i_y_offset,
-                       int i_solver_choice,
                        int i_state_boundary_left,
                        int i_state_boundary_right,
                        int i_state_boundary_top,
@@ -197,7 +195,6 @@ public:
    * @param o_x_offset Pointer to offset in x-direction.
    * @param o_y_offset Pointer to offset in y-direction.
    * @param o_stride Pointer to Stride (x-axis + 2).
-   * @param o_solver_choice Pointer to Solver-choice (0 = roe, 1 = fwave)
    * @param o_state_boundary_left Pointer to State of the left-boundary (0 = open, 1 = closed)
    * @param o_state_boundary_right Pointer to State of the right-boundary (0 = open, 1 = closed)
    * @param o_state_boundary_top Pointer to State of the top-boundary (0 = open, 1 = closed)
@@ -221,7 +218,6 @@ public:
                       t_real **o_b,
                       t_real *o_x_offset,
                       t_real *o_y_offset,
-                      int *o_solver_choice,
                       int *o_state_boundary_left,
                       int *o_state_boundary_right,
                       int *o_state_boundary_top,

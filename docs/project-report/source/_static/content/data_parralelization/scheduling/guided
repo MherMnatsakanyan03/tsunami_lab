@@ -1,0 +1,70 @@
+entering time loop
+  simulation time / #time steps: 0 / 0
+        Time to write: 1.8321e-05s
+        Time since programm started: 4.7e-08s
+  simulation time / #time steps: 1630.75 / 500
+        Time to write: 0.000196954s
+        Time since programm started: 1.21718s
+  simulation time / #time steps: 3261.49 / 1000
+        Time to write: 0.000157739s
+        Time since programm started: 2.32947s
+  simulation time / #time steps: 4892.29 / 1500
+        Time to write: 0.000159078s
+        Time since programm started: 3.49809s
+  simulation time / #time steps: 6523.15 / 2000
+        Time to write: 0.000142059s
+        Time since programm started: 4.64413s
+  simulation time / #time steps: 8154 / 2500
+        Time to write: 0.000194098s
+        Time since programm started: 5.76654s
+  simulation time / #time steps: 9784.86 / 3000
+        Time to write: 0.000138032s
+        Time since programm started: 6.92048s
+  simulation time / #time steps: 11415.7 / 3500
+        Time to write: 0.000139353s
+        Time since programm started: 8.096s
+  simulation time / #time steps: 13046.6 / 4000
+        Time to write: 0.000137099s
+        Time since programm started: 9.22935s
+  simulation time / #time steps: 14677.4 / 4500
+        Time to write: 0.000151893s
+        Time since programm started: 10.3362s
+  simulation time / #time steps: 16308.3 / 5000
+        Time to write: 0.00017207s
+        Time since programm started: 11.4963s
+  simulation time / #time steps: 17939.2 / 5500
+        Time to write: 0.000133712s
+        Time since programm started: 12.611s
+  simulation time / #time steps: 19570 / 6000
+        Time to write: 0.000159984s
+        Time since programm started: 13.7473s
+  simulation time / #time steps: 21200.9 / 6500
+        Time to write: 0.000139352s
+        Time since programm started: 14.8925s
+  simulation time / #time steps: 22831.7 / 7000
+        Time to write: 0.000168069s
+        Time since programm started: 16.054s
+  simulation time / #time steps: 24462.6 / 7500
+        Time to write: 0.000148277s
+        Time since programm started: 17.1583s
+  simulation time / #time steps: 26093.5 / 8000
+        Time to write: 0.000163319s
+        Time since programm started: 18.3142s
+  simulation time / #time steps: 27724.3 / 8500
+        Time to write: 0.000169204s
+        Time since programm started: 19.4414s
+  simulation time / #time steps: 29355.2 / 9000
+        Time to write: 0.000149497s
+        Time since programm started: 20.5637s
+  simulation time / #time steps: 30986 / 9500
+        Time to write: 0.000151045s
+        Time since programm started: 21.7382s
+  simulation time / #time steps: 32616.9 / 10000
+        Time to write: 0.00014797s
+        Time since programm started: 22.8677s
+  simulation time / #time steps: 34247.8 / 10500
+        Time to write: 0.000149716s
+        Time since programm started: 24.0179s
+  simulation time / #time steps: 35878.6 / 11000
+        Time to write: 0.000172596s
+        Time since programm started: 25.1368s

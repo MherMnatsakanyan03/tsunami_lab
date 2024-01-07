@@ -66,3 +66,12 @@ Gebco netCDF download
 
     - for 3d: WarpByScalar in ParaView
     - download colorway -> "Rescale custom color range"
+
+
+Eigenanteil TODO:
+    - Salepitch
+    - Einzelschritte überlegen
+    - Roadmap und Meilensteine aufschreiben (für nächste Abgabe)
+
+    - Erwartete Leistung ausrechnen
+    - AMD/Nvidia VTune-alternative nutzen

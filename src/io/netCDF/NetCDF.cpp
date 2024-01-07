@@ -254,7 +254,6 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(t_idx i_nx,
                                               t_real const *i_b,
                                               t_real i_x_offset,
                                               t_real i_y_offset,
-                                              int i_solver_choice,
                                               int i_state_boundary_left,
                                               int i_state_boundary_right,
                                               int i_state_boundary_top,
@@ -295,7 +294,6 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(t_idx i_nx,
 
   int l_x_offset_dimid,
       l_y_offset_dimid,
-      l_solver_choice_dimid,
       l_state_boundary_left_dimid,
       l_state_boundary_right_dimid,
       l_state_boundary_top_dimid,
@@ -313,7 +311,6 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(t_idx i_nx,
   // Defining the variables
   handleNetCdfError(nc_def_var(l_ncid, "x_offset", NC_FLOAT, 0, NULL, &l_x_offset_dimid), "Error define x_offset variable:");
   handleNetCdfError(nc_def_var(l_ncid, "y_offset", NC_FLOAT, 0, NULL, &l_y_offset_dimid), "Error define y_offset variable:");
-  handleNetCdfError(nc_def_var(l_ncid, "solver_choice", NC_INT, 0, NULL, &l_solver_choice_dimid), "Error define solver_choice variable:");
   handleNetCdfError(nc_def_var(l_ncid, "state_boundary_left", NC_INT, 0, NULL, &l_state_boundary_left_dimid), "Error define state_boundary_left variable:");
   handleNetCdfError(nc_def_var(l_ncid, "state_boundary_right", NC_INT, 0, NULL, &l_state_boundary_right_dimid), "Error define state_boundary_right variable:");
   handleNetCdfError(nc_def_var(l_ncid, "state_boundary_top", NC_INT, 0, NULL, &l_state_boundary_top_dimid), "Error define state_boundary_top variable:");
@@ -333,7 +330,6 @@ void tsunami_lab::io::NetCdf::writeCheckpoint(t_idx i_nx,
   // Writing the values to the NetCDF file
   handleNetCdfError(nc_put_var_float(l_ncid, l_x_offset_dimid, &i_x_offset), "Error put x_offset variable: ");
   handleNetCdfError(nc_put_var_float(l_ncid, l_y_offset_dimid, &i_y_offset), "Error put y_offset variable: ");
-  handleNetCdfError(nc_put_var_int(l_ncid, l_solver_choice_dimid, &i_solver_choice), "Error put solver_choice variable: ");
   handleNetCdfError(nc_put_var_int(l_ncid, l_state_boundary_left_dimid, &i_state_boundary_left), "Error put state_boundary_left variable: ");
   handleNetCdfError(nc_put_var_int(l_ncid, l_state_boundary_right_dimid, &i_state_boundary_right), "Error put state_boundary_right variable: ");
   handleNetCdfError(nc_put_var_int(l_ncid, l_state_boundary_top_dimid, &i_state_boundary_top), "Error put state_boundary_top variable: ");
@@ -364,7 +360,6 @@ void tsunami_lab::io::NetCdf::readCheckpoint(t_idx *o_nx,
                                              t_real **o_b,
                                              t_real *o_x_offset,
                                              t_real *o_y_offset,
-                                             int *o_solver_choice,
                                              int *o_state_boundary_left,
                                              int *o_state_boundary_right,
                                              int *o_state_boundary_top,
@@ -412,7 +407,6 @@ void tsunami_lab::io::NetCdf::readCheckpoint(t_idx *o_nx,
 
   int l_x_offset_dimid,
       l_y_offset_dimid,
-      l_solver_choice_dimid,
       l_state_boundary_left_dimid,
       l_state_boundary_right_dimid,
       l_state_boundary_top_dimid,
@@ -428,7 +422,6 @@ void tsunami_lab::io::NetCdf::readCheckpoint(t_idx *o_nx,
 
   handleNetCdfError(nc_inq_varid(l_ncid, "x_offset", &l_x_offset_dimid), "Error getting x_offset value id: ");
   handleNetCdfError(nc_inq_varid(l_ncid, "y_offset", &l_y_offset_dimid), "Error getting y_offset value id: ");
-  handleNetCdfError(nc_inq_varid(l_ncid, "solver_choice", &l_solver_choice_dimid), "Error getting solver_choice value id: ");
   handleNetCdfError(nc_inq_varid(l_ncid, "state_boundary_left", &l_state_boundary_left_dimid), "Error getting state_boundary_left value id: ");
   handleNetCdfError(nc_inq_varid(l_ncid, "state_boundary_right", &l_state_boundary_right_dimid), "Error getting state_boundary_right value id: ");
   handleNetCdfError(nc_inq_varid(l_ncid, "state_boundary_top", &l_state_boundary_top_dimid), "Error getting state_boundary_top value id: ");
@@ -451,7 +444,6 @@ void tsunami_lab::io::NetCdf::readCheckpoint(t_idx *o_nx,
   handleNetCdfError(nc_get_var_float(l_ncid, l_hMax_dimid, o_hMax), "Error getting time value: ");
 
   // Integer variables
-  handleNetCdfError(nc_get_var_int(l_ncid, l_solver_choice_dimid, o_solver_choice), "Error getting solver_choice value: ");
   handleNetCdfError(nc_get_var_int(l_ncid, l_state_boundary_left_dimid, o_state_boundary_left), "Error getting state_boundary_left value: ");
   handleNetCdfError(nc_get_var_int(l_ncid, l_state_boundary_right_dimid, o_state_boundary_right), "Error getting state_boundary_right value: ");
   handleNetCdfError(nc_get_var_int(l_ncid, l_state_boundary_top_dimid, o_state_boundary_top), "Error getting state_boundary_top value: ");

@@ -33,7 +33,6 @@ tsunami_lab::setups::Checkpoint::Checkpoint()
                          &m_bathymetry,
                          &m_x_offset,
                          &m_y_offset,
-                         &m_solver_choice,
                          &m_state_boundary_left,
                          &m_state_boundary_right,
                          &m_state_boundary_top,
@@ -106,11 +105,6 @@ tsunami_lab::t_real tsunami_lab::setups::Checkpoint::getXOffset() const
 tsunami_lab::t_real tsunami_lab::setups::Checkpoint::getYOffset() const
 {
   return m_y_offset;
-}
-
-int tsunami_lab::setups::Checkpoint::getSolverChoice() const
-{
-  return m_solver_choice;
 }
 
 int tsunami_lab::setups::Checkpoint::getStateBoundaryLeft() const

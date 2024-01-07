@@ -22,7 +22,7 @@ Installing the project is very simple. All you need to do is:
    #. Installing the submodule using :code:`git sumbodule init` and :code:`git sumbodule update`
    #. Installing the requirements using :code:`sudo apt-get install libnetcdf-c++4-dev` and :code:`sudo apt-get install netcdf-bin`
    #. While in the repository, enter the building command into your console: :code:`scons`
-   #. In the console, use :code:`./build/tsunami_lab [-d DIMENSION] [-s SETUP] [-v SOLVER] [-l STATE_LEFT] [-r STATE_RIGHT] [-t STATE_TOP] [-b STATE_BOTTOM] [-i STATION] [-k RESOLUTION] <number-of-cells>` (Tip: to be sure that you are in the correct console, you can write ./b and press the "tab"-button and see, if the console completes the path automatically)
+   #. In the console, use :code:`./build/tsunami_lab [-d DIMENSION] [-s SETUP] [-l STATE_LEFT] [-r STATE_RIGHT] [-t STATE_TOP] [-b STATE_BOTTOM] [-i STATION] [-k RESOLUTION] <number-of-cells>` (Tip: to be sure that you are in the correct console, you can write ./b and press the "tab"-button and see, if the console completes the path automatically)
    #. The output-files should be generated in either in the `csv-dump`-folder or in `netCDF_dump` (depending if you use 1d or 2d)
 
 ..  tip::
@@ -40,7 +40,6 @@ Installing the project is very simple. All you need to do is:
       * :code:`'dambreak2d'` 
       * :code:`'artificial2d'` 
       * :code:`'tsunami2d'` 
-   #. possible inputs for :code:`SOLVER` are "fwave" and "roe". Not using this parameter will use "fwave" by default.
    #. possible inputs for :code:`STATE_LEFT` are "open" or "closed"
    #. possible inputs for :code:`STATE_RIGHT` are "open" or "closed"
    #. possible inputs for :code:`STATE_TOP` are "open" or "closed"

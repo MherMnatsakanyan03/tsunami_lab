@@ -1,0 +1,118 @@
+Requirement already satisfied: scons in /home/xo78roy/.local/lib/python3.8/site-packages (4.6.0)
+Requirement already satisfied: setuptools in /cluster/miniconda3-py38/lib/python3.8/site-packages (from scons) (46.4.0.post20200518)
+scons: Reading SConscript files ...
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+
+runnning build script
+Linux
+scons: done reading SConscript files.
+scons: Building targets ...
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/io/csv/Csv.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/io/csv/Csv.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/io/csv/Csv.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/io/csv/Csv.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/io/netCDF/NetCDF.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/io/netCDF/NetCDF.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/io/netCDF/NetCDF.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/io/netCDF/NetCDF.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/io/stations/Stations.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/io/stations/Stations.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/io/stations/Stations.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/io/stations/Stations.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/main.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/main.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/patches/wavepropagation1d/WavePropagation1d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/patches/wavepropagation1d/WavePropagation1d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/patches/wavepropagation1d/WavePropagation1d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/patches/wavepropagation1d/WavePropagation1d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/patches/wavepropagation2d/WavePropagation2d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/patches/wavepropagation2d/WavePropagation2d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/patches/wavepropagation2d/WavePropagation2d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/patches/wavepropagation2d/WavePropagation2d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/artificialTsunami2d/ArtificialTsunami2d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/artificialTsunami2d/ArtificialTsunami2d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/artificialTsunami2d/ArtificialTsunami2d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/artificialTsunami2d/ArtificialTsunami2d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/checkpoint/Checkpoint.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/checkpoint/Checkpoint.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/dambreak1d/DamBreak1d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/dambreak1d/DamBreak1d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/dambreak1d/DamBreak1d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/dambreak1d/DamBreak1d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/dambreak2d/DamBreak2d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/dambreak2d/DamBreak2d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/dambreak2d/DamBreak2d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/dambreak2d/DamBreak2d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/rarerare1d/RareRare1d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/rarerare1d/RareRare1d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/rarerare1d/RareRare1d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/rarerare1d/RareRare1d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/shockshock1d/ShockShock1d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/shockshock1d/ShockShock1d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/shockshock1d/ShockShock1d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/shockshock1d/ShockShock1d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/subcritical1d/Subcritical1d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/subcritical1d/Subcritical1d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/supercritical1d/Supercritical1d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/supercritical1d/Supercritical1d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/supercritical1d/Supercritical1d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/supercritical1d/Supercritical1d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/tsunamievent1d/TsunamiEvent1d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/tsunamievent1d/TsunamiEvent1d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/tsunamievent1d/TsunamiEvent1d.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/tsunamievent1d/TsunamiEvent1d.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/setups/tsunamievent2d/TsunamiEvent2d.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/setups/tsunamievent2d/TsunamiEvent2d.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/solvers/f-wave/F_wave.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/solvers/f-wave/F_wave.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/solvers/f-wave/F_wave.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/solvers/f-wave/F_wave.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/solvers/roe/Roe.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/solvers/roe/Roe.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/solvers/roe/Roe.test.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/solvers/roe/Roe.test.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/src/tests.o -c -std=c++17 -Wall -Wextra -Wpedantic -Werror -Ofast -isystem submodules/Catch2/single_include -fopenmp build/src/tests.cpp
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/tests -fopenmp build/src/solvers/roe/Roe.o build/src/solvers/f-wave/F_wave.o build/src/patches/wavepropagation1d/WavePropagation1d.o build/src/patches/wavepropagation2d/WavePropagation2d.o build/src/setups/dambreak1d/DamBreak1d.o build/src/setups/dambreak2d/DamBreak2d.o build/src/setups/shockshock1d/ShockShock1d.o build/src/setups/rarerare1d/RareRare1d.o build/src/setups/subcritical1d/Subcritical1d.o build/src/setups/supercritical1d/Supercritical1d.o build/src/setups/tsunamievent1d/TsunamiEvent1d.o build/src/setups/tsunamievent2d/TsunamiEvent2d.o build/src/setups/artificialTsunami2d/ArtificialTsunami2d.o build/src/io/csv/Csv.o build/src/io/stations/Stations.o build/src/io/netCDF/NetCDF.o build/src/setups/checkpoint/Checkpoint.o build/src/tests.o build/src/solvers/roe/Roe.test.o build/src/solvers/f-wave/F_wave.test.o build/src/patches/wavepropagation1d/WavePropagation1d.test.o build/src/patches/wavepropagation2d/WavePropagation2d.test.o build/src/setups/dambreak1d/DamBreak1d.test.o build/src/setups/dambreak2d/DamBreak2d.test.o build/src/setups/shockshock1d/ShockShock1d.test.o build/src/setups/rarerare1d/RareRare1d.test.o build/src/setups/supercritical1d/Supercritical1d.test.o build/src/setups/tsunamievent1d/TsunamiEvent1d.test.o build/src/setups/artificialTsunami2d/ArtificialTsunami2d.test.o build/src/io/csv/Csv.test.o build/src/io/stations/Stations.test.o build/src/io/netCDF/NetCDF.test.o -lnetcdf
+/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++ -o build/tsunami_lab -fopenmp build/src/solvers/roe/Roe.o build/src/solvers/f-wave/F_wave.o build/src/patches/wavepropagation1d/WavePropagation1d.o build/src/patches/wavepropagation2d/WavePropagation2d.o build/src/setups/dambreak1d/DamBreak1d.o build/src/setups/dambreak2d/DamBreak2d.o build/src/setups/shockshock1d/ShockShock1d.o build/src/setups/rarerare1d/RareRare1d.o build/src/setups/subcritical1d/Subcritical1d.o build/src/setups/supercritical1d/Supercritical1d.o build/src/setups/tsunamievent1d/TsunamiEvent1d.o build/src/setups/tsunamievent2d/TsunamiEvent2d.o build/src/setups/artificialTsunami2d/ArtificialTsunami2d.o build/src/io/csv/Csv.o build/src/io/stations/Stations.o build/src/io/netCDF/NetCDF.o build/src/setups/checkpoint/Checkpoint.o build/src/main.o -lnetcdf
+scons: done building targets.
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+using fwave-solver
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+runtime configuration
+  number of cells in x-direction: 899
+  number of cells in y-direction: 499
+  cell size:                      3003.06
+entering time loop
+  simulation time / #time steps: 0 / 0
+	Time to write: 0.0497288s
+	Time since programm started: 4.59e-07s
+  simulation time / #time steps: 2450.94 / 500
+	Time to write: 0.0326104s
+	Time since programm started: 27.5329s
+  simulation time / #time steps: 4901.87 / 1000
+	Time to write: 0.0326187s
+	Time since programm started: 54.5785s
+  simulation time / #time steps: 7352.8 / 1500
+	Time to write: 0.0419708s
+	Time since programm started: 81.5787s
+  simulation time / #time steps: 9803.88 / 2000
+	Time to write: 0.0315909s
+	Time since programm started: 107.932s
+  simulation time / #time steps: 12255.1 / 2500
+	Time to write: 0.0419847s
+	Time since programm started: 135.697s
+  simulation time / #time steps: 14706.2 / 3000
+	Time to write: 0.0367624s
+	Time since programm started: 164.12s
+  simulation time / #time steps: 17157.4 / 3500
+	Time to write: 0.0395311s
+	Time since programm started: 190.531s
+  simulation time / #time steps: 19608.6 / 4000
+	Time to write: 0.0405305s
+	Time since programm started: 217.203s
+  simulation time / #time steps: 22059.7 / 4500
+	Time to write: 0.0344713s
+	Time since programm started: 244.861s
+  simulation time / #time steps: 24510.9 / 5000
+	Time to write: 0.0329498s
+	Time since programm started: 273.898s
+  simulation time / #time steps: 26962.1 / 5500
+	Time to write: 0.0328492s
+	Time since programm started: 302.239s
+  simulation time / #time steps: 29413.3 / 6000
+	Time to write: 0.0414066s
+	Time since programm started: 328.983s
+  simulation time / #time steps: 31864.4 / 6500
+	Time to write: 0.0503016s
+	Time since programm started: 357.941s
+  simulation time / #time steps: 34315.6 / 7000
+	Time to write: 0.0502338s
+	Time since programm started: 388.847s
+finished time loop
+freeing memory
+delete checkpoints
+finished, exiting

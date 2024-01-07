@@ -28,9 +28,6 @@ private:
     //! number of cells discretizing the computational domain
     t_idx m_nCells = 0;
 
-    //! choice of solver, 0 = roe, 1 = fwave
-    int m_solver_choice = 0;
-
     //! state of left boundary, 0 = open, 1 = closed
     int m_state_boundary_left = 0;
 
@@ -51,10 +48,8 @@ public:
      * Constructs the 1d wave propagation solver.
      *
      * @param i_nCells number of cells.
-     * @param solver_choice type int, defines the choice of solver. Possible values: "roe" and "fwave".
      **/
     WavePropagation1d(t_idx i_nCells,
-                      int solver_choice,
                       int state_boundary_left,
                       int state_boundary_right);
 
