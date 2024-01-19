@@ -28,6 +28,8 @@ private:
   //! wall heigth
   t_real m_delta = 20;
 
+  double PI = 3.14159265358979323846;
+
   /**
    * @brief Get initial displacement
    *
@@ -46,7 +48,7 @@ private:
   t_real f(t_real i_x,
            t_real) const
   {
-    return std::sin(((i_x * 0.002) + 1) * M_PI);
+    return std::sin(((i_x * 0.002) + 1) * PI);
   };
 
   /**
