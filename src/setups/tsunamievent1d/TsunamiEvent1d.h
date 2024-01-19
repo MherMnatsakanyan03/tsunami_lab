@@ -28,6 +28,8 @@ private:
   //! wall heigth
   t_real m_delta = 20;
 
+  double PI = 3.14159265358979323846;
+
   std::vector<t_real> m_b_in;
 
   /**

@@ -38,6 +38,8 @@ if os_system == "Linux":
     plattform_choice = 0
 elif os_system == "Darwin":  # Darwin is the underlying OS for MacOS
     plattform_choice = 1
+elif os_system == "Windows": 
+    plattform_choice = 2
 else:
     print(f"Unsupported OS: {os_system}")
     exit(1)
@@ -52,6 +54,9 @@ if(plattform_choice == 1):
   # Add lib paths
   env.Append(CPPPATH=['/opt/homebrew/include'])
   env.Append(LIBPATH=['/opt/homebrew/lib'])
+elif(plattform_choice == 2):# Add lib paths
+  env.Append(CPPPATH=['C:\msys64\mingw64\include'])
+  env.Append(LIBPATH=['C:\msys64\mingw64\lib'])
 
 
 # set compiler

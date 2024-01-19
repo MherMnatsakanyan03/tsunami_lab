@@ -63,7 +63,7 @@ tsunami_lab::t_real tsunami_lab::setups::TsunamiEvent1d::getDisplacement(t_real 
 {
   if (250000 > i_x && i_x > 175000)
   {
-    return 10 * sin(((i_x - 175000) / 37500) * M_PI + M_PI);
+    return 10 * sin(((i_x - 175000) / 37500) * PI + PI);
   }
   else
   {
