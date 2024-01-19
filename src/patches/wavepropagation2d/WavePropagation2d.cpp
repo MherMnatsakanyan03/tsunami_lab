@@ -79,7 +79,6 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
             l_hvNew[l_coord] = l_hvOld[l_coord];
         }
     }
-    t_real l_netUpdates[2][2];
 
 // iterate over edges and update with Riemann solutions in x-direction
 #pragma omp parallel for schedule(guided)
@@ -92,6 +91,7 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
             t_idx l_coord_R = getCoordinates(l_x + 1, l_y);
 
             // compute net-updates
+            t_real l_netUpdates[2][2];
 
             solvers::FWave::netUpdates(l_hOld[l_coord_L],
                                        l_hOld[l_coord_R],
