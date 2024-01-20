@@ -1,11 +1,13 @@
+
+
 __constant float m_g = 9.80665;
 __constant float m_gSqrt = 3.131557121;
 
 inline void waveSpeeds(float i_hL, float i_hR, float i_uL, float i_uR,
                        float *o_waveSpeedL, float *o_waveSpeedR) {
   // Pre-compute square-root ops
-  float l_hSqrtL = native_sqrt(i_hL);
-  float l_hSqrtR = native_sqrt(i_hR);
+  float l_hSqrtL = sqrt(i_hL);
+  float l_hSqrtR = sqrt(i_hR);
 
   // Compute FWave averages
   float l_hRoe = 0.5f * (i_hL + i_hR);
@@ -13,7 +15,7 @@ inline void waveSpeeds(float i_hL, float i_hR, float i_uL, float i_uR,
   l_uRoe /= l_hSqrtL + l_hSqrtR;
 
   // Compute wave speeds
-  float l_ghSqrtRoe = m_gSqrt * native_sqrt(l_hRoe);
+  float l_ghSqrtRoe = m_gSqrt * sqrt(l_hRoe);
   *o_waveSpeedL = l_uRoe - l_ghSqrtRoe;
   *o_waveSpeedR = l_uRoe + l_ghSqrtRoe;
 }
@@ -153,26 +155,27 @@ __kernel void updateXAxisKernel(__global float *i_hOld, __global float *i_huOld,
                                 __global float *o_hNew, __global float *o_huNew,
                                 __global float *o_hvNew) {
 
-  int i = get_global_id(0);
+  int l_x = get_global_id(0);
+  int l_y = get_global_id(1);
 
-  int l_coord_L = i;
-  int l_coord_R = (i + 1);
+  int l_coord_L = l_y * (m_nCells_x + 2) + l_x;
+  int l_coord_R = l_y * (m_nCells_x + 2) + l_x + 1;
 
-  if (l_coord_R < 10) {
-    // Define net updates array
-    float l_netUpdatesL[2];
-    float l_netUpdatesR[2];
+  if (l_x > m_nCells_x || l_y > m_nCells_y)
+    return;
 
-    netUpdates(i_hOld[l_coord_L], i_hOld[l_coord_R], i_huOld[l_coord_L],
-               i_huOld[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
-               l_netUpdatesL, l_netUpdatesR);
-    printf("%d , %d\n", l_coord_L, l_coord_R);
+  //   Define net updates array
+  float l_netUpdatesL[2];
+  float l_netUpdatesR[2];
 
-    o_hNew[l_coord_L] -= i_scaling * l_netUpdatesL[0];
-    o_huNew[l_coord_L] -= i_scaling * l_netUpdatesL[1];
-    o_hNew[l_coord_R] -= i_scaling * l_netUpdatesR[0];
-    o_huNew[l_coord_R] -= i_scaling * l_netUpdatesR[1];
-  }
+  netUpdates(i_hOld[l_coord_L], i_hOld[l_coord_R], i_huOld[l_coord_L],
+             i_huOld[l_coord_R], i_b[l_coord_L], i_b[l_coord_R], l_netUpdatesL,
+             l_netUpdatesR);
+
+  o_hNew[l_coord_L] -= i_scaling * l_netUpdatesL[0];
+  o_huNew[l_coord_L] -= i_scaling * l_netUpdatesL[1];
+  o_hNew[l_coord_R] -= i_scaling * l_netUpdatesR[0];
+  o_huNew[l_coord_R] -= i_scaling * l_netUpdatesR[1];
 }
 
 __kernel void updateYAxisKernel(__global float *i_hOld, __global float *i_huOld,
@@ -181,12 +184,16 @@ __kernel void updateYAxisKernel(__global float *i_hOld, __global float *i_huOld,
                                 __global float *o_hNew, __global float *o_huNew,
                                 __global float *o_hvNew) {
 
-  int i = get_global_id(0);
+  int l_x = get_global_id(0);
+  int l_y = get_global_id(1);
 
-  int l_coord_L = i;
-  int l_coord_R = (i + 5);
+  int l_coord_L = l_y * (m_nCells_x + 2) + l_x;
+  int l_coord_R = (l_y + 1) * (m_nCells_x + 2) + l_x;
 
-  // Define net updates array
+  if (l_x > m_nCells_x || l_y > m_nCells_y)
+    return;
+
+  //   Define net updates array
   float l_netUpdatesL[2];
   float l_netUpdatesR[2];
 
@@ -196,6 +203,6 @@ __kernel void updateYAxisKernel(__global float *i_hOld, __global float *i_huOld,
 
   o_hNew[l_coord_L] -= i_scaling * l_netUpdatesL[0];
   o_hvNew[l_coord_L] -= i_scaling * l_netUpdatesL[1];
-  o_hNew[l_coord_R] += i_scaling * l_netUpdatesR[0];
-  o_hvNew[l_coord_R] += i_scaling * l_netUpdatesR[1];
+  o_hNew[l_coord_R] -= i_scaling * l_netUpdatesR[0];
+  o_hvNew[l_coord_R] -= i_scaling * l_netUpdatesR[1];
 }

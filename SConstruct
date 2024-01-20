@@ -54,6 +54,8 @@ if(plattform_choice == 1):
   # Add lib paths
   env.Append(CPPPATH=['/opt/homebrew/include'])
   env.Append(LIBPATH=['/opt/homebrew/lib'])
+
+  env.Append(LINKFLAGS=['-framework', 'OpenCL'])
 elif(plattform_choice == 2):# Add lib paths
   env.Append(CPPPATH=['C:\msys64\mingw64\include'])
   env.Append(LIBPATH=['C:\msys64\mingw64\lib'])

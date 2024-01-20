@@ -22,7 +22,14 @@ l_sources = ['solvers/f-wave/F_wave.cpp',
              'io/csv/Csv.cpp',
              'io/stations/Stations.cpp',
              'io/netCDF/NetCDF.cpp',
-             'setups/checkpoint/Checkpoint.cpp',]
+             'setups/checkpoint/Checkpoint.cpp',
+             'patches/wavepropagation2d_kernel/WavePropagation2d_kernel.cpp',]
+
+kernel_file = 'patches/wavepropagation2d_kernel/kernel.cl' # Pfad zur Quelldatei
+build_dir = 'build/patches/wavepropagation2d_kernel/' # Zielverzeichnis
+
+
+env.Install(build_dir, kernel_file)
 
 for l_so in l_sources:
     env.sources.append(env.Object(l_so))

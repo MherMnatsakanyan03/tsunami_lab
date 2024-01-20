@@ -10,7 +10,7 @@
 
 #include <string>
 #include <vector>
-#include <CL/cl.h>
+#include </Users/ibyton/Desktop/Uni/Opencl/OpenCL/common/inc/CL/cl.h>
 
 #include "../WavePropagation.h"
 
