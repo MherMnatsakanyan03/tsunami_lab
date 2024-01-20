@@ -8,8 +8,9 @@
 
 #define CL_TARGET_OPENCL_VERSION 300
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
-// #define PROGRAM_FILE "/Users/ibyton/Desktop/Uni/tsunami_lab/build/src/patches/wavepropagation2d_kernel/kernel.cl"
-#define PROGRAM_FILE "kernel.cl"
+#define CL_TARGET_OPENCL_VERSION 300
+#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
+#define PROGRAM_FILE "/Users/ibyton/Desktop/Uni/tsunami_lab/build/src/patches/wavepropagation2d_kernel/kernel.cl"
 #define KERNEL_X_AXIS_FUNC "updateXAxisKernel"
 #define KERNEL_Y_AXIS_FUNC "updateYAxisKernel"
 
