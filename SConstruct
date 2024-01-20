@@ -76,6 +76,8 @@ env.Append(LIBS=['netcdf'])
 # Added parallelization
 env.Append(CCFLAGS=['-fopenmp'])
 env.Append(LINKFLAGS=['-fopenmp'])
+env.Append(CCFLAGS=['-lOpenCL'])
+env.Append(LINKFLAGS=['-lOpenCL'])
 
 # generate help message
 Help( vars.GenerateHelpText( env ) )
