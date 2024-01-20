@@ -10,13 +10,11 @@
 
 #define CL_TARGET_OPENCL_VERSION 300
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
-#define CL_TARGET_OPENCL_VERSION 300
-#define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 #include <string>
 #include <vector>
-#include <CL/cl.h>
-// #include </Users/ibyton/Desktop/Uni/Opencl/OpenCL/common/inc/CL/cl.h>
-// #include "../../plugins/OpenCL/common/inc/CL/cl.h"
+#include </Users/ibyton/Desktop/Uni/Opencl/OpenCL/common/inc/CL/cl.h>
+// #include <CL/cl.h>
+
 #include "../WavePropagation.h"
 
 namespace tsunami_lab
