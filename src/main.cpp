@@ -26,6 +26,7 @@
 #include "io/stations/Stations.h"
 #include "patches/wavepropagation1d/WavePropagation1d.h"
 #include "patches/wavepropagation2d/WavePropagation2d.h"
+#include "patches/wavepropagation2d_kernel/WavePropagation2d_kernel.h"
 #include "setups/dambreak1d/DamBreak1d.h"
 #include "setups/dambreak2d/DamBreak2d.h"
 #include "setups/rarerare1d/RareRare1d.h"
@@ -51,6 +52,7 @@ int resolution_div = 1;
 bool simulate_real_tsunami = false;
 bool checkpointing = false;
 double checkpoint_timer = 3600.0;
+int use_opencl = 0;
 // std::string bat_path = "data/artificialtsunami/artificialtsunami_bathymetry_1000.nc";
 // std::string dis_path = "data/artificialtsunami/artificialtsunami_displ_1000.nc";
 // std::string bat_path = "data/real_tsunamis/chile_gebco20_usgs_250m_bath_fixed.nc";
@@ -129,6 +131,7 @@ int main(int i_argc,
         std::cerr << "-b STATE_BOTTOM = 'open','closed', default is 'open'" << std::endl;
         std::cerr << "-i STATION = 'path'" << std::endl;
         std::cerr << "-k RESOLUTION, where the higher the input, the lower the resolution" << std::endl;
+        std::cerr << "-o OPENCL, 0 = CPU and 1 = GPU" << std::endl;
         return EXIT_FAILURE;
     }
     else if (!checkpointing)
@@ -194,7 +197,7 @@ int main(int i_argc,
     else
     {
 
-        while ((opt = getopt(i_argc, i_argv, "d:s:l:r:t:b:i:k:")) != -1)
+        while ((opt = getopt(i_argc, i_argv, "d:s:l:r:t:b:i:k:o:")) != -1)
         {
             switch (opt)
             {
@@ -478,6 +481,12 @@ int main(int i_argc,
                 }
                 break;
             }
+            case 'o':
+            {
+                use_opencl = atoi(optarg);
+
+                break;
+            }
             // unknown option
             case '?':
             {
@@ -494,7 +503,8 @@ int main(int i_argc,
                     << "    -t STATE_TOP = 'open','closed', default is 'open'" << std::endl
                     << "    -b STATE_BOTTOM = 'open','closed', default is 'open'" << std::endl
                     << "    -i 'path' " << std::endl
-                    << "    -k RESOLUTION, where the higher the input, the lower the resolution" << std::endl;
+                    << "    -k RESOLUTION, where the higher the input, the lower the resolution" << std::endl
+                    << "    -o OPENCL, 0 = CPU and 1 = GPU" << std::endl;
                 break;
             }
             }
@@ -504,6 +514,11 @@ int main(int i_argc,
     switch (dimension)
     {
     case 1:
+        if (use_opencl)
+        {
+            std::cout << "Using OpenCL in 1d is not supported. Exiting." << std::endl;
+            return EXIT_FAILURE;
+        }
         l_waveProp = new tsunami_lab::patches::WavePropagation1d(l_nx,
                                                                  state_boundary_left,
                                                                  state_boundary_right);
@@ -514,12 +529,24 @@ int main(int i_argc,
         {
             l_ny = l_nx;
         }
-        l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
-                                                                 l_ny,
-                                                                 state_boundary_left,
-                                                                 state_boundary_right,
-                                                                 state_boundary_top,
-                                                                 state_boundary_bottom);
+        if (use_opencl)
+        {
+            l_waveProp = new tsunami_lab::patches::WavePropagation2d_kernel(l_nx,
+                                                                            l_ny,
+                                                                            state_boundary_left,
+                                                                            state_boundary_right,
+                                                                            state_boundary_top,
+                                                                            state_boundary_bottom);
+        }
+        else
+        {
+            l_waveProp = new tsunami_lab::patches::WavePropagation2d(l_nx,
+                                                                     l_ny,
+                                                                     state_boundary_left,
+                                                                     state_boundary_right,
+                                                                     state_boundary_top,
+                                                                     state_boundary_bottom);
+        }
 
         break;
 
