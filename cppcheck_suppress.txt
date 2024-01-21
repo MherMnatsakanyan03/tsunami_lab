@@ -1,1 +1,1 @@
-*:src/plugins/json.hpp
+*:src/plugins/
