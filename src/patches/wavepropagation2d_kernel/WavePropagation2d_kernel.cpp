@@ -8,18 +8,19 @@
 
 #define CL_TARGET_OPENCL_VERSION 300
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
-// #define PROGRAM_FILE "/Users/ibyton/Desktop/Uni/tsunami_lab/build/src/patches/wavepropagation2d_kernel/kernel.cl"
-#define PROGRAM_FILE "kernel.cl"
+#define PROGRAM_FILE "/Users/ibyton/Desktop/Uni/tsunami_lab/build/src/patches/wavepropagation2d_kernel/kernel.cl"
+// #define PROGRAM_FILE "kernel.cl"
 #define KERNEL_X_AXIS_FUNC "updateXAxisKernel"
 #define KERNEL_Y_AXIS_FUNC "updateYAxisKernel"
+#define KERNEL_UPDATE_CELLS "updateCellsKernel"
 
 #include "WavePropagation2d_kernel.h"
 
 #include <iostream>
 #include <stdexcept>
 #include <string>
-// #include </Users/ibyton/Desktop/Uni/Opencl/OpenCL/common/inc/CL/cl.h>
-#include <CL/cl.h>
+#include </Users/ibyton/Desktop/Uni/Opencl/OpenCL/common/inc/CL/cl.h>
+// #include <CL/cl.h>
 #include "../../solvers/f-wave/F_wave.h"
 
 cl_device_id create_device()
@@ -197,9 +198,9 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     cl_mem l_hold_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hOld, &err);
     cl_mem l_huold_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_huOld, &err);
     cl_mem l_hvold_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hvOld, &err);
-    cl_mem l_h_new_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hNew, &err);
-    cl_mem l_hv_new_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hvNew, &err);
-    cl_mem l_hu_new_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_huOld, &err);
+    cl_mem l_hnew_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hNew, &err);
+    cl_mem l_hvnew_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hvNew, &err);
+    cl_mem l_hunew_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_huOld, &err);
     cl_mem l_bbuff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_b, &err);
 
     // Set kernel arguments
@@ -210,9 +211,8 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(kernel, 4, sizeof(int), &m_nCells_x);
     clSetKernelArg(kernel, 5, sizeof(int), &m_nCells_y);
     clSetKernelArg(kernel, 6, sizeof(float), &i_scaling);
-    clSetKernelArg(kernel, 7, sizeof(cl_mem), &l_h_new_buff);
-    clSetKernelArg(kernel, 8, sizeof(cl_mem), &l_hu_new_buff);
-    clSetKernelArg(kernel, 9, sizeof(cl_mem), &l_hv_new_buff);
+    clSetKernelArg(kernel, 7, sizeof(cl_mem), &l_hnew_buff);
+    clSetKernelArg(kernel, 8, sizeof(cl_mem), &l_hunew_buff);
 
     // Enqueue kernel
     size_t global_size[2] = {m_nCells_x + 2, m_nCells_y + 2}; // Gesamtanzahl der Work-Items in X- und Y-Richtung
@@ -222,17 +222,9 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clFinish(queue);
 
     // Read the output data back to the host
+    clEnqueueReadBuffer(queue, l_hnew_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hNew, 0, NULL, NULL);
+    clEnqueueReadBuffer(queue, l_hunew_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_huNew, 0, NULL, NULL);
 
-    clEnqueueReadBuffer(queue, l_h_new_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hNew, 0, NULL, NULL);
-    clEnqueueReadBuffer(queue, l_hu_new_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_huNew, 0, NULL, NULL);
-    clEnqueueReadBuffer(queue, l_hv_new_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hvNew, 0, NULL, NULL);
-
-    clReleaseMemObject(l_hold_buff);
-    clReleaseMemObject(l_huold_buff);
-    clReleaseMemObject(l_hvold_buff);
-    clReleaseMemObject(l_h_new_buff);
-    clReleaseMemObject(l_hu_new_buff);
-    clReleaseMemObject(l_hv_new_buff);
     clReleaseKernel(kernel);
     clReleaseCommandQueue(queue);
 
@@ -249,8 +241,6 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     l_hNew = m_h[m_step];
     l_huNew = m_hu[m_step];
     l_hvNew = m_hv[m_step];
-
-    // l_b = m_b;
 
 // init new cell quantities
 #pragma omp parallel for schedule(guided)
@@ -271,15 +261,6 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     // Create a command queue
     queue = clCreateCommandQueue(context, device, 0, &err);
 
-    // Create memory buffers
-    l_hold_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hOld, &err);
-    l_huold_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_huOld, &err);
-    l_hvold_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hvOld, &err);
-    l_h_new_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hNew, &err);
-    l_hv_new_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hvNew, &err);
-    l_hu_new_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_huOld, &err);
-    l_bbuff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_b, &err);
-
     // Set kernel arguments
     clSetKernelArg(kernel, 0, sizeof(cl_mem), &l_hold_buff);
     clSetKernelArg(kernel, 1, sizeof(cl_mem), &l_huold_buff);
@@ -288,9 +269,8 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(kernel, 4, sizeof(int), &m_nCells_x);
     clSetKernelArg(kernel, 5, sizeof(int), &m_nCells_y);
     clSetKernelArg(kernel, 6, sizeof(float), &i_scaling);
-    clSetKernelArg(kernel, 7, sizeof(cl_mem), &l_h_new_buff);
-    clSetKernelArg(kernel, 8, sizeof(cl_mem), &l_hu_new_buff);
-    clSetKernelArg(kernel, 9, sizeof(cl_mem), &l_hv_new_buff);
+    clSetKernelArg(kernel, 7, sizeof(cl_mem), &l_hnew_buff);
+    clSetKernelArg(kernel, 8, sizeof(cl_mem), &l_hvnew_buff);
 
     // Enqueue kernel
 
@@ -299,16 +279,16 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
 
     // Read the output data back to the host
 
-    clEnqueueReadBuffer(queue, l_h_new_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hNew, 0, NULL, NULL);
-    clEnqueueReadBuffer(queue, l_hu_new_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_huNew, 0, NULL, NULL);
-    clEnqueueReadBuffer(queue, l_hv_new_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hvNew, 0, NULL, NULL);
+    clEnqueueReadBuffer(queue, l_hnew_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hNew, 0, NULL, NULL);
+    clEnqueueReadBuffer(queue, l_hvnew_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), l_hvNew, 0, NULL, NULL);
 
     clReleaseMemObject(l_hold_buff);
     clReleaseMemObject(l_huold_buff);
     clReleaseMemObject(l_hvold_buff);
-    clReleaseMemObject(l_h_new_buff);
-    clReleaseMemObject(l_hu_new_buff);
-    clReleaseMemObject(l_hv_new_buff);
+    clReleaseMemObject(l_hnew_buff);
+    clReleaseMemObject(l_hunew_buff);
+    clReleaseMemObject(l_hvnew_buff);
+    clReleaseMemObject(l_bbuff);
     clReleaseKernel(kernel);
     clReleaseCommandQueue(queue);
 }

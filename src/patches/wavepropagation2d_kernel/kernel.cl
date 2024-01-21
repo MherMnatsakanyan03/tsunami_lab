@@ -149,17 +149,40 @@ inline void netUpdates(float i_hL, float i_hR, float i_huL, float i_huR,
   }
 }
 
+inline int getCoordinates(int x, int y, int m_nCells_x, int m_nCells_y) {
+  return y * (m_nCells_x + 2) + x;
+}
+
+__kernel void updateCells(__global float *i_hOld, __global float *i_huOld,
+                          __global float *i_hvOld, __global float *i_b,
+                          int m_nCells_x, int m_nCells_y,
+                          __global float *o_hNew, __global float *o_huNew,
+                          __global float *o_hvNew) {
+
+  int l_x = get_global_id(0) + 1;
+  int l_y = get_global_id(1) + 1;
+
+  int l_coord = getCoordinates(l_x, l_y, m_nCells_x, m_nCells_y);
+
+  if (l_x > m_nCells_x || l_y > m_nCells_y)
+    return;
+
+  o_hNew[l_coord] = i_hOld[l_coord];
+  o_huNew[l_coord] = i_huOld[l_coord];
+  o_hvNew[l_coord] = i_hvOld[l_coord];
+}
+
 __kernel void updateXAxisKernel(__global float *i_hOld, __global float *i_huOld,
                                 __global float *i_hvOld, __global float *i_b,
                                 int m_nCells_x, int m_nCells_y, float i_scaling,
-                                __global float *o_hNew, __global float *o_huNew,
-                                __global float *o_hvNew) {
+                                __global float *o_hNew,
+                                __global float *o_huNew) {
 
   int l_x = get_global_id(0);
   int l_y = get_global_id(1);
 
-  int l_coord_L = l_y * (m_nCells_x + 2) + l_x;
-  int l_coord_R = l_y * (m_nCells_x + 2) + l_x + 1;
+  int l_coord_L = getCoordinates(l_x, l_y, m_nCells_x, m_nCells_y);
+  int l_coord_R = getCoordinates(l_x + 1, l_y, m_nCells_x, m_nCells_y);
 
   if (l_x > m_nCells_x || l_y > m_nCells_y)
     return;
@@ -181,14 +204,14 @@ __kernel void updateXAxisKernel(__global float *i_hOld, __global float *i_huOld,
 __kernel void updateYAxisKernel(__global float *i_hOld, __global float *i_huOld,
                                 __global float *i_hvOld, __global float *i_b,
                                 int m_nCells_x, int m_nCells_y, float i_scaling,
-                                __global float *o_hNew, __global float *o_huNew,
+                                __global float *o_hNew,
                                 __global float *o_hvNew) {
 
   int l_x = get_global_id(0);
   int l_y = get_global_id(1);
 
-  int l_coord_L = l_y * (m_nCells_x + 2) + l_x;
-  int l_coord_R = (l_y + 1) * (m_nCells_x + 2) + l_x;
+  int l_coord_L = getCoordinates(l_x, l_y, m_nCells_x, m_nCells_y);
+  int l_coord_R = getCoordinates(l_x, l_y + 1, m_nCells_x, m_nCells_y);
 
   if (l_x > m_nCells_x || l_y > m_nCells_y)
     return;
