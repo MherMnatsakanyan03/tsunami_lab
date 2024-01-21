@@ -59,6 +59,9 @@ if(plattform_choice == 1):
 elif(plattform_choice == 2):# Add lib paths
   env.Append(CPPPATH=['C:\msys64\mingw64\include'])
   env.Append(LIBPATH=['C:\msys64\mingw64\lib'])
+elif(plattform_choice == 0):
+  env.Append(CCFLAGS=['-lOpenCL'])
+  env.Append(LINKFLAGS=['-lOpenCL'])
 
 
 # set compiler
@@ -76,8 +79,6 @@ env.Append(LIBS=['netcdf'])
 # Added parallelization
 env.Append(CCFLAGS=['-fopenmp'])
 env.Append(LINKFLAGS=['-fopenmp'])
-env.Append(CCFLAGS=['-lOpenCL'])
-env.Append(LINKFLAGS=['-lOpenCL'])
 
 # generate help message
 Help( vars.GenerateHelpText( env ) )
