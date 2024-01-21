@@ -62,6 +62,7 @@ elif(plattform_choice == 2):# Add lib paths
 elif(plattform_choice == 0):
   env.Append(CCFLAGS=['-lOpenCL'])
   env.Append(LINKFLAGS=['-lOpenCL'])
+  env.Append(LIBS=['OpenCL'])
 
 
 # set compiler
