@@ -18,8 +18,6 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-// #include </Users/ibyton/Desktop/Uni/Opencl/OpenCL/common/inc/CL/cl.h>
-#include <CL/cl.h>
 #include "../../solvers/f-wave/F_wave.h"
 
 cl_device_id create_device()
