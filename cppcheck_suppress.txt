@@ -1,1 +1,1 @@
-*:src/plugins/
+*:src/plugins/**
