@@ -74,7 +74,11 @@ cl_program build_program(cl_context ctx, cl_device_id dev, const char *filename)
     rewind(program_handle);
     program_buffer = (char *)malloc(program_size + 1);
     program_buffer[program_size] = '\0';
-    fread(program_buffer, sizeof(char), program_size, program_handle);
+    size_t items_read = fread(program_buffer, sizeof(char), program_size, program_handle);
+    if (items_read != program_size)
+    {
+        exit(1);
+    }
     fclose(program_handle);
 
     program = clCreateProgramWithSource(ctx, 1,
