@@ -47,7 +47,11 @@ else:
 # create environment
 env = Environment( variables = vars )
 
-if(plattform_choice == 1):
+if(plattform_choice == 0): # Linux
+  env.Append(CCFLAGS=['-lOpenCL'])
+  env.Append(LINKFLAGS=['-lOpenCL'])
+  env.Append(LIBS=['OpenCL'])
+elif(plattform_choice == 1): # Mac
   env['CXX'] = '/opt/homebrew/bin/g++-13'
   env['CC'] = '/opt/homebrew/bin/gcc-13'
 
@@ -56,10 +60,9 @@ if(plattform_choice == 1):
   env.Append(LIBPATH=['/opt/homebrew/lib'])
 
   env.Append(LINKFLAGS=['-framework', 'OpenCL'])
-elif(plattform_choice == 2):# Add lib paths
+elif(plattform_choice == 2): # Windows
   env.Append(CPPPATH=['C:\msys64\mingw64\include'])
   env.Append(LIBPATH=['C:\msys64\mingw64\lib'])
-elif(plattform_choice == 0):
   env.Append(CCFLAGS=['-lOpenCL'])
   env.Append(LINKFLAGS=['-lOpenCL'])
   env.Append(LIBS=['OpenCL'])
