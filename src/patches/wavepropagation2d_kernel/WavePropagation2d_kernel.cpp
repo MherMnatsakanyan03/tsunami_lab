@@ -56,6 +56,7 @@ cl_device_id create_device()
 }
 
 cl_program build_program(cl_context ctx, cl_device_id dev, const char *filename)
+
 {
 
     cl_program program;
@@ -110,6 +111,23 @@ cl_program build_program(cl_context ctx, cl_device_id dev, const char *filename)
     return program;
 }
 
+size_t findMaxLocalSize(cl_device_id device)
+{
+    size_t maxLocalSize;
+    cl_int err;
+
+    // Abfrage der maximalen Arbeitsgruppengröße
+    err = clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, sizeof(maxLocalSize), &maxLocalSize, NULL);
+    if (err != CL_SUCCESS)
+    {
+        // Fehlerbehandlung
+        std::cerr << "Error: Could not retrieve maximum work group size." << std::endl;
+        exit(1);
+    }
+
+    return maxLocalSize;
+}
+
 tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i_nCells_x,
                                                                          t_idx i_nCells_y,
                                                                          int state_boundary_left,
@@ -153,7 +171,6 @@ tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()
 
     clReleaseProgram(program);
     clReleaseContext(context);
-    clReleaseMemObject(m_bbuff);
 }
 
 void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
@@ -214,9 +231,11 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(kernel, 7, sizeof(cl_mem), &l_hnew_buff);
     clSetKernelArg(kernel, 8, sizeof(cl_mem), &l_hunew_buff);
 
+    size_t maxLocalSize = findMaxLocalSize(device);
+
     // Enqueue kernel
     size_t global_size[2] = {m_nCells_x + 2, m_nCells_y + 2}; // Gesamtanzahl der Work-Items in X- und Y-Richtung
-    size_t local_size[2] = {1, 1};
+    size_t local_size[2] = {maxLocalSize / 2, maxLocalSize / 2};
 
     clEnqueueNDRangeKernel(queue, kernel, 2, NULL, global_size, local_size, 0, NULL, NULL);
     clFinish(queue);
