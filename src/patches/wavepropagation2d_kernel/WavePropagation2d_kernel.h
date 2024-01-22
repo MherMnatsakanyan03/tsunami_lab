@@ -56,6 +56,9 @@ private:
     //! momenta for the current and next time step for all cells in y-direction
     t_real *m_hv = {nullptr};
 
+    t_real *m_hTemp = {nullptr};
+    t_real *m_hvTemp = {nullptr};
+
     //! bathymetry for all cells
     t_real *m_b = nullptr;
 
@@ -71,11 +74,10 @@ private:
     cl_mem m_h_buff;
     cl_mem m_hu_buff;
     cl_mem m_hv_buff;
-    cl_mem m_huNew_buff;
-    cl_mem m_hvNew_buff;
-    cl_mem m_hNew_buff;
+    cl_mem m_hTemp_buff;
+    cl_mem m_huvTemp_buff;
 
-    t_idx m_size = (m_nCells_x + 2) * (m_nCells_y + 2);
+    t_idx m_size = sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2);
 
     /**
      * @brief Get the 2d Coordinates of the 1d array (x-y grid is being made flat into one line)
@@ -234,6 +236,8 @@ public:
     {
         m_b[getCoordinates(i_ix + 1, i_iy + 1)] = i_b;
     }
+
+    void getData();
 };
 
 #endif

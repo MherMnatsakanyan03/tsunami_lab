@@ -94,6 +94,9 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
     // Y-AXIS
     //
     setGhostOutflow();
+
+    std::copy(m_h, m_h + (m_nCells_x + 2) * (m_nCells_y + 2), m_hNew);
+    std::copy(m_hv, m_hv + (m_nCells_x + 2) * (m_nCells_y + 2), m_hvNew);
     // pointers to old and new data
 
 // iterate over edges and update with Riemann solutions in y-direction
@@ -269,3 +272,5 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
 }
 
 void tsunami_lab::patches::WavePropagation2d::setData(){};
+
+void tsunami_lab::patches::WavePropagation2d::getData(){};

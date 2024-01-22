@@ -119,6 +119,8 @@ public:
                              t_real i_b) = 0;
 
   virtual void setData() = 0;
+
+  virtual void getData() = 0;
 };
 
 #endif

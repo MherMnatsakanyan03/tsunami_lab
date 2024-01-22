@@ -12,7 +12,7 @@
 // #define PROGRAM_FILE "kernel.cl"
 #define KERNEL_X_AXIS_FUNC "updateXAxisKernel"
 #define KERNEL_Y_AXIS_FUNC "updateYAxisKernel"
-#define KERNEL_UPDATE_CELLS "updateCellsKernel"
+#define KERNEL_UPDATE_CELLS "mainKernel"
 
 #include "WavePropagation2d_kernel.h"
 
@@ -146,6 +146,8 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
     m_h = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
     m_hu = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
     m_hv = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_hTemp = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_hvTemp = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
 
     m_b = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
 
@@ -155,13 +157,9 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
 
     program = build_program(context, device, PROGRAM_FILE);
 
-    m_h_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
-    m_hu_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
-    m_hv_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
-    m_b_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
-    m_hNew_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
-    m_huNew_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
-    m_hvNew_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
+    kernel = clCreateKernel(program, KERNEL_UPDATE_CELLS, &err);
+
+    queue = clCreateCommandQueue(context, device, 0, &err);
 }
 
 tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()
@@ -179,235 +177,60 @@ tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()
     clReleaseMemObject(m_hu_buff);
     clReleaseMemObject(m_hv_buff);
     clReleaseMemObject(m_b_buff);
+    clReleaseKernel(kernel);
+    clReleaseCommandQueue(queue);
 }
 
 void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
 {
-    //
-    // X-AXIS
-    //
-
-    setGhostOutflow();
-
-    // Create kernel
-    kernel = clCreateKernel(program, KERNEL_X_AXIS_FUNC, &err);
-
-    // Create a command queue
-    queue = clCreateCommandQueue(context, device, 0, &err);
-
-    // Create memory buffers
 
     // Set kernel arguments
-    clSetKernelArg(kernel, 0, sizeof(cl_mem), &m_hNew_buff);
-    clSetKernelArg(kernel, 1, sizeof(cl_mem), &m_huNew_buff);
-    clSetKernelArg(kernel, 2, sizeof(cl_mem), &m_hvNew_buff);
+    clSetKernelArg(kernel, 0, sizeof(cl_mem), &m_h_buff);
+    clSetKernelArg(kernel, 1, sizeof(cl_mem), &m_hu_buff);
+    clSetKernelArg(kernel, 2, sizeof(cl_mem), &m_hv_buff);
     clSetKernelArg(kernel, 3, sizeof(cl_mem), &m_b_buff);
     clSetKernelArg(kernel, 4, sizeof(int), &m_nCells_x);
     clSetKernelArg(kernel, 5, sizeof(int), &m_nCells_y);
     clSetKernelArg(kernel, 6, sizeof(float), &i_scaling);
-    clSetKernelArg(kernel, 7, sizeof(cl_mem), &m_h_buff);
-    clSetKernelArg(kernel, 8, sizeof(cl_mem), &m_hu_buff);
+    clSetKernelArg(kernel, 7, sizeof(int), &m_state_boundary_left);
+    clSetKernelArg(kernel, 8, sizeof(int), &m_state_boundary_right);
+    clSetKernelArg(kernel, 9, sizeof(int), &m_state_boundary_top);
+    clSetKernelArg(kernel, 10, sizeof(int), &m_state_boundary_bottom);
+    clSetKernelArg(kernel, 11, sizeof(cl_mem), &m_hTemp_buff);
+    clSetKernelArg(kernel, 12, sizeof(cl_mem), &m_huvTemp_buff);
 
-    size_t maxLocalSize = findMaxLocalSize(device);
+    // size_t maxLocalSize = findMaxLocalSize(device);
 
     // Enqueue kernel
     size_t global_size[2] = {m_nCells_x + 2, m_nCells_y + 2}; // Gesamtanzahl der Work-Items in X- und Y-Richtung
-    size_t local_size[2] = {maxLocalSize / 2, maxLocalSize / 2};
+    size_t local_size[2] = {1, 1};
 
     clEnqueueNDRangeKernel(queue, kernel, 2, NULL, global_size, local_size, 0, NULL, NULL);
     clFinish(queue);
 
-    // Read the output data back to the host
-    clEnqueueReadBuffer(queue, m_h_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_h, 0, NULL, NULL);
-    clEnqueueReadBuffer(queue, m_hu_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hu, 0, NULL, NULL);
-
-    clReleaseKernel(kernel);
-    clReleaseCommandQueue(queue);
-
-    //
-    // Y-AXIS
-    //
-    setGhostOutflow();
-    // iterate over edges and update with Riemann solutions in y-direction
-    // Create kernel
-    kernel = clCreateKernel(program, KERNEL_Y_AXIS_FUNC, &err);
-
-    // Create a command queue
-    queue = clCreateCommandQueue(context, device, 0, &err);
-
-    // Set kernel arguments
-    clSetKernelArg(kernel, 0, sizeof(cl_mem), &m_hNew_buff);
-    clSetKernelArg(kernel, 1, sizeof(cl_mem), &m_huNew_buff);
-    clSetKernelArg(kernel, 2, sizeof(cl_mem), &m_hvNew_buff);
-    clSetKernelArg(kernel, 3, sizeof(cl_mem), &m_b_buff);
-    clSetKernelArg(kernel, 4, sizeof(int), &m_nCells_x);
-    clSetKernelArg(kernel, 5, sizeof(int), &m_nCells_y);
-    clSetKernelArg(kernel, 6, sizeof(float), &i_scaling);
-    clSetKernelArg(kernel, 7, sizeof(cl_mem), &m_h_buff);
-    clSetKernelArg(kernel, 8, sizeof(cl_mem), &m_hv_buff);
-
-    // Enqueue kernel
-
-    clEnqueueNDRangeKernel(queue, kernel, 2, NULL, global_size, local_size, 0, NULL, NULL);
-    clFinish(queue);
-
-    // Read the output data back to the host
-
-    clEnqueueReadBuffer(queue, m_h_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_h, 0, NULL, NULL);
+    /*clEnqueueReadBuffer(queue, m_h_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_h, 0, NULL, NULL);
     clEnqueueReadBuffer(queue, m_hv_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hv, 0, NULL, NULL);
-
-    clReleaseKernel(kernel);
-    clReleaseCommandQueue(queue);
+    clEnqueueReadBuffer(queue, m_hu_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hu, 0, NULL, NULL);*/
 }
 
-void tsunami_lab::patches::WavePropagation2d_kernel::setGhostOutflow()
-{
-    t_real *l_h = m_h;
-    t_real *l_hu = m_hu;
-    t_real *l_hv = m_hv;
-    t_real *l_b = m_b;
-
-    // set left boundary
-    switch (m_state_boundary_left)
-    {
-    // open
-    case 0:
-        for (t_idx l_y = 0; l_y < m_nCells_y; l_y++)
-        {
-            t_idx l_coord_l = getCoordinates(0, l_y);
-            t_idx l_coord_r = getCoordinates(1, l_y);
-            l_h[l_coord_l] = l_h[l_coord_r];
-            l_hu[l_coord_l] = l_hu[l_coord_r];
-            l_hv[l_coord_l] = l_hv[l_coord_r];
-            l_b[l_coord_l] = l_b[l_coord_r];
-        }
-        break;
-    // closed
-    case 1:
-        for (t_idx l_y = 0; l_y < m_nCells_y; l_y++)
-        {
-            t_idx l_coord = getCoordinates(0, l_y);
-            l_h[l_coord] = 0;
-            l_hu[l_coord] = 0;
-            l_hv[l_coord] = 0;
-            l_b[l_coord] = 25;
-        }
-        break;
-
-    default:
-        std::cerr << "undefined state for left boundary" << std::endl;
-        exit(EXIT_FAILURE);
-        break;
-    }
-
-    // set right boundary
-    switch (m_state_boundary_right)
-    {
-    // open
-    case 0:
-        for (t_idx l_y = 0; l_y < m_nCells_y; l_y++)
-        {
-            t_idx l_coord_l = getCoordinates(m_nCells_x, l_y);
-            t_idx l_coord_r = getCoordinates(m_nCells_x + 1, l_y);
-            l_h[l_coord_r] = l_h[l_coord_l];
-            l_hu[l_coord_r] = l_hu[l_coord_l];
-            l_hv[l_coord_r] = l_hv[l_coord_l];
-            l_b[l_coord_r] = l_b[l_coord_l];
-        }
-        break;
-    // closed
-    case 1:
-        for (t_idx l_y = 0; l_y < m_nCells_y; l_y++)
-        {
-            t_idx l_coord = getCoordinates(m_nCells_x + 1, l_y);
-            l_h[l_coord] = 0;
-            l_hu[l_coord] = 0;
-            l_hv[l_coord] = 0;
-            l_b[l_coord] = 25;
-        }
-        break;
-
-    default:
-        std::cerr << "undefined state for right boundary" << std::endl;
-        exit(EXIT_FAILURE);
-        break;
-    }
-
-    // set top boundary
-    switch (m_state_boundary_top)
-    {
-    // open
-    case 0:
-        for (t_idx l_x = 0; l_x < m_nCells_x; l_x++)
-        {
-            t_idx l_coord_l = getCoordinates(l_x, 0);
-            t_idx l_coord_r = getCoordinates(l_x, 1);
-            l_h[l_coord_l] = l_h[l_coord_r];
-            l_hu[l_coord_l] = l_hu[l_coord_r];
-            l_hv[l_coord_l] = l_hv[l_coord_r];
-            l_b[l_coord_l] = l_b[l_coord_r];
-        }
-        break;
-    // closed
-    case 1:
-        for (t_idx l_x = 0; l_x < m_nCells_x; l_x++)
-        {
-            t_idx l_coord = getCoordinates(l_x, 0);
-            l_h[l_coord] = 0;
-            l_hu[l_coord] = 0;
-            l_hv[l_coord] = 0;
-            l_b[l_coord] = 25;
-        }
-        break;
-
-    default:
-        std::cerr << "undefined state for top boundary" << std::endl;
-        exit(EXIT_FAILURE);
-        break;
-    }
-
-    // set bottom boundary
-    switch (m_state_boundary_bottom)
-    {
-    // open
-    case 0:
-        for (t_idx l_x = 0; l_x < m_nCells_x; l_x++)
-        {
-            t_idx l_coord_l = getCoordinates(l_x, m_nCells_y);
-            t_idx l_coord_r = getCoordinates(l_x, m_nCells_y + 1);
-            l_h[l_coord_r] = l_h[l_coord_l];
-            l_hu[l_coord_r] = l_hu[l_coord_l];
-            l_hv[l_coord_r] = l_hv[l_coord_l];
-            l_b[l_coord_r] = l_b[l_coord_l];
-        }
-        break;
-    // closed
-    case 1:
-        for (t_idx l_x = 0; l_x < m_nCells_x; l_x++)
-        {
-            t_idx l_coord = getCoordinates(l_x, m_nCells_y + 1);
-            l_h[l_coord] = 0;
-            l_hu[l_coord] = 0;
-            l_hv[l_coord] = 0;
-            l_b[l_coord] = 25;
-        }
-        break;
-
-    default:
-        std::cerr << "undefined state for bottom boundary" << std::endl;
-        exit(EXIT_FAILURE);
-        break;
-    }
-}
 void tsunami_lab::patches::WavePropagation2d_kernel::setData()
 {
     // set initial data
-    clEnqueueWriteBuffer(queue, m_h_buff, CL_TRUE, 0, m_size, m_h, 0, NULL, NULL);
-    clEnqueueWriteBuffer(queue, m_hu_buff, CL_TRUE, 0, m_size, m_hu, 0, NULL, NULL);
-    clEnqueueWriteBuffer(queue, m_hv_buff, CL_TRUE, 0, m_size, m_hv, 0, NULL, NULL);
-    clEnqueueWriteBuffer(queue, m_b_buff, CL_TRUE, 0, m_size, m_b, 0, NULL, NULL);
-
-    clEnqueueCopyBuffer(queue, m_h_buff, m_hNew_buff, 0, 0, m_size, 0, NULL, NULL);
-    clEnqueueCopyBuffer(queue, m_hu_buff, m_huNew_buff, 0, 0, m_size, 0, NULL, NULL);
-    clEnqueueCopyBuffer(queue, m_hv_buff, m_hvNew_buff, 0, 0, m_size, 0, NULL, NULL);
+    std::cout << m_h[4000] << std::endl;
+    m_h_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_h, &err);
+    m_hu_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hu, &err);
+    m_hv_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hv, &err);
+    m_b_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_b, &err);
+    m_hTemp_buff = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
+    m_huvTemp_buff = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
 }
+
+void tsunami_lab::patches::WavePropagation2d_kernel::getData()
+{
+    clFinish(queue);
+    clEnqueueReadBuffer(queue, m_h_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_h, 0, NULL, NULL);
+    clEnqueueReadBuffer(queue, m_hv_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hv, 0, NULL, NULL);
+    clEnqueueReadBuffer(queue, m_hu_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hu, 0, NULL, NULL);
+}
+
+void tsunami_lab::patches::WavePropagation2d_kernel::setGhostOutflow(){};

@@ -765,6 +765,7 @@ int main(int i_argc,
             }
             else if (dimension == 2 && do_write)
             {
+                l_waveProp->getData();
                 netcdf_manager->write(l_nx,
                                       l_ny,
                                       resolution_div,

@@ -165,6 +165,8 @@ public:
     }
 
     void setData();
+
+    void getData();
 };
 
 #endif
