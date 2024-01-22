@@ -117,6 +117,8 @@ public:
   virtual void setBathymetry(t_idx i_ix,
                              t_idx i_iy,
                              t_real i_b) = 0;
+
+  virtual void setData() = 0;
 };
 
 #endif

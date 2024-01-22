@@ -12,8 +12,8 @@
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 #include <string>
 #include <vector>
-// #include "../../plugins/OpenCL/common/inc/CL/cl.h"
-#include <CL/cl.h>
+#include "../../plugins/OpenCL/common/inc/CL/cl.h"
+// #include <CL/cl.h>
 
 #include "../WavePropagation.h"
 
@@ -50,11 +50,11 @@ private:
     int m_state_boundary_bottom = 0;
 
     //! water heights for the current and next time step for all cells
-    t_real *m_h[2] = {nullptr, nullptr};
+    t_real *m_h = {nullptr};
     //! momenta for the current and next time step for all cells in x-direction
-    t_real *m_hu[2] = {nullptr, nullptr};
+    t_real *m_hu = {nullptr};
     //! momenta for the current and next time step for all cells in y-direction
-    t_real *m_hv[2] = {nullptr, nullptr};
+    t_real *m_hv = {nullptr};
 
     //! bathymetry for all cells
     t_real *m_b = nullptr;
@@ -67,7 +67,15 @@ private:
     cl_int i, err;
     size_t local_size, global_size;
 
-    cl_mem m_bbuff;
+    cl_mem m_b_buff;
+    cl_mem m_h_buff;
+    cl_mem m_hu_buff;
+    cl_mem m_hv_buff;
+    cl_mem m_huNew_buff;
+    cl_mem m_hvNew_buff;
+    cl_mem m_hNew_buff;
+
+    t_idx m_size = (m_nCells_x + 2) * (m_nCells_y + 2);
 
     /**
      * @brief Get the 2d Coordinates of the 1d array (x-y grid is being made flat into one line)
@@ -119,6 +127,8 @@ public:
      **/
     void setGhostOutflow();
 
+    void setData();
+
     /**
      * Gets the stride in y-direction. x-direction is stride-1.
      *
@@ -136,7 +146,7 @@ public:
      */
     t_real const *getHeight()
     {
-        return m_h[m_step];
+        return m_h;
     }
 
     /**
@@ -146,7 +156,7 @@ public:
      **/
     t_real const *getMomentumX()
     {
-        return m_hu[m_step];
+        return m_hu;
     }
 
     /**
@@ -156,7 +166,7 @@ public:
      **/
     t_real const *getMomentumY()
     {
-        return m_hv[m_step];
+        return m_hv;
     }
 
     /**
@@ -180,7 +190,7 @@ public:
                    t_idx i_iy,
                    t_real i_h)
     {
-        m_h[m_step][getCoordinates(i_ix + 1, i_iy + 1)] = i_h;
+        m_h[getCoordinates(i_ix + 1, i_iy + 1)] = i_h;
     }
 
     /**
@@ -194,7 +204,7 @@ public:
                       t_idx i_iy,
                       t_real i_hu)
     {
-        m_hu[m_step][getCoordinates(i_ix + 1, i_iy + 1)] = i_hu;
+        m_hu[getCoordinates(i_ix + 1, i_iy + 1)] = i_hu;
     }
 
     /**
@@ -208,7 +218,7 @@ public:
                       t_idx i_iy,
                       t_real i_hv)
     {
-        m_hv[m_step][getCoordinates(i_ix + 1, i_iy + 1)] = i_hv;
+        m_hv[getCoordinates(i_ix + 1, i_iy + 1)] = i_hv;
     }
 
     /**

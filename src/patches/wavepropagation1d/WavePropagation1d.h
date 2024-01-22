@@ -163,6 +163,8 @@ public:
     {
         m_b[i_ix + 1] = i_b;
     }
+
+    void setData();
 };
 
 #endif

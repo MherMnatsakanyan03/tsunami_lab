@@ -46,11 +46,15 @@ private:
     int m_state_boundary_bottom = 0;
 
     //! water heights for the current and next time step for all cells
-    t_real *m_h[2] = {nullptr, nullptr};
+    t_real *m_h = {nullptr};
     //! momenta for the current and next time step for all cells in x-direction
-    t_real *m_hu[2] = {nullptr, nullptr};
+    t_real *m_hu = {nullptr};
     //! momenta for the current and next time step for all cells in y-direction
-    t_real *m_hv[2] = {nullptr, nullptr};
+    t_real *m_hv = {nullptr};
+
+    t_real *m_hNew = {nullptr};
+    t_real *m_huNew = {nullptr};
+    t_real *m_hvNew = {nullptr};
 
     //! bathymetry for all cells
     t_real *m_b = nullptr;
@@ -122,7 +126,7 @@ public:
      */
     t_real const *getHeight()
     {
-        return m_h[m_step];
+        return m_h;
     }
 
     /**
@@ -132,7 +136,7 @@ public:
      **/
     t_real const *getMomentumX()
     {
-        return m_hu[m_step];
+        return m_hu;
     }
 
     /**
@@ -142,7 +146,7 @@ public:
      **/
     t_real const *getMomentumY()
     {
-        return m_hv[m_step];
+        return m_hv;
     }
 
     /**
@@ -166,7 +170,7 @@ public:
                    t_idx i_iy,
                    t_real i_h)
     {
-        m_h[m_step][getCoordinates(i_ix + 1, i_iy + 1)] = i_h;
+        m_h[getCoordinates(i_ix + 1, i_iy + 1)] = i_h;
     }
 
     /**
@@ -180,7 +184,7 @@ public:
                       t_idx i_iy,
                       t_real i_hu)
     {
-        m_hu[m_step][getCoordinates(i_ix + 1, i_iy + 1)] = i_hu;
+        m_hu[getCoordinates(i_ix + 1, i_iy + 1)] = i_hu;
     }
 
     /**
@@ -194,7 +198,7 @@ public:
                       t_idx i_iy,
                       t_real i_hv)
     {
-        m_hv[m_step][getCoordinates(i_ix + 1, i_iy + 1)] = i_hv;
+        m_hv[getCoordinates(i_ix + 1, i_iy + 1)] = i_hv;
     }
 
     /**
@@ -210,6 +214,8 @@ public:
     {
         m_b[getCoordinates(i_ix + 1, i_iy + 1)] = i_b;
     }
+
+    void setData();
 };
 
 #endif

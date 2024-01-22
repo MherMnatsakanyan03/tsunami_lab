@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <algorithm>
 
 #include "../../solvers/f-wave/F_wave.h"
 
@@ -29,23 +30,21 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCells_x,
 
     // allocate memory including a single ghost cell on each side and initializing with 0
     // The 2d x-y grid is being flattened into a 1d array
-    for (int l_st = 0; l_st < 2; l_st++)
-    {
-        m_h[l_st] = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-        m_hu[l_st] = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-        m_hv[l_st] = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-    }
+    m_h = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_hu = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_hv = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
     m_b = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_hNew = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_huNew = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_hvNew = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
 }
 
 tsunami_lab::patches::WavePropagation2d::~WavePropagation2d()
 {
-    for (int l_st = 0; l_st < 2; l_st++)
-    {
-        delete[] m_h[l_st];
-        delete[] m_hu[l_st];
-        delete[] m_hv[l_st];
-    }
+
+    delete[] m_h;
+    delete[] m_hu;
+    delete[] m_hv;
     delete[] m_b;
 }
 
@@ -56,29 +55,9 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
     //
     setGhostOutflow();
     // pointers to old and new data
-    t_real *l_hOld = m_h[m_step];
-    t_real *l_huOld = m_hu[m_step];
-    t_real *l_hvOld = m_hv[m_step];
 
-    m_step = (m_step + 1) % 2;
-    t_real *l_hNew = m_h[m_step];
-    t_real *l_huNew = m_hu[m_step];
-    t_real *l_hvNew = m_hv[m_step];
-
-    t_real *l_b = m_b;
-
-// init new cell quantities
-#pragma omp parallel for schedule(guided)
-    for (t_idx l_y = 1; l_y < m_nCells_y + 1; l_y++)
-    {
-        for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
-        {
-            t_idx l_coord = getCoordinates(l_x, l_y);
-            l_hNew[l_coord] = l_hOld[l_coord];
-            l_huNew[l_coord] = l_huOld[l_coord];
-            l_hvNew[l_coord] = l_hvOld[l_coord];
-        }
-    }
+    std::copy(m_h, m_h + (m_nCells_x + 2) * (m_nCells_y + 2), m_hNew);
+    std::copy(m_hu, m_hu + (m_nCells_x + 2) * (m_nCells_y + 2), m_huNew);
 
 // iterate over edges and update with Riemann solutions in x-direction
 #pragma omp parallel for schedule(guided)
@@ -93,21 +72,21 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
             // compute net-updates
             t_real l_netUpdates[2][2];
 
-            solvers::FWave::netUpdates(l_hOld[l_coord_L],
-                                       l_hOld[l_coord_R],
-                                       l_huOld[l_coord_L],
-                                       l_huOld[l_coord_R],
-                                       l_b[l_coord_L],
-                                       l_b[l_coord_R],
+            solvers::FWave::netUpdates(m_hNew[l_coord_L],
+                                       m_hNew[l_coord_R],
+                                       m_huNew[l_coord_L],
+                                       m_huNew[l_coord_R],
+                                       m_b[l_coord_L],
+                                       m_b[l_coord_R],
                                        l_netUpdates[0],
                                        l_netUpdates[1]);
 
             // update the cells' quantities
-            l_hNew[l_coord_L] -= i_scaling * l_netUpdates[0][0];
-            l_huNew[l_coord_L] -= i_scaling * l_netUpdates[0][1];
+            m_h[l_coord_L] -= i_scaling * l_netUpdates[0][0];
+            m_hu[l_coord_L] -= i_scaling * l_netUpdates[0][1];
 
-            l_hNew[l_coord_R] -= i_scaling * l_netUpdates[1][0];
-            l_huNew[l_coord_R] -= i_scaling * l_netUpdates[1][1];
+            m_h[l_coord_R] -= i_scaling * l_netUpdates[1][0];
+            m_hu[l_coord_R] -= i_scaling * l_netUpdates[1][1];
         }
     }
 
@@ -116,29 +95,7 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
     //
     setGhostOutflow();
     // pointers to old and new data
-    l_hOld = m_h[m_step];
-    l_huOld = m_hu[m_step];
-    l_hvOld = m_hv[m_step];
 
-    m_step = (m_step + 1) % 2;
-    l_hNew = m_h[m_step];
-    l_huNew = m_hu[m_step];
-    l_hvNew = m_hv[m_step];
-
-    l_b = m_b;
-
-// init new cell quantities
-#pragma omp parallel for schedule(guided)
-    for (t_idx l_y = 1; l_y < m_nCells_y + 1; l_y++)
-    {
-        for (t_idx l_x = 1; l_x < m_nCells_x + 1; l_x++)
-        {
-            t_idx l_coord = getCoordinates(l_x, l_y);
-            l_hNew[l_coord] = l_hOld[l_coord];
-            l_huNew[l_coord] = l_huOld[l_coord];
-            l_hvNew[l_coord] = l_hvOld[l_coord];
-        }
-    }
 // iterate over edges and update with Riemann solutions in y-direction
 #pragma omp parallel for schedule(guided)
     for (t_idx l_y = 0; l_y < m_nCells_y + 1; l_y++)
@@ -152,30 +109,30 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
             // compute net-updates
             t_real l_netUpdates[2][2];
 
-            solvers::FWave::netUpdates(l_hOld[l_coord_down],
-                                       l_hOld[l_coord_up],
-                                       l_hvOld[l_coord_down],
-                                       l_hvOld[l_coord_up],
-                                       l_b[l_coord_down],
-                                       l_b[l_coord_up],
+            solvers::FWave::netUpdates(m_hNew[l_coord_down],
+                                       m_hNew[l_coord_up],
+                                       m_hvNew[l_coord_down],
+                                       m_hvNew[l_coord_up],
+                                       m_b[l_coord_down],
+                                       m_b[l_coord_up],
                                        l_netUpdates[0],
                                        l_netUpdates[1]);
 
             // update the cells' quantities
-            l_hNew[l_coord_down] -= i_scaling * l_netUpdates[0][0];
-            l_hvNew[l_coord_down] -= i_scaling * l_netUpdates[0][1];
+            m_h[l_coord_down] -= i_scaling * l_netUpdates[0][0];
+            m_hv[l_coord_down] -= i_scaling * l_netUpdates[0][1];
 
-            l_hNew[l_coord_up] -= i_scaling * l_netUpdates[1][0];
-            l_hvNew[l_coord_up] -= i_scaling * l_netUpdates[1][1];
+            m_h[l_coord_up] -= i_scaling * l_netUpdates[1][0];
+            m_hv[l_coord_up] -= i_scaling * l_netUpdates[1][1];
         }
     }
 }
 
 void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
 {
-    t_real *l_h = m_h[m_step];
-    t_real *l_hu = m_hu[m_step];
-    t_real *l_hv = m_hv[m_step];
+    t_real *l_h = m_h;
+    t_real *l_hu = m_hu;
+    t_real *l_hv = m_hv;
     t_real *l_b = m_b;
 
     // set left boundary
@@ -310,3 +267,5 @@ void tsunami_lab::patches::WavePropagation2d::setGhostOutflow()
         break;
     }
 }
+
+void tsunami_lab::patches::WavePropagation2d::setData(){};

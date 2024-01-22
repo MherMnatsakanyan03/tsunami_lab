@@ -618,6 +618,7 @@ int main(int i_argc,
                                       l_b);
         }
     }
+    l_waveProp->setData();
     if (dimension == 2 && !checkpointing && do_write)
     {
         /* if (std::filesystem::exists("netCDF_dump"))
