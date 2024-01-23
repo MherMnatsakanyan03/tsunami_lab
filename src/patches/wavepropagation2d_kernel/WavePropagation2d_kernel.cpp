@@ -189,8 +189,8 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(kernel, 1, sizeof(cl_mem), &m_hu_buff);
     clSetKernelArg(kernel, 2, sizeof(cl_mem), &m_hv_buff);
     clSetKernelArg(kernel, 3, sizeof(cl_mem), &m_b_buff);
-    clSetKernelArg(kernel, 4, sizeof(int), &m_nCells_x);
-    clSetKernelArg(kernel, 5, sizeof(int), &m_nCells_y);
+    clSetKernelArg(kernel, 4, sizeof(size_t), &m_nCells_x);
+    clSetKernelArg(kernel, 5, sizeof(size_t), &m_nCells_y);
     clSetKernelArg(kernel, 6, sizeof(float), &i_scaling);
     clSetKernelArg(kernel, 7, sizeof(int), &m_state_boundary_left);
     clSetKernelArg(kernel, 8, sizeof(int), &m_state_boundary_right);
@@ -216,7 +216,6 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
 void tsunami_lab::patches::WavePropagation2d_kernel::setData()
 {
     // set initial data
-    std::cout << m_h[4000] << std::endl;
     m_h_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_h, &err);
     m_hu_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hu, &err);
     m_hv_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hv, &err);

@@ -1,5 +1,3 @@
-
-
 __constant float m_g = 9.80665;
 __constant float m_gSqrt = 3.131557121;
 
@@ -287,9 +285,110 @@ inline float atomicAdd(volatile global float *addr, float val) {
   return current.f32;
 }
 
+inline void updateXAxisKernel(__global float *i_hTemp,
+                              __global float *i_huvTemp, __global float *i_b,
+                              int m_nCells_x, int m_nCells_y, float i_scaling,
+                              __global float *o_h, __global float *o_hu) {
+
+  int x = get_global_id(0);
+  int y = get_global_id(1);
+
+  int l_coord_L = getCoordinates(x, y, m_nCells_x, m_nCells_y);
+  int l_coord_R = getCoordinates(x + 1, y, m_nCells_x, m_nCells_y);
+
+  Copy(o_h, i_hTemp, m_nCells_x, m_nCells_y);
+  Copy(o_hu, i_huvTemp, m_nCells_x, m_nCells_y);
+
+  if (x > m_nCells_x || y > m_nCells_y)
+    return;
+
+  //   Define net updates array
+  float l_netUpdatesL[2];
+  float l_netUpdatesR[2];
+
+  netUpdates(i_hTemp[l_coord_L], i_hTemp[l_coord_R], i_huvTemp[l_coord_L],
+             i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
+             l_netUpdatesL, l_netUpdatesR);
+
+  atomicAdd(&o_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
+  atomicAdd(&o_hu[l_coord_L], -i_scaling * l_netUpdatesL[1]);
+  atomicAdd(&o_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
+  atomicAdd(&o_hu[l_coord_R], -i_scaling * l_netUpdatesR[1]);
+}
+inline void updateYAxisKernel(__global float *i_hTemp,
+                              __global float *i_huvTemp, __global float *i_b,
+                              int m_nCells_x, int m_nCells_y, float i_scaling,
+                              __global float *o_h, __global float *o_hv) {
+
+  int x = get_global_id(0);
+  int y = get_global_id(1);
+
+  int l_coord_L = getCoordinates(x, y, m_nCells_x, m_nCells_y);
+  int l_coord_R = getCoordinates(x, y + 1, m_nCells_x, m_nCells_y);
+
+  Copy(o_h, i_hTemp, m_nCells_x, m_nCells_y);
+  Copy(o_hv, i_huvTemp, m_nCells_x, m_nCells_y);
+
+  if (x > m_nCells_x || y > m_nCells_y)
+    return;
+
+  //   Define net updates array
+  float l_netUpdatesL[2];
+  float l_netUpdatesR[2];
+
+  netUpdates(i_hTemp[l_coord_L], i_hTemp[l_coord_R], i_huvTemp[l_coord_L],
+             i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
+             l_netUpdatesL, l_netUpdatesR);
+
+  atomicAdd(&o_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
+  atomicAdd(&o_hv[l_coord_L], -i_scaling * l_netUpdatesL[1]);
+  atomicAdd(&o_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
+  atomicAdd(&o_hv[l_coord_R], -i_scaling * l_netUpdatesR[1]);
+}
+
+inline void setGhostCellsX(__global float *io_h, __global float *io_hu,
+                           int m_nCells_x, int m_nCells_y) {
+
+  int l_x = get_global_id(0);
+  int l_y = get_global_id(1);
+
+  if (l_x > m_nCells_x + 1 || l_y > m_nCells_y + 1) {
+    return;
+  }
+
+  if (l_x == 0) {
+    io_h[(m_nCells_x + 2) * l_y] = io_h[1 + (m_nCells_x + 2) * l_y];
+    io_hu[(m_nCells_x + 2) * l_y] = io_hu[1 + (m_nCells_x + 2) * l_y];
+  } else if (l_x == m_nCells_x + 1) {
+    io_h[l_x + (m_nCells_x + 2) * l_y] = io_h[l_x - 1 + (m_nCells_x + 2) * l_y];
+    io_hu[l_x + (m_nCells_x + 2) * l_y] =
+        io_hu[l_x - 1 + (m_nCells_x + 2) * l_y];
+  }
+}
+
+inline void setGhostCellsY(__global float *io_h, __global float *io_hu,
+                           int m_nCells_x, int m_nCells_y) {
+
+  int l_x = get_global_id(0);
+  int l_y = get_global_id(1);
+
+  if (l_x > m_nCells_x + 1 || l_y > m_nCells_y + 1) {
+    return;
+  }
+
+  if (l_y == 0) {
+    io_h[(m_nCells_x + 2) * l_y] = io_h[1 + (m_nCells_x + 2) * l_y];
+    io_hu[(m_nCells_x + 2) * l_y] = io_hu[1 + (m_nCells_x + 2) * l_y];
+  } else if (l_y == m_nCells_y + 1) {
+    io_h[l_x + (m_nCells_x + 2) * l_y] = io_h[l_x - 1 + (m_nCells_x + 2) * l_y];
+    io_hu[l_x + (m_nCells_x + 2) * l_y] =
+        io_hu[l_x - 1 + (m_nCells_x + 2) * l_y];
+  }
+}
+
 __kernel void mainKernel(__global float *i_h, __global float *i_hu,
                          __global float *i_hv, __global float *i_b,
-                         int m_nCells_x, int m_nCells_y, float i_scaling,
+                         ulong m_nCells_x, ulong m_nCells_y, float i_scaling,
                          int m_state_boundary_left, int m_state_boundary_right,
                          int m_state_boundary_top, int m_state_boundary_bottom,
                          __global float *i_hTemp, __global float *i_huvTemp) {
@@ -316,90 +415,48 @@ __kernel void mainKernel(__global float *i_h, __global float *i_hu,
              i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
              l_netUpdatesL, l_netUpdatesR);
 
-  /*if (l_coord_L == 4000) {
-    printf("%f : %f\n", i_h[4000], l_netUpdatesL[1]);
-  }*/
-
   atomicAdd(&i_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
   atomicAdd(&i_hu[l_coord_L], -i_scaling * l_netUpdatesL[1]);
   atomicAdd(&i_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
   atomicAdd(&i_hu[l_coord_R], -i_scaling * l_netUpdatesR[1]);
 
-  /*if (l_coord_L == 4000) {
-    printf("%f : %f\n", i_hTemp[4000], i_h[4000]);
-  }*/
-
   setGhostOutflow(i_h, i_hu, i_hv, i_b, m_nCells_x, m_nCells_y,
                   m_state_boundary_left, m_state_boundary_right,
                   m_state_boundary_top, m_state_boundary_bottom);
 
+  int l_coord_down = getCoordinates(x, y, m_nCells_x, m_nCells_y);
+  int l_coord_up = getCoordinates(x, y + 1, m_nCells_x, m_nCells_y);
+
+  float l_netUpdatesDown[2];
+  float l_netUpdatesUp[2];
+
   Copy(i_h, i_hTemp, m_nCells_x, m_nCells_y);
   Copy(i_hv, i_huvTemp, m_nCells_x, m_nCells_y);
 
-  netUpdates(i_hTemp[l_coord_L], i_hTemp[l_coord_R], i_huvTemp[l_coord_L],
-             i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
-             l_netUpdatesL, l_netUpdatesR);
+  netUpdates(i_hTemp[l_coord_down], i_hTemp[l_coord_up],
+             i_huvTemp[l_coord_down], i_huvTemp[l_coord_up], i_b[l_coord_down],
+             i_b[l_coord_up], l_netUpdatesDown, l_netUpdatesUp);
 
-  atomicAdd(&i_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
-  atomicAdd(&i_hv[l_coord_L], -i_scaling * l_netUpdatesL[1]);
-  atomicAdd(&i_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
-  atomicAdd(&i_hv[l_coord_R], -i_scaling * l_netUpdatesR[1]);
+  atomicAdd(&i_h[l_coord_down], -i_scaling * l_netUpdatesDown[0]);
+  atomicAdd(&i_hv[l_coord_down], -i_scaling * l_netUpdatesDown[1]);
+  atomicAdd(&i_h[l_coord_up], -i_scaling * l_netUpdatesUp[0]);
+  atomicAdd(&i_hv[l_coord_up], -i_scaling * l_netUpdatesUp[1]);
 }
 
-__kernel void updateXAxisKernel(__global float *i_hOld, __global float *i_huOld,
-                                __global float *i_b, int m_nCells_x,
-                                int m_nCells_y, float i_scaling,
-                                __global float *o_hNew,
-                                __global float *o_huNew) {
+__kernel void mainKernel2(__global float *i_h, __global float *i_hu,
+                          __global float *i_hv, __global float *i_b,
+                          ulong m_nCells_x, ulong m_nCells_y, float i_scaling,
+                          int m_state_boundary_left, int m_state_boundary_right,
+                          int m_state_boundary_top, int m_state_boundary_bottom,
+                          __global float *i_hTemp, __global float *i_huvTemp) {
 
-  int x = get_global_id(0);
-  int y = get_global_id(1);
+  setGhostCellsX(i_h, i_hu, m_nCells_x, m_nCells_y);
 
-  int l_coord_L = getCoordinates(x, y, m_nCells_x, m_nCells_y);
-  int l_coord_R = getCoordinates(x + 1, y, m_nCells_x, m_nCells_y);
+  updateXAxisKernel(i_hTemp, i_huvTemp, i_b, m_nCells_x, m_nCells_y, i_scaling,
+                    i_h, i_hu);
 
-  if (x > m_nCells_x || y > m_nCells_y)
-    return;
+  setGhostCellsY(i_h, i_hv, m_nCells_x, m_nCells_y);
 
-  //   Define net updates array
-  float l_netUpdatesL[2];
-  float l_netUpdatesR[2];
-
-  netUpdates(i_hOld[l_coord_L], i_hOld[l_coord_R], i_huOld[l_coord_L],
-             i_huOld[l_coord_R], i_b[l_coord_L], i_b[l_coord_R], l_netUpdatesL,
-             l_netUpdatesR);
-
-  o_hNew[l_coord_L] -= i_scaling * l_netUpdatesL[0];
-  o_huNew[l_coord_L] -= i_scaling * l_netUpdatesL[1];
-  o_hNew[l_coord_R] -= i_scaling * l_netUpdatesR[0];
-  o_huNew[l_coord_R] -= i_scaling * l_netUpdatesR[1];
-}
-
-__kernel void updateYAxisKernel(__global float *i_hOld, __global float *i_hvOld,
-                                __global float *i_b, int m_nCells_x,
-                                int m_nCells_y, float i_scaling,
-                                __global float *o_hNew,
-                                __global float *o_hvNew) {
-
-  int x = get_global_id(0);
-  int y = get_global_id(1);
-
-  int l_coord_L = getCoordinates(x, y, m_nCells_x, m_nCells_y);
-  int l_coord_R = getCoordinates(x, y + 1, m_nCells_x, m_nCells_y);
-
-  if (x > m_nCells_x || y > m_nCells_y)
-    return;
-
-  //   Define net updates array
-  float l_netUpdatesL[2];
-  float l_netUpdatesR[2];
-
-  netUpdates(i_hOld[l_coord_L], i_hOld[l_coord_R], i_hvOld[l_coord_L],
-             i_hvOld[l_coord_R], i_b[l_coord_L], i_b[l_coord_R], l_netUpdatesL,
-             l_netUpdatesR);
-
-  o_hNew[l_coord_L] -= i_scaling * l_netUpdatesL[0];
-  o_hvNew[l_coord_L] -= i_scaling * l_netUpdatesL[1];
-  o_hNew[l_coord_R] -= i_scaling * l_netUpdatesR[0];
-  o_hvNew[l_coord_R] -= i_scaling * l_netUpdatesR[1];
+  updateYAxisKernel(i_hTemp, i_huvTemp, i_b, m_nCells_x, m_nCells_y, i_scaling,
+                    i_h, i_hv);
 }
