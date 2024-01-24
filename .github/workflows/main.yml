@@ -28,7 +28,6 @@ jobs:
                   sudo apt-get install netcdf-bin
                   sudo apt-get install valgrind
                   sudo apt-get install cppcheck
-                  sudo apt install ocl-icd-opencl-dev
                   mkdir intel
                   cd intel
                   wget http://registrationcenter-download.intel.com/akdlm/irc_nas/12556/opencl_runtime_16.1.2_x64_rh_6.4.0.37.tgz
