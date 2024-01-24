@@ -52,9 +52,9 @@ private:
     //! momenta for the current and next time step for all cells in y-direction
     t_real *m_hv = {nullptr};
 
-    t_real *m_hNew = {nullptr};
-    t_real *m_huNew = {nullptr};
-    t_real *m_hvNew = {nullptr};
+    t_real *m_hTemp = {nullptr};
+    t_real *m_huTemp = {nullptr};
+    t_real *m_hvTemp = {nullptr};
 
     //! bathymetry for all cells
     t_real *m_b = nullptr;

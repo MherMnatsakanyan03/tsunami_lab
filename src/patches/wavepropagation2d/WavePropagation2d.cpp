@@ -34,9 +34,9 @@ tsunami_lab::patches::WavePropagation2d::WavePropagation2d(t_idx i_nCells_x,
     m_hu = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
     m_hv = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
     m_b = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-    m_hNew = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-    m_huNew = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-    m_hvNew = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_hTemp = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_huTemp = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
+    m_hvTemp = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
 }
 
 tsunami_lab::patches::WavePropagation2d::~WavePropagation2d()
@@ -46,6 +46,9 @@ tsunami_lab::patches::WavePropagation2d::~WavePropagation2d()
     delete[] m_hu;
     delete[] m_hv;
     delete[] m_b;
+    delete[] m_hTemp;
+    delete[] m_huTemp;
+    delete[] m_hvTemp;
 }
 
 void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
@@ -56,8 +59,8 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
     setGhostOutflow();
     // pointers to old and new data
 
-    std::copy(m_h, m_h + (m_nCells_x + 2) * (m_nCells_y + 2), m_hNew);
-    std::copy(m_hu, m_hu + (m_nCells_x + 2) * (m_nCells_y + 2), m_huNew);
+    std::copy(m_h, m_h + (m_nCells_x + 2) * (m_nCells_y + 2), m_hTemp);
+    std::copy(m_hu, m_hu + (m_nCells_x + 2) * (m_nCells_y + 2), m_huTemp);
 
 // iterate over edges and update with Riemann solutions in x-direction
 #pragma omp parallel for schedule(guided)
@@ -72,10 +75,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
             // compute net-updates
             t_real l_netUpdates[2][2];
 
-            solvers::FWave::netUpdates(m_hNew[l_coord_L],
-                                       m_hNew[l_coord_R],
-                                       m_huNew[l_coord_L],
-                                       m_huNew[l_coord_R],
+            solvers::FWave::netUpdates(m_hTemp[l_coord_L],
+                                       m_hTemp[l_coord_R],
+                                       m_huTemp[l_coord_L],
+                                       m_huTemp[l_coord_R],
                                        m_b[l_coord_L],
                                        m_b[l_coord_R],
                                        l_netUpdates[0],
@@ -95,8 +98,8 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
     //
     setGhostOutflow();
 
-    std::copy(m_h, m_h + (m_nCells_x + 2) * (m_nCells_y + 2), m_hNew);
-    std::copy(m_hv, m_hv + (m_nCells_x + 2) * (m_nCells_y + 2), m_hvNew);
+    std::copy(m_h, m_h + (m_nCells_x + 2) * (m_nCells_y + 2), m_hTemp);
+    std::copy(m_hv, m_hv + (m_nCells_x + 2) * (m_nCells_y + 2), m_hvTemp);
     // pointers to old and new data
 
 // iterate over edges and update with Riemann solutions in y-direction
@@ -112,10 +115,10 @@ void tsunami_lab::patches::WavePropagation2d::timeStep(t_real i_scaling)
             // compute net-updates
             t_real l_netUpdates[2][2];
 
-            solvers::FWave::netUpdates(m_hNew[l_coord_down],
-                                       m_hNew[l_coord_up],
-                                       m_hvNew[l_coord_down],
-                                       m_hvNew[l_coord_up],
+            solvers::FWave::netUpdates(m_hTemp[l_coord_down],
+                                       m_hTemp[l_coord_up],
+                                       m_hvTemp[l_coord_down],
+                                       m_hvTemp[l_coord_up],
                                        m_b[l_coord_down],
                                        m_b[l_coord_up],
                                        l_netUpdates[0],
