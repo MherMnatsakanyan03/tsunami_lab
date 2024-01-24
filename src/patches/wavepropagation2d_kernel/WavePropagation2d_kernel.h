@@ -75,7 +75,8 @@ private:
     cl_mem m_hu_buff;
     cl_mem m_hv_buff;
     cl_mem m_hTemp_buff;
-    cl_mem m_huvTemp_buff;
+    cl_mem m_huTemp_buff;
+    cl_mem m_hvTemp_buff;
 
     t_idx m_size = sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2);
 
