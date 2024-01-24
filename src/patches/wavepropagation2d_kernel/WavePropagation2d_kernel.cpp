@@ -163,11 +163,19 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
     std::cout << "Kernel path: " << kernel_path_char << std::endl;
 
     program = build_program(context, device, kernel_path_char);
+    std::cout << "Program built" << std::endl;
 
     ksetGhostOutflow = clCreateKernel(program, KERNEL_GHOSTCELLS, &err);
+    std::cout << "Kernel created: setGhostOutflow" << std::endl;
+
     kcopy = clCreateKernel(program, KERNEL_COPY, &err);
+    std::cout << "Kernel created: copy" << std::endl;
+
     knetUpdatesX = clCreateKernel(program, KERNEL_X_AXIS_FUNC, &err);
+    std::cout << "Kernel created: updateXAxisKernel" << std::endl;
+
     knetUpdatesY = clCreateKernel(program, KERNEL_Y_AXIS_FUNC, &err);
+    std::cout << "Kernel created: updateYAxisKernel" << std::endl;
 
     queue = clCreateCommandQueue(context, device, 0, &err);
 }
