@@ -1,3 +1,12 @@
+/**
+ * @author Maurice Herold (maurice.herold AT uni-jena.de)
+ * @author Mher Mnatsakanyan (mher.mnatsakanyan AT uni-jena.de)
+ * @author Justus Dreßler (justus.dressler AT uni-jena.de)
+ *
+ * @section DESCRIPTION
+ * Two-dimensional wave propagation patch.
+ **/
+
 __constant float m_g = 9.80665;
 __constant float m_gSqrt = 3.131557121;
 
