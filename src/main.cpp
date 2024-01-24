@@ -38,9 +38,9 @@
 #include "setups/artificialTsunami2d/ArtificialTsunami2d.h"
 #include "setups/checkpoint/Checkpoint.h"
 
-bool do_write = false;
+bool do_write = true;
 // declaration of variables
-tsunami_lab::t_idx simulated_frame = 1;
+tsunami_lab::t_idx simulated_frame = 25;
 int state_boundary_top = 0;
 int state_boundary_bottom = 0;
 int state_boundary_left = 0;
@@ -826,10 +826,13 @@ int main(int i_argc,
     std::cout << "finished time loop" << std::endl;
 
     // free memory
-    std::cout << "freeing memory" << std::endl;
+    std::cout << "freeing memory: l_setup" << std::endl;
     delete l_setup;
+    std::cout << "freeing memory: l_waveProp" << std::endl;
     delete l_waveProp;
+    std::cout << "freeing memory: l_stations" << std::endl;
     delete l_stations;
+    std::cout << "freeing memory: netcdf_manager" << std::endl;
     delete netcdf_manager;
 
     // clear checkpoint

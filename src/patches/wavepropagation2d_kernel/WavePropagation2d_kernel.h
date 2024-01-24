@@ -50,14 +50,11 @@ private:
     int m_state_boundary_bottom = 0;
 
     //! water heights for the current and next time step for all cells
-    t_real *m_h = {nullptr};
+    t_real *m_h = nullptr;
     //! momenta for the current and next time step for all cells in x-direction
-    t_real *m_hu = {nullptr};
+    t_real *m_hu = nullptr;
     //! momenta for the current and next time step for all cells in y-direction
-    t_real *m_hv = {nullptr};
-
-    t_real *m_hTemp = {nullptr};
-    t_real *m_hvTemp = {nullptr};
+    t_real *m_hv = nullptr;
 
     //! bathymetry for all cells
     t_real *m_b = nullptr;
@@ -65,7 +62,10 @@ private:
     cl_device_id device;
     cl_context context;
     cl_program program;
-    cl_kernel kernel;
+    cl_kernel ksetGhostOutflow;
+    cl_kernel kcopy;
+    cl_kernel knetUpdatesX;
+    cl_kernel knetUpdatesY;
     cl_command_queue queue;
     cl_int i, err;
     size_t local_size, global_size;
@@ -75,8 +75,7 @@ private:
     cl_mem m_hu_buff;
     cl_mem m_hv_buff;
     cl_mem m_hTemp_buff;
-    cl_mem m_huTemp_buff;
-    cl_mem m_hvTemp_buff;
+    cl_mem m_huvTemp_buff;
 
     t_idx m_size = sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2);
 

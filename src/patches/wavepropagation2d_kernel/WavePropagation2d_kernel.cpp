@@ -13,7 +13,8 @@
 // #define PROGRAM_FILE "kernel.cl"
 #define KERNEL_X_AXIS_FUNC "updateXAxisKernel"
 #define KERNEL_Y_AXIS_FUNC "updateYAxisKernel"
-#define KERNEL_UPDATE_CELLS "mainKernel"
+#define KERNEL_GHOSTCELLS "setGhostOutflow"
+#define KERNEL_COPY "copy"
 
 #include "WavePropagation2d_kernel.h"
 
@@ -151,9 +152,6 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
     m_h = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
     m_hu = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
     m_hv = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-    m_hTemp = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-    m_hvTemp = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
-
     m_b = new t_real[(m_nCells_x + 2) * (m_nCells_y + 2)]{0};
 
     device = create_device();
@@ -162,7 +160,10 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
 
     program = build_program(context, device, PROGRAM_FILE);
 
-    kernel = clCreateKernel(program, KERNEL_UPDATE_CELLS, &err);
+    ksetGhostOutflow = clCreateKernel(program, KERNEL_GHOSTCELLS, &err);
+    kcopy = clCreateKernel(program, KERNEL_COPY, &err);
+    knetUpdatesX = clCreateKernel(program, KERNEL_X_AXIS_FUNC, &err);
+    knetUpdatesY = clCreateKernel(program, KERNEL_Y_AXIS_FUNC, &err);
 
     queue = clCreateCommandQueue(context, device, 0, &err);
 }
@@ -173,7 +174,6 @@ tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()
     delete[] m_h;
     delete[] m_hu;
     delete[] m_hv;
-
     delete[] m_b;
 
     clReleaseProgram(program);
@@ -182,36 +182,97 @@ tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()
     clReleaseMemObject(m_hu_buff);
     clReleaseMemObject(m_hv_buff);
     clReleaseMemObject(m_b_buff);
-    clReleaseKernel(kernel);
+    clReleaseMemObject(m_hTemp_buff);
+    clReleaseMemObject(m_huvTemp_buff);
+    clReleaseKernel(ksetGhostOutflow);
+    clReleaseKernel(kcopy);
+    clReleaseKernel(knetUpdatesX);
+    clReleaseKernel(knetUpdatesY);
     clReleaseCommandQueue(queue);
 }
 
 void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
 {
-
-    // Set kernel arguments
-    clSetKernelArg(kernel, 0, sizeof(cl_mem), &m_h_buff);
-    clSetKernelArg(kernel, 1, sizeof(cl_mem), &m_hu_buff);
-    clSetKernelArg(kernel, 2, sizeof(cl_mem), &m_hv_buff);
-    clSetKernelArg(kernel, 3, sizeof(cl_mem), &m_b_buff);
-    clSetKernelArg(kernel, 4, sizeof(size_t), &m_nCells_x);
-    clSetKernelArg(kernel, 5, sizeof(size_t), &m_nCells_y);
-    clSetKernelArg(kernel, 6, sizeof(float), &i_scaling);
-    clSetKernelArg(kernel, 7, sizeof(int), &m_state_boundary_left);
-    clSetKernelArg(kernel, 8, sizeof(int), &m_state_boundary_right);
-    clSetKernelArg(kernel, 9, sizeof(int), &m_state_boundary_top);
-    clSetKernelArg(kernel, 10, sizeof(int), &m_state_boundary_bottom);
-    clSetKernelArg(kernel, 11, sizeof(cl_mem), &m_hTemp_buff);
-    clSetKernelArg(kernel, 12, sizeof(cl_mem), &m_huTemp_buff);
-    clSetKernelArg(kernel, 13, sizeof(cl_mem), &m_hvTemp_buff);
-
-    // size_t maxLocalSize = findMaxLocalSize(device);
-
-    // Enqueue kernel
+    // set ghost cells
     size_t global_size[2] = {m_nCells_x + 2, m_nCells_y + 2}; // Gesamtanzahl der Work-Items in X- und Y-Richtung
     size_t local_size[2] = {1, 1};
 
-    clEnqueueNDRangeKernel(queue, kernel, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    // Set kernel arguments
+    clSetKernelArg(ksetGhostOutflow, 0, sizeof(cl_mem), &m_h_buff);
+    clSetKernelArg(ksetGhostOutflow, 1, sizeof(cl_mem), &m_hu_buff);
+    clSetKernelArg(ksetGhostOutflow, 2, sizeof(cl_mem), &m_hv_buff);
+    clSetKernelArg(ksetGhostOutflow, 3, sizeof(cl_mem), &m_b_buff);
+    clSetKernelArg(ksetGhostOutflow, 4, sizeof(size_t), &m_nCells_x);
+    clSetKernelArg(ksetGhostOutflow, 5, sizeof(size_t), &m_nCells_y);
+    clSetKernelArg(ksetGhostOutflow, 7, sizeof(int), &m_state_boundary_left);
+    clSetKernelArg(ksetGhostOutflow, 8, sizeof(int), &m_state_boundary_right);
+    clSetKernelArg(ksetGhostOutflow, 9, sizeof(int), &m_state_boundary_top);
+    clSetKernelArg(ksetGhostOutflow, 10, sizeof(int), &m_state_boundary_bottom);
+
+    clEnqueueNDRangeKernel(queue, ksetGhostOutflow, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clFinish(queue);
+
+    // copy data
+    clSetKernelArg(kcopy, 0, sizeof(cl_mem), &m_h_buff);
+    clSetKernelArg(kcopy, 1, sizeof(cl_mem), &m_hu_buff);
+    clSetKernelArg(kcopy, 2, sizeof(size_t), &m_nCells_x);
+    clSetKernelArg(kcopy, 3, sizeof(size_t), &m_nCells_y);
+    clSetKernelArg(kcopy, 4, sizeof(cl_mem), &m_hTemp_buff);
+    clSetKernelArg(kcopy, 5, sizeof(cl_mem), &m_huvTemp_buff);
+
+    clEnqueueNDRangeKernel(queue, kcopy, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clFinish(queue);
+
+    // update x-axis
+    clSetKernelArg(knetUpdatesX, 0, sizeof(cl_mem), &m_hTemp_buff);
+    clSetKernelArg(knetUpdatesX, 1, sizeof(cl_mem), &m_huvTemp_buff);
+    clSetKernelArg(knetUpdatesX, 2, sizeof(cl_mem), &m_b_buff);
+    clSetKernelArg(knetUpdatesX, 3, sizeof(size_t), &m_nCells_x);
+    clSetKernelArg(knetUpdatesX, 4, sizeof(size_t), &m_nCells_y);
+    clSetKernelArg(knetUpdatesX, 5, sizeof(float), &i_scaling);
+    clSetKernelArg(knetUpdatesX, 6, sizeof(cl_mem), &m_h_buff);
+    clSetKernelArg(knetUpdatesX, 7, sizeof(cl_mem), &m_hu_buff);
+
+    clEnqueueNDRangeKernel(queue, knetUpdatesX, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clFinish(queue);
+
+    // set ghost cells
+    clSetKernelArg(ksetGhostOutflow, 0, sizeof(cl_mem), &m_h_buff);
+    clSetKernelArg(ksetGhostOutflow, 1, sizeof(cl_mem), &m_hu_buff);
+    clSetKernelArg(ksetGhostOutflow, 2, sizeof(cl_mem), &m_hv_buff);
+    clSetKernelArg(ksetGhostOutflow, 3, sizeof(cl_mem), &m_b_buff);
+    clSetKernelArg(ksetGhostOutflow, 4, sizeof(size_t), &m_nCells_x);
+    clSetKernelArg(ksetGhostOutflow, 5, sizeof(size_t), &m_nCells_y);
+    clSetKernelArg(ksetGhostOutflow, 7, sizeof(int), &m_state_boundary_left);
+    clSetKernelArg(ksetGhostOutflow, 8, sizeof(int), &m_state_boundary_right);
+    clSetKernelArg(ksetGhostOutflow, 9, sizeof(int), &m_state_boundary_top);
+    clSetKernelArg(ksetGhostOutflow, 10, sizeof(int), &m_state_boundary_bottom);
+
+    clEnqueueNDRangeKernel(queue, ksetGhostOutflow, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clFinish(queue);
+
+    // copy data
+    clSetKernelArg(kcopy, 0, sizeof(cl_mem), &m_h_buff);
+    clSetKernelArg(kcopy, 1, sizeof(cl_mem), &m_hv_buff);
+    clSetKernelArg(kcopy, 2, sizeof(size_t), &m_nCells_x);
+    clSetKernelArg(kcopy, 3, sizeof(size_t), &m_nCells_y);
+    clSetKernelArg(kcopy, 4, sizeof(cl_mem), &m_hTemp_buff);
+    clSetKernelArg(kcopy, 5, sizeof(cl_mem), &m_huvTemp_buff);
+
+    clEnqueueNDRangeKernel(queue, kcopy, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clFinish(queue);
+
+    // update y-axis
+    clSetKernelArg(knetUpdatesY, 0, sizeof(cl_mem), &m_hTemp_buff);
+    clSetKernelArg(knetUpdatesY, 1, sizeof(cl_mem), &m_huvTemp_buff);
+    clSetKernelArg(knetUpdatesY, 2, sizeof(cl_mem), &m_b_buff);
+    clSetKernelArg(knetUpdatesY, 3, sizeof(size_t), &m_nCells_x);
+    clSetKernelArg(knetUpdatesY, 4, sizeof(size_t), &m_nCells_y);
+    clSetKernelArg(knetUpdatesY, 5, sizeof(float), &i_scaling);
+    clSetKernelArg(knetUpdatesY, 6, sizeof(cl_mem), &m_h_buff);
+    clSetKernelArg(knetUpdatesY, 7, sizeof(cl_mem), &m_hv_buff);
+
+    clEnqueueNDRangeKernel(queue, knetUpdatesY, 2, NULL, global_size, local_size, 0, NULL, NULL);
     clFinish(queue);
 }
 
@@ -223,8 +284,7 @@ void tsunami_lab::patches::WavePropagation2d_kernel::setData()
     m_hv_buff = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hv, &err);
     m_b_buff = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_b, &err);
     m_hTemp_buff = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
-    m_huTemp_buff = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
-    m_hvTemp_buff = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
+    m_huvTemp_buff = clCreateBuffer(context, CL_MEM_READ_WRITE, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), NULL, &err);
 }
 
 void tsunami_lab::patches::WavePropagation2d_kernel::getData()
@@ -233,6 +293,7 @@ void tsunami_lab::patches::WavePropagation2d_kernel::getData()
     clEnqueueReadBuffer(queue, m_h_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_h, 0, NULL, NULL);
     clEnqueueReadBuffer(queue, m_hv_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hv, 0, NULL, NULL);
     clEnqueueReadBuffer(queue, m_hu_buff, CL_TRUE, 0, sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2), m_hu, 0, NULL, NULL);
+    clFinish(queue);
 }
 
 void tsunami_lab::patches::WavePropagation2d_kernel::setGhostOutflow(){};

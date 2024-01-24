@@ -10,7 +10,7 @@
 #include "WavePropagation2d_kernel.h"
 #include "../../constants.h"
 
-TEST_CASE("Test the 2d wave propagation fwave-solver x-direction.", "[WaveProp2dFWavedX]")
+TEST_CASE("Test the 2d wave propagation fwave-solver x-direction. KERNEL", "[WaveProp2dFWavedXKernel]")
 {
     /*
      * Test case:
@@ -120,7 +120,7 @@ TEST_CASE("Test the 2d wave propagation fwave-solver x-direction.", "[WaveProp2d
     }
 }
 
-TEST_CASE("Test the 2d wave propagation fwave-solver y-direction.", "[WaveProp2dFWavedY]")
+TEST_CASE("Test the 2d wave propagation fwave-solver y-direction. KERNEL", "[WaveProp2dFWavedYKernel]")
 {
     /*
      * Test case:
@@ -230,7 +230,7 @@ TEST_CASE("Test the 2d wave propagation fwave-solver y-direction.", "[WaveProp2d
     }
 }
 
-TEST_CASE("Test the 2d wave propagation roe-solver x-direction.", "[WaveProp2dRoedX]")
+TEST_CASE("Test the 2d wave propagation roe-solver x-direction. KERNEL", "[WaveProp2dRoedXKernel]")
 {
     /*
      * Test case:
@@ -340,7 +340,7 @@ TEST_CASE("Test the 2d wave propagation roe-solver x-direction.", "[WaveProp2dRo
     }
 }
 
-TEST_CASE("Test the 2d wave propagation roe-solver y-direction.", "[WaveProp2dRoeY]")
+TEST_CASE("Test the 2d wave propagation roe-solver y-direction. KERNEL", "[WaveProp2dRoeYKERNEL]")
 {
     /*
      * Test case:
