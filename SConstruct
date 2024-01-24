@@ -6,6 +6,7 @@
 ##
 import SCons
 import platform
+import distro
 
 
 print( '####################################' )
@@ -48,6 +49,8 @@ else:
 env = Environment( variables = vars )
 
 if(plattform_choice == 0): # Linux
+  if 'centos' == distro.id():
+     env.Replace(CXX="/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++")
   env.Append(CCFLAGS=['-lOpenCL'])
   env.Append(LINKFLAGS=['-lOpenCL'])
   env.Append(LIBS=['OpenCL'])
