@@ -40,7 +40,7 @@
 
 bool do_write = true;
 // declaration of variables
-tsunami_lab::t_idx simulated_frame = 25;
+tsunami_lab::t_idx simulated_frame = 1;
 int state_boundary_top = 0;
 int state_boundary_bottom = 0;
 int state_boundary_left = 0;
