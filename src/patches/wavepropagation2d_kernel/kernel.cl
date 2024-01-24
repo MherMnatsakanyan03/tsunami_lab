@@ -1,8 +1,8 @@
 __constant float m_g = 9.80665;
 __constant float m_gSqrt = 3.131557121;
 
-inline void waveSpeeds(float i_hL, float i_hR, float i_uL, float i_uR,
-                       float *o_waveSpeedL, float *o_waveSpeedR) {
+void waveSpeeds(float i_hL, float i_hR, float i_uL, float i_uR,
+                float *o_waveSpeedL, float *o_waveSpeedR) {
   // Pre-compute square-root ops
   float m_hSqrtL = sqrt(i_hL);
   float m_hSqrtR = sqrt(i_hR);
@@ -18,23 +18,22 @@ inline void waveSpeeds(float i_hL, float i_hR, float i_uL, float i_uR,
   *o_waveSpeedR = l_uRoe + l_ghSqrtRoe;
 }
 
-inline void flux(float i_h, float i_hu, float *o_flux) {
+void flux(float i_h, float i_hu, float *o_flux) {
 
   o_flux[0] = i_hu;
   o_flux[1] = i_hu * i_hu / i_h + m_g * (i_h * i_h * 0.5f);
 }
 
-inline void deltaXPsi(float i_hL, float i_hR, float i_bL, float i_bR,
-                      float *o_deltaXPsi) {
+void deltaXPsi(float i_hL, float i_hR, float i_bL, float i_bR,
+               float *o_deltaXPsi) {
 
   o_deltaXPsi[0] = 0;
   o_deltaXPsi[1] = -1 * m_g * (i_bR - i_bL) * (i_hL + i_hR) * 0.5f;
 }
 
-inline void waveStrengths(float i_hL, float i_hR, float i_huL, float i_huR,
-                          float i_bL, float i_bR, float i_waveSpeedL,
-                          float i_waveSpeedR, float *o_strengthL,
-                          float *o_strengthR) {
+void waveStrengths(float i_hL, float i_hR, float i_huL, float i_huR, float i_bL,
+                   float i_bR, float i_waveSpeedL, float i_waveSpeedR,
+                   float *o_strengthL, float *o_strengthR) {
 
   // Compute inverse of right eigenvector-matrix
   float l_detInv = 1 / (i_waveSpeedR - i_waveSpeedL);
@@ -70,9 +69,8 @@ inline void waveStrengths(float i_hL, float i_hR, float i_huL, float i_huR,
   *o_strengthR += l_rInv[1][1] * l_fluxJump[1];
 }
 
-inline void netUpdates(float i_hL, float i_hR, float i_huL, float i_huR,
-                       float i_bL, float i_bR, float *o_netUpdateL,
-                       float *o_netUpdateR) {
+void netUpdates(float i_hL, float i_hR, float i_huL, float i_huR, float i_bL,
+                float i_bR, float *o_netUpdateL, float *o_netUpdateR) {
   // both sides are dry -> exit 0
   if (i_hL <= 0 && i_hR <= 0) {
     o_netUpdateL[0] = 0;
@@ -163,6 +161,7 @@ setGhostOutflow(__global float *m_h, __global float *m_hu, __global float *m_hv,
   int l_coord, l_coord_l, l_coord_r;
 
   // set left boundary
+  // if (y < m_nCells_y) {
   switch (m_state_boundary_left) {
   // open
   case 0:
@@ -208,9 +207,11 @@ setGhostOutflow(__global float *m_h, __global float *m_hu, __global float *m_hv,
 
   default:
     break;
+    //}
   }
 
   // set top boundary
+  // if (x < m_nCells_x) {
   switch (m_state_boundary_top) {
   // open
   case 0:
@@ -257,6 +258,7 @@ setGhostOutflow(__global float *m_h, __global float *m_hu, __global float *m_hv,
   default:
     break;
   }
+  //}
 }
 
 inline void Copy(__global float *src, __global float *result, int m_nCells_x,
@@ -299,9 +301,6 @@ inline void updateXAxisKernel(__global float *i_hTemp,
   Copy(o_h, i_hTemp, m_nCells_x, m_nCells_y);
   Copy(o_hu, i_huvTemp, m_nCells_x, m_nCells_y);
 
-  if (x > m_nCells_x || y > m_nCells_y)
-    return;
-
   //   Define net updates array
   float l_netUpdatesL[2];
   float l_netUpdatesR[2];
@@ -310,10 +309,10 @@ inline void updateXAxisKernel(__global float *i_hTemp,
              i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
              l_netUpdatesL, l_netUpdatesR);
 
-  atomicAdd(&o_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
-  atomicAdd(&o_hu[l_coord_L], -i_scaling * l_netUpdatesL[1]);
-  atomicAdd(&o_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
-  atomicAdd(&o_hu[l_coord_R], -i_scaling * l_netUpdatesR[1]);
+  o_h[l_coord_L] -= i_scaling * l_netUpdatesL[0];
+  o_hu[l_coord_L] -= i_scaling * l_netUpdatesL[1];
+  o_h[l_coord_R] -= i_scaling * l_netUpdatesR[0];
+  o_hu[l_coord_R] -= i_scaling * l_netUpdatesR[1];
 }
 inline void updateYAxisKernel(__global float *i_hTemp,
                               __global float *i_huvTemp, __global float *i_b,
@@ -329,9 +328,6 @@ inline void updateYAxisKernel(__global float *i_hTemp,
   Copy(o_h, i_hTemp, m_nCells_x, m_nCells_y);
   Copy(o_hv, i_huvTemp, m_nCells_x, m_nCells_y);
 
-  if (x > m_nCells_x || y > m_nCells_y)
-    return;
-
   //   Define net updates array
   float l_netUpdatesL[2];
   float l_netUpdatesR[2];
@@ -340,10 +336,10 @@ inline void updateYAxisKernel(__global float *i_hTemp,
              i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
              l_netUpdatesL, l_netUpdatesR);
 
-  atomicAdd(&o_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
-  atomicAdd(&o_hv[l_coord_L], -i_scaling * l_netUpdatesL[1]);
-  atomicAdd(&o_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
-  atomicAdd(&o_hv[l_coord_R], -i_scaling * l_netUpdatesR[1]);
+  o_h[l_coord_L] -= i_scaling * l_netUpdatesL[0];
+  o_hv[l_coord_L] -= i_scaling * l_netUpdatesL[1];
+  o_h[l_coord_R] -= i_scaling * l_netUpdatesR[0];
+  o_hv[l_coord_R] -= i_scaling * l_netUpdatesR[1];
 }
 
 inline void setGhostCellsX(__global float *io_h, __global float *io_hu,
@@ -391,56 +387,54 @@ __kernel void mainKernel(__global float *i_h, __global float *i_hu,
                          ulong m_nCells_x, ulong m_nCells_y, float i_scaling,
                          int m_state_boundary_left, int m_state_boundary_right,
                          int m_state_boundary_top, int m_state_boundary_bottom,
-                         __global float *i_hTemp, __global float *i_huvTemp) {
+                         __global float *i_hTemp, __global float *i_huTemp,
+                         __global float *i_hvTemp) {
   int x = get_global_id(0);
   int y = get_global_id(1);
 
   int l_coord_L = getCoordinates(x, y, m_nCells_x, m_nCells_y);
-  int l_coord_R = getCoordinates(x + 1, y, m_nCells_x, m_nCells_y);
-
-  if (x > m_nCells_x || y > m_nCells_y)
-    return;
+  int l_coord_R = getCoordinates((x + 1), y, m_nCells_x, m_nCells_y);
 
   setGhostOutflow(i_h, i_hu, i_hv, i_b, m_nCells_x, m_nCells_y,
                   m_state_boundary_left, m_state_boundary_right,
                   m_state_boundary_top, m_state_boundary_bottom);
 
   Copy(i_h, i_hTemp, m_nCells_x, m_nCells_y);
-  Copy(i_hu, i_huvTemp, m_nCells_x, m_nCells_y);
+  Copy(i_hu, i_huTemp, m_nCells_x, m_nCells_y);
 
   float l_netUpdatesL[2];
   float l_netUpdatesR[2];
 
-  netUpdates(i_hTemp[l_coord_L], i_hTemp[l_coord_R], i_huvTemp[l_coord_L],
-             i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
-             l_netUpdatesL, l_netUpdatesR);
+  netUpdates(i_hTemp[l_coord_L], i_hTemp[l_coord_R], i_huTemp[l_coord_L],
+             i_huTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R], l_netUpdatesL,
+             l_netUpdatesR);
 
-  atomicAdd(&i_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
-  atomicAdd(&i_hu[l_coord_L], -i_scaling * l_netUpdatesL[1]);
-  atomicAdd(&i_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
-  atomicAdd(&i_hu[l_coord_R], -i_scaling * l_netUpdatesR[1]);
+  i_h[l_coord_L] -= i_scaling * l_netUpdatesL[0];
+  i_hu[l_coord_L] -= i_scaling * l_netUpdatesL[1];
+  i_h[l_coord_R] -= i_scaling * l_netUpdatesR[0];
+  i_hu[l_coord_R] -= i_scaling * l_netUpdatesR[1];
 
   setGhostOutflow(i_h, i_hu, i_hv, i_b, m_nCells_x, m_nCells_y,
                   m_state_boundary_left, m_state_boundary_right,
                   m_state_boundary_top, m_state_boundary_bottom);
 
   int l_coord_down = getCoordinates(x, y, m_nCells_x, m_nCells_y);
-  int l_coord_up = getCoordinates(x, y + 1, m_nCells_x, m_nCells_y);
+  int l_coord_up = getCoordinates(x, (y + 1), m_nCells_x, m_nCells_y);
 
   float l_netUpdatesDown[2];
   float l_netUpdatesUp[2];
 
   Copy(i_h, i_hTemp, m_nCells_x, m_nCells_y);
-  Copy(i_hv, i_huvTemp, m_nCells_x, m_nCells_y);
+  Copy(i_hv, i_hvTemp, m_nCells_x, m_nCells_y);
 
-  netUpdates(i_hTemp[l_coord_down], i_hTemp[l_coord_up],
-             i_huvTemp[l_coord_down], i_huvTemp[l_coord_up], i_b[l_coord_down],
-             i_b[l_coord_up], l_netUpdatesDown, l_netUpdatesUp);
+  netUpdates(i_hTemp[l_coord_down], i_hTemp[l_coord_up], i_hvTemp[l_coord_down],
+             i_hvTemp[l_coord_up], i_b[l_coord_down], i_b[l_coord_up],
+             l_netUpdatesDown, l_netUpdatesUp);
 
-  atomicAdd(&i_h[l_coord_down], -i_scaling * l_netUpdatesDown[0]);
-  atomicAdd(&i_hv[l_coord_down], -i_scaling * l_netUpdatesDown[1]);
-  atomicAdd(&i_h[l_coord_up], -i_scaling * l_netUpdatesUp[0]);
-  atomicAdd(&i_hv[l_coord_up], -i_scaling * l_netUpdatesUp[1]);
+  i_h[l_coord_down] -= i_scaling * l_netUpdatesDown[0];
+  i_hv[l_coord_down] -= i_scaling * l_netUpdatesDown[1];
+  i_h[l_coord_up] -= i_scaling * l_netUpdatesUp[0];
+  i_hv[l_coord_up] -= i_scaling * l_netUpdatesUp[1];
 }
 
 __kernel void mainKernel2(__global float *i_h, __global float *i_hu,
@@ -448,15 +442,20 @@ __kernel void mainKernel2(__global float *i_h, __global float *i_hu,
                           ulong m_nCells_x, ulong m_nCells_y, float i_scaling,
                           int m_state_boundary_left, int m_state_boundary_right,
                           int m_state_boundary_top, int m_state_boundary_bottom,
-                          __global float *i_hTemp, __global float *i_huvTemp) {
+                          __global float *i_hTemp, __global float *i_huTemp,
+                          __global float *i_hvTemp) {
 
-  setGhostCellsX(i_h, i_hu, m_nCells_x, m_nCells_y);
+  setGhostOutflow(i_h, i_hu, i_hv, i_b, m_nCells_x, m_nCells_y,
+                  m_state_boundary_left, m_state_boundary_right,
+                  m_state_boundary_top, m_state_boundary_bottom);
 
-  updateXAxisKernel(i_hTemp, i_huvTemp, i_b, m_nCells_x, m_nCells_y, i_scaling,
+  updateXAxisKernel(i_hTemp, i_huTemp, i_b, m_nCells_x, m_nCells_y, i_scaling,
                     i_h, i_hu);
 
-  setGhostCellsY(i_h, i_hv, m_nCells_x, m_nCells_y);
+  setGhostOutflow(i_h, i_hu, i_hv, i_b, m_nCells_x, m_nCells_y,
+                  m_state_boundary_left, m_state_boundary_right,
+                  m_state_boundary_top, m_state_boundary_bottom);
 
-  updateYAxisKernel(i_hTemp, i_huvTemp, i_b, m_nCells_x, m_nCells_y, i_scaling,
+  updateYAxisKernel(i_hTemp, i_hvTemp, i_b, m_nCells_x, m_nCells_y, i_scaling,
                     i_h, i_hv);
 }

@@ -38,7 +38,7 @@
 #include "setups/artificialTsunami2d/ArtificialTsunami2d.h"
 #include "setups/checkpoint/Checkpoint.h"
 
-bool do_write = true;
+bool do_write = false;
 // declaration of variables
 tsunami_lab::t_idx simulated_frame = 25;
 int state_boundary_top = 0;
