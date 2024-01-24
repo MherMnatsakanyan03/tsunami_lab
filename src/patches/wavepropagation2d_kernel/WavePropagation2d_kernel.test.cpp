@@ -78,8 +78,11 @@ TEST_CASE("Test the 2d wave propagation fwave-solver x-direction. KERNEL", "[Wav
         }
     }
 
+    m_waveProp.setData();
     // perform a time step
     m_waveProp.timeStep(0.1);
+
+    m_waveProp.getData();
 
     // steady state
     for (std::size_t l_cx = 1; l_cx < 50; l_cx++)
@@ -188,8 +191,11 @@ TEST_CASE("Test the 2d wave propagation fwave-solver y-direction. KERNEL", "[Wav
         }
     }
 
+    m_waveProp.setData();
     // perform a time step
     m_waveProp.timeStep(0.1);
+
+    m_waveProp.getData();
 
     // steady state
     for (std::size_t l_cy = 1; l_cy < 50; l_cy++)
@@ -298,8 +304,11 @@ TEST_CASE("Test the 2d wave propagation roe-solver x-direction. KERNEL", "[WaveP
         }
     }
 
+    m_waveProp.setData();
     // perform a time step
     m_waveProp.timeStep(0.1);
+
+    m_waveProp.getData();
 
     // steady state
     for (std::size_t l_cx = 1; l_cx < 50; l_cx++)
@@ -408,8 +417,11 @@ TEST_CASE("Test the 2d wave propagation roe-solver y-direction. KERNEL", "[WaveP
         }
     }
 
+    m_waveProp.setData();
     // perform a time step
     m_waveProp.timeStep(0.1);
+
+    m_waveProp.getData();
 
     // steady state
     for (std::size_t l_cy = 1; l_cy < 50; l_cy++)

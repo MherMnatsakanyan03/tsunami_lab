@@ -60,10 +60,27 @@ int use_opencl = 0;
 std::string bat_path = "data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc";
 std::string dis_path = "data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc";
 
+void printTime(std::chrono::nanoseconds i_duration, std::string i_message)
+{
+    std::cout << i_message << ": ";
+    if (i_duration > std::chrono::hours(1))
+        std::cout << std::chrono::duration_cast<std::chrono::hours>(i_duration).count() << "h ";
+    if (i_duration > std::chrono::minutes(1))
+        std::cout << std::chrono::duration_cast<std::chrono::minutes>(i_duration).count() % 60 << "min ";
+    if (i_duration > std::chrono::seconds(1))
+        std::cout << std::chrono::duration_cast<std::chrono::seconds>(i_duration).count() % 60 << "s ";
+    if (i_duration > std::chrono::milliseconds(1))
+        std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(i_duration).count() % 1000 << "ms ";
+    if (i_duration > std::chrono::microseconds(1))
+        std::cout << std::chrono::duration_cast<std::chrono::microseconds>(i_duration).count() % 1000 << "us ";
+    std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(i_duration).count() % 1000 << "ns" << std::endl;
+}
+
 int main(int i_argc,
          char *i_argv[])
 {
 
+    auto l_start_time = std::chrono::high_resolution_clock::now();
     // setenv("OMP_PROC_BIND", "master", 1);
     // setenv("OMP_PLACES", "cores", 1);
 
@@ -679,13 +696,15 @@ int main(int i_argc,
     }
 
     int multiplier = 0;
-    auto l_lastCheckpointTime = std::chrono::steady_clock::now();
-    auto l_start_time = std::chrono::steady_clock::now();
+    auto l_lastCheckpointTime = std::chrono::high_resolution_clock::now();
+    auto l_setup_time = std::chrono::high_resolution_clock::now();
+    std::chrono::nanoseconds l_duration_write = std::chrono::nanoseconds::zero();
+    std::chrono::nanoseconds l_duration_checkpoint = std::chrono::nanoseconds::zero();
 
     // iterate over time
     while (l_simTime < l_endTime)
     {
-        auto l_currentTime = std::chrono::steady_clock::now();
+        auto l_currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> l_elapsedTime = l_currentTime - l_start_time;
 
         if (l_elapsedTime.count() >= checkpoint_timer && dimension == 2 && do_write)
@@ -731,13 +750,14 @@ int main(int i_argc,
                                             simulated_frame,
                                             resolution_div,
                                             filename);
-            l_lastCheckpointTime = std::chrono::steady_clock::now();
+            l_lastCheckpointTime = std::chrono::high_resolution_clock::now();
+            l_duration_checkpoint += l_lastCheckpointTime - l_currentTime;
         }
         if (l_timeStep % simulated_frame == 0)
         {
 
             // Start of local timer
-            auto l_localStartTime = std::chrono::steady_clock::now();
+            auto l_localStartTime = std::chrono::high_resolution_clock::now();
 
             std::cout << "  simulation time / #time steps: "
                       << l_simTime << " / " << l_timeStep << std::endl;
@@ -794,9 +814,11 @@ int main(int i_argc,
             l_nOut++;
 
             // End of local timer
-            auto l_localEndTime = std::chrono::steady_clock::now();
-            std::chrono::duration<double> l_localElapsedTime = l_localEndTime - l_localStartTime;
-            std::cout << "\tTime to write: " << l_localElapsedTime.count() << "s" << std::endl;
+            auto l_localEndTime = std::chrono::high_resolution_clock::now();
+            std::chrono::nanoseconds l_localElapsedTime = l_localEndTime - l_localStartTime;
+            l_duration_write += l_localElapsedTime;
+
+            std::cout << "\tTime to write: " << l_localElapsedTime.count() / 1000000 << "s" << std::endl;
             // Global timer
             std::cout << "\tTime since programm started: " << l_elapsedTime.count() << "s" << std::endl;
         }
@@ -822,6 +844,18 @@ int main(int i_argc,
         l_timeStep++;
         l_simTime += l_dt;
     }
+
+    auto l_end = std::chrono::high_resolution_clock::now();
+    auto l_duration_total = l_end - l_start_time;
+    printTime(l_duration_total, "total time");
+    auto l_duration_setup = l_setup_time - l_start_time;
+    printTime(l_duration_setup, "setup time");
+    auto l_duration_loop = l_end - l_setup_time;
+    auto l_duration_calc = l_duration_loop - l_duration_write - l_duration_checkpoint;
+    printTime(l_duration_calc, "calc time ");
+    printTime(l_duration_write, "write time");
+    printTime(l_duration_checkpoint, "checkpoint time");
+    std::cout << "calc time per cell and iteration: " << (double)std::chrono::duration_cast<std::chrono::nanoseconds>(l_duration_calc).count() / (double)(l_timeStep * l_nx * l_ny) << "ns" << std::endl;
 
     std::cout << "finished time loop" << std::endl;
 
