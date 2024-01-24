@@ -51,6 +51,12 @@ jobs:
                   ./build/tests
                   ./build/tsunami_lab -d 2d -s "dambreak2d" 30
 
+            - name: Sanitize 2D
+              run: |
+                  scons mode=debug+san
+                  ./build/tests
+                  ./build/tsunami_lab -d 2d -s "dambreak2d" -o 1 30
+
             - name: Valgrind 1D
               run: |
                   scons mode=debug

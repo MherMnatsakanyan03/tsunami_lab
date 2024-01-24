@@ -8,9 +8,7 @@
 
 #define CL_TARGET_OPENCL_VERSION 300
 #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
-// #define PROGRAM_FILE "/Users/ibyton/Desktop/Uni/tsunami_lab/build/src/patches/wavepropagation2d_kernel/kernel.cl"
-#define PROGRAM_FILE "/home/mnatsakanyan/Uni/TsunamiLab/tsunami_lab/src/patches/wavepropagation2d_kernel/kernel.cl"
-// #define PROGRAM_FILE "kernel.cl"
+
 #define KERNEL_X_AXIS_FUNC "updateXAxisKernel"
 #define KERNEL_Y_AXIS_FUNC "updateYAxisKernel"
 #define KERNEL_GHOSTCELLS "setGhostOutflow"
@@ -21,7 +19,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-// #include <CL/cl.h>
+#include <filesystem>
 #include "../../solvers/f-wave/F_wave.h"
 
 cl_device_id create_device()
@@ -158,7 +156,13 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
 
     context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
 
-    program = build_program(context, device, PROGRAM_FILE);
+    std::filesystem::path currentPath = std::filesystem::current_path();
+    std::string kernel_path = currentPath.string() + "/src/patches/wavepropagation2d_kernel/kernel.cl";
+    const char *kernel_path_char = kernel_path.c_str();
+
+    std::cout << "Kernel path: " << kernel_path_char << std::endl;
+
+    program = build_program(context, device, kernel_path_char);
 
     ksetGhostOutflow = clCreateKernel(program, KERNEL_GHOSTCELLS, &err);
     kcopy = clCreateKernel(program, KERNEL_COPY, &err);
