@@ -30,7 +30,6 @@ jobs:
                   sudo apt-get install cppcheck
                   sudo apt install ocl-icd-opencl-dev
                   sudo apt-get install pocl-opencl-icd
-                  sudo apt-get install pocl-opencl-dev
                   git submodule init
                   git submodule update
 
