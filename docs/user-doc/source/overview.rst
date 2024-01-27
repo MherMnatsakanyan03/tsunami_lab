@@ -22,7 +22,7 @@ Installing the project is very simple. All you need to do is:
    #. Installing the submodule using :code:`git sumbodule init` and :code:`git sumbodule update`
    #. Installing the requirements using :code:`sudo apt-get install libnetcdf-c++4-dev` and :code:`sudo apt-get install netcdf-bin`
    #. While in the repository, enter the building command into your console: :code:`scons`
-   #. In the console, use :code:`./build/tsunami_lab [-d DIMENSION] [-s SETUP] [-l STATE_LEFT] [-r STATE_RIGHT] [-t STATE_TOP] [-b STATE_BOTTOM] [-i STATION] [-k RESOLUTION] <number-of-cells>` (Tip: to be sure that you are in the correct console, you can write ./b and press the "tab"-button and see, if the console completes the path automatically)
+   #. In the console, use :code:`./build/tsunami_lab [-d DIMENSION] [-s SETUP] [-l STATE_LEFT] [-r STATE_RIGHT] [-t STATE_TOP] [-b STATE_BOTTOM] [-i STATION] [-k RESOLUTION] [-o OPENCL] <number-of-cells>` (Tip: to be sure that you are in the correct console, you can write ./b and press the "tab"-button and see, if the console completes the path automatically)
    #. The output-files should be generated in either in the `csv-dump`-folder or in `netCDF_dump` (depending if you use 1d or 2d)
 
 ..  tip::
@@ -46,4 +46,5 @@ Installing the project is very simple. All you need to do is:
    #. possible inputs for :code:`STATE_BOTTOM` are "open" or "closed"
    #. input for :code:`STAION` is the path, where you want the station-data to be saved to
    #. input for :code:`RESOLUTION` is a number by which the size of all arrays will be divided by to save some space while writing
+   #. input for :code:`OPENCL` are 1 or 0. If 1, the program will use OpenCL to calculate the simulation. If 0, the program will use the CPU to calculate the simulation. Depending on if your system supports OpenCL, you might need to install the OpenCL-drivers for your system. If your system does not support OpenCL on the GPU, you can install pocl (Portable Computing Language) to use OpenCL on the CPU. To install pocl, you can use :code:`sudo apt-get install pocl-opencl-icd` and :code:`sudo apt-get install pocl-opencl-dev`
    #. When checkpointing, you need to change the `checkpoint_timer`-variable inside :code:`main.cpp`, depending on when you need to set a checkpoint. If a checkpoint-file exists (a not-empty "checkpoints"-folder), the system will automatically try to continue from that checkpoint.
