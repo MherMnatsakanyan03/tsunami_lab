@@ -3,7 +3,7 @@
  * @author Mher Mnatsakanyan (mher.mnatsakanyan AT uni-jena.de)
  *
  * @section DESCRIPTION
- * Two-dimensional wave propagation patch.
+ * Two-dimensional wave propagation patch using OpenCL.
  **/
 
 #define CL_TARGET_OPENCL_VERSION 300

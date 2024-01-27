@@ -3,7 +3,7 @@
  * @author Maurice Herold (maurice.herold AT uni-jena.de)
  *
  * @section DESCRIPTION
- * Unit tests for the two-dimensional wave propagation patch.
+ * Unit tests for the two-dimensional wave propagation patch using OpenCL.
  **/
 
 #include <catch2/catch.hpp>
