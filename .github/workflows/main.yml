@@ -28,16 +28,11 @@ jobs:
                   sudo apt-get install netcdf-bin
                   sudo apt-get install valgrind
                   sudo apt-get install cppcheck
-                  mkdir intel
-                  cd intel
-                  wget http://registrationcenter-download.intel.com/akdlm/irc_nas/12556/opencl_runtime_16.1.2_x64_rh_6.4.0.37.tgz
-                  tar zxvf opencl_runtime_16.1.2_x64_rh_6.4.0.37.tgz
-                  cd opencl_runtime_16.1.2_x64_rh_6.4.0.37
-                  sudo ./install.sh -y
-                  cd ../../
+                  sudo apt install ocl-icd-opencl-dev
+                  sudo apt-get install pocl-opencl-icd
                   git submodule init
                   git submodule update
-            #                 sudo apt-get install pocl-opencl-icd
+
             - name: Static Code Analysis
               run: cppcheck src/ --template=gcc --force --error-exitcode=1 --suppressions-list=cppcheck_suppress.txt
 
