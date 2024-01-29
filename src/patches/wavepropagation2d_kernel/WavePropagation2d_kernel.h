@@ -3,7 +3,7 @@
  * @author Mher Mnatsakanyan (mher.mnatsakanyan AT uni-jena.de)
  *
  * @section DESCRIPTION
- * Two-dimensional wave propagation patch.
+ * Two-dimensional wave propagation patch using OpenCL.
  **/
 #ifndef TSUNAMI_LAB_PATCHES_WAVE_PROPAGATION_2D_KERNEL
 #define TSUNAMI_LAB_PATCHES_WAVE_PROPAGATION_2D_KERNEL

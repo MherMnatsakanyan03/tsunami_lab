@@ -4,7 +4,7 @@
  * @author Justus Dreßler (justus.dressler AT uni-jena.de)
  *
  * @section DESCRIPTION
- * Two-dimensional wave propagation patch.
+ * OpenCL-Kernel for the Two-dimensional wave propagation patch.
  **/
 
 __constant float m_g = 9.80665;
