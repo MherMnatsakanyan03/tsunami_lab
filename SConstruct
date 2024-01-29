@@ -6,8 +6,6 @@
 ##
 import SCons
 import platform
-import distro
-
 
 print( '####################################' )
 print( '### Tsunami Lab                  ###' )
@@ -37,6 +35,7 @@ if vars.UnknownVariables():
 os_system = platform.system()
 if os_system == "Linux":
     plattform_choice = 0
+    import distro
 elif os_system == "Darwin":  # Darwin is the underlying OS for MacOS
     plattform_choice = 1
 elif os_system == "Windows": 
