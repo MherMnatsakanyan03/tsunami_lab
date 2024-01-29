@@ -81,3 +81,15 @@ jobs:
           ./build/tests
           ./build/tsunami_lab -d 2d -s "dambreak2d" 500
         continue-on-error: true
+
+      - name: Check for errors
+        if: always()
+        run: |
+          if [ -f error.log ]; then
+              echo "Errors occurred during the build:"
+              cat error.log
+              exit 1
+          else
+              echo "Build succeeded without errors."
+          fi
+        shell: bash
