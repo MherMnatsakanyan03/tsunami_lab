@@ -40,6 +40,7 @@
 #include "setups/tsunamievent2d/TsunamiEvent2d.h"
 #include "setups/artificialTsunami2d/ArtificialTsunami2d.h"
 #include "setups/checkpoint/Checkpoint.h"
+#include <condition_variable>
 
 bool do_write = true;
 // declaration of variables
