@@ -20,6 +20,9 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <atomic>
+#include <mutex>
+#include <thread>
 
 #include "io/csv/Csv.h"
 #include "io/netCDF/NetCDF.h"
@@ -37,6 +40,7 @@
 #include "setups/tsunamievent2d/TsunamiEvent2d.h"
 #include "setups/artificialTsunami2d/ArtificialTsunami2d.h"
 #include "setups/checkpoint/Checkpoint.h"
+#include <condition_variable>
 
 bool do_write = true;
 // declaration of variables
@@ -51,6 +55,7 @@ int dimension;
 int resolution_div = 1;
 bool simulate_real_tsunami = false;
 bool checkpointing = false;
+bool write_parallel = true;
 double checkpoint_timer = 3600.0;
 int use_opencl = 0;
 // std::string bat_path = "data/artificialtsunami/artificialtsunami_bathymetry_1000.nc";
@@ -60,10 +65,48 @@ int use_opencl = 0;
 std::string bat_path = "data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc";
 std::string dis_path = "data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc";
 
+void printTime(std::chrono::nanoseconds i_duration, const std::string &i_message)
+{
+    std::cout << i_message << ": ";
+
+    // Berechnung und Ausgabe der Sekunden, wenn vorhanden
+    if (i_duration >= std::chrono::seconds(1))
+    {
+        auto seconds = std::chrono::duration_cast<std::chrono::seconds>(i_duration);
+        std::cout << seconds.count() << "s ";
+        i_duration -= seconds;
+    }
+
+    // Berechnung und Ausgabe der Millisekunden, wenn vorhanden
+    if (i_duration >= std::chrono::milliseconds(1))
+    {
+        auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(i_duration);
+        std::cout << milliseconds.count() << "ms ";
+        i_duration -= milliseconds;
+    }
+
+    // Berechnung und Ausgabe der Mikrosekunden, wenn vorhanden
+    if (i_duration >= std::chrono::microseconds(1))
+    {
+        auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(i_duration);
+        std::cout << microseconds.count() << "us ";
+        i_duration -= microseconds;
+    }
+
+    // Berechnung und Ausgabe der verbleibenden Nanosekunden, wenn vorhanden
+    if (i_duration > std::chrono::nanoseconds(0))
+    {
+        std::cout << i_duration.count() << "ns ";
+    }
+
+    std::cout << std::endl;
+}
+
 int main(int i_argc,
          char *i_argv[])
 {
 
+    auto l_start_time = std::chrono::high_resolution_clock::now();
     // setenv("OMP_PROC_BIND", "master", 1);
     // setenv("OMP_PLACES", "cores", 1);
 
@@ -132,6 +175,7 @@ int main(int i_argc,
         std::cerr << "-i STATION = 'path'" << std::endl;
         std::cerr << "-k RESOLUTION, where the higher the input, the lower the resolution" << std::endl;
         std::cerr << "-o OPENCL, 0 = CPU and 1 = GPU" << std::endl;
+        std::cerr << "-w write parallel, 0 = parallel and 1 = normal" << std::endl;
         return EXIT_FAILURE;
     }
     else if (!checkpointing)
@@ -197,7 +241,7 @@ int main(int i_argc,
     else
     {
 
-        while ((opt = getopt(i_argc, i_argv, "d:s:l:r:t:b:i:k:o:")) != -1)
+        while ((opt = getopt(i_argc, i_argv, "d:s:l:r:t:b:i:k:o:w:")) != -1)
         {
             switch (opt)
             {
@@ -487,6 +531,29 @@ int main(int i_argc,
 
                 break;
             }
+            case 'w':
+            {
+                if (std::string(optarg) == "1")
+                {
+                    write_parallel = true;
+                    std::cout << "write parallel" << std::endl;
+                }
+                else if (std::string(optarg) == "0")
+                {
+                    write_parallel = false;
+                    std::cout << "write normal" << std::endl;
+                }
+                else
+                {
+                    std::cerr
+                        << "undefined write parallel "
+                        << std::string(optarg) << std::endl
+                        << "possible options are: '0' or '1'" << std::endl
+                        << "be sure to only type in lower-case" << std::endl;
+                    return EXIT_FAILURE;
+                }
+                break;
+            }
             // unknown option
             case '?':
             {
@@ -618,6 +685,7 @@ int main(int i_argc,
                                       l_b);
         }
     }
+    l_waveProp->setData();
     if (dimension == 2 && !checkpointing && do_write)
     {
         /* if (std::filesystem::exists("netCDF_dump"))
@@ -678,13 +746,21 @@ int main(int i_argc,
     }
 
     int multiplier = 0;
-    auto l_lastCheckpointTime = std::chrono::steady_clock::now();
-    auto l_start_time = std::chrono::steady_clock::now();
+    auto l_lastCheckpointTime = std::chrono::high_resolution_clock::now();
+    auto l_setup_time = std::chrono::high_resolution_clock::now();
+    std::chrono::nanoseconds l_duration_write = std::chrono::nanoseconds::zero();
+    std::chrono::nanoseconds l_duration_checkpoint = std::chrono::nanoseconds::zero();
+
+    // setup for write thread
+    std::mutex write_mutex;
+    std::atomic<bool> is_write_completed(true);
+    std::condition_variable write_condition;
+    write_condition.notify_one();
 
     // iterate over time
     while (l_simTime < l_endTime)
     {
-        auto l_currentTime = std::chrono::steady_clock::now();
+        auto l_currentTime = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> l_elapsedTime = l_currentTime - l_start_time;
 
         if (l_elapsedTime.count() >= checkpoint_timer && dimension == 2 && do_write)
@@ -730,13 +806,14 @@ int main(int i_argc,
                                             simulated_frame,
                                             resolution_div,
                                             filename);
-            l_lastCheckpointTime = std::chrono::steady_clock::now();
+            l_lastCheckpointTime = std::chrono::high_resolution_clock::now();
+            l_duration_checkpoint += l_lastCheckpointTime - l_currentTime;
         }
         if (l_timeStep % simulated_frame == 0)
         {
 
             // Start of local timer
-            auto l_localStartTime = std::chrono::steady_clock::now();
+            auto l_localStartTime = std::chrono::high_resolution_clock::now();
 
             std::cout << "  simulation time / #time steps: "
                       << l_simTime << " / " << l_timeStep << std::endl;
@@ -762,8 +839,9 @@ int main(int i_argc,
 
                 l_file.close();
             }
-            else if (dimension == 2 && do_write)
+            else if (dimension == 2 && do_write && !write_parallel)
             {
+                l_waveProp->getData();
                 netcdf_manager->write(l_nx,
                                       l_ny,
                                       resolution_div,
@@ -789,12 +867,57 @@ int main(int i_argc,
                                       l_simTime,
                                       filename);
             }
+            else if (dimension == 2 && do_write && write_parallel)
+            {
+                // lock until Writhe Thread is done
+                std::unique_lock<std::mutex> lock(write_mutex);
+                write_condition.wait(lock, [&]
+                                     { return is_write_completed.load(); });
+
+                l_waveProp->getData();
+                auto n_out = l_nOut;
+                auto n_simTime = l_simTime;
+                lock.unlock();
+                std::thread write_thread([&, n_out, n_simTime]()
+                                         {
+                                             std::unique_lock<std::mutex> lock(write_mutex);
+                                             netcdf_manager->write(l_nx,
+                                                                   l_ny,
+                                                                   resolution_div,
+                                                                   netcdf_manager->removeGhostCells(l_waveProp->getHeight(),
+                                                                                                    l_nx,
+                                                                                                    l_ny,
+                                                                                                    1,
+                                                                                                    1,
+                                                                                                    l_waveProp->getStride()),
+                                                                   netcdf_manager->removeGhostCells(l_waveProp->getMomentumX(),
+                                                                                                    l_nx,
+                                                                                                    l_ny,
+                                                                                                    1,
+                                                                                                    1,
+                                                                                                    l_waveProp->getStride()),
+                                                                   netcdf_manager->removeGhostCells(l_waveProp->getMomentumY(),
+                                                                                                    l_nx,
+                                                                                                    l_ny,
+                                                                                                    1,
+                                                                                                    1,
+                                                                                                    l_waveProp->getStride()),
+                                                                   n_out,
+                                                                   n_simTime,
+                                                                   filename);
+                                             lock.unlock();
+                                             is_write_completed = true;
+                                             write_condition.notify_one(); });
+                write_thread.detach();
+            }
             l_nOut++;
 
             // End of local timer
-            auto l_localEndTime = std::chrono::steady_clock::now();
-            std::chrono::duration<double> l_localElapsedTime = l_localEndTime - l_localStartTime;
-            std::cout << "\tTime to write: " << l_localElapsedTime.count() << "s" << std::endl;
+            auto l_localEndTime = std::chrono::high_resolution_clock::now();
+            std::chrono::nanoseconds l_localElapsedTime = l_localEndTime - l_localStartTime;
+            l_duration_write += l_localElapsedTime;
+
+            printTime(l_localElapsedTime, "write time");
             // Global timer
             std::cout << "\tTime since programm started: " << l_elapsedTime.count() << "s" << std::endl;
         }
@@ -821,13 +944,27 @@ int main(int i_argc,
         l_simTime += l_dt;
     }
 
+    auto l_end = std::chrono::high_resolution_clock::now();
+    auto l_duration_total = l_end - l_start_time;
+    auto l_duration_setup = l_setup_time - l_start_time;
+    auto l_duration_loop = l_end - l_setup_time;
+    auto l_duration_calc = l_duration_loop - l_duration_write - l_duration_checkpoint;
+    printTime(l_duration_total, "total time");
+    printTime(l_duration_calc, "calc time ");
+    printTime(l_duration_setup, "setup time");
+    printTime(l_duration_write, "write time");
+    printTime(l_duration_checkpoint, "checkpoint time");
+
     std::cout << "finished time loop" << std::endl;
 
     // free memory
-    std::cout << "freeing memory" << std::endl;
+    std::cout << "freeing memory: l_setup" << std::endl;
     delete l_setup;
+    std::cout << "freeing memory: l_waveProp" << std::endl;
     delete l_waveProp;
+    std::cout << "freeing memory: l_stations" << std::endl;
     delete l_stations;
+    std::cout << "freeing memory: netcdf_manager" << std::endl;
     delete netcdf_manager;
 
     // clear checkpoint

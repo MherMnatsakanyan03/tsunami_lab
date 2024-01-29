@@ -7,7 +7,6 @@
 import SCons
 import platform
 
-
 print( '####################################' )
 print( '### Tsunami Lab                  ###' )
 print( '###                              ###' )
@@ -36,6 +35,7 @@ if vars.UnknownVariables():
 os_system = platform.system()
 if os_system == "Linux":
     plattform_choice = 0
+    import distro
 elif os_system == "Darwin":  # Darwin is the underlying OS for MacOS
     plattform_choice = 1
 elif os_system == "Windows": 
@@ -48,6 +48,8 @@ else:
 env = Environment( variables = vars )
 
 if(plattform_choice == 0): # Linux
+  if 'centos' == distro.id():
+     env.Replace(CXX="/cluster/spack/opt/spack/linux-centos7-broadwell/gcc-10.2.0/gcc-11.2.0-c27urtyjryzoyyqfms5m3ewi6vrtvt44/bin/g++")
   env.Append(CCFLAGS=['-lOpenCL'])
   env.Append(LINKFLAGS=['-lOpenCL'])
   env.Append(LIBS=['OpenCL'])

@@ -136,3 +136,7 @@ void tsunami_lab::patches::WavePropagation1d::setGhostOutflow()
         break;
     }
 }
+
+void tsunami_lab::patches::WavePropagation1d::setData(){};
+
+void tsunami_lab::patches::WavePropagation1d::getData(){};

@@ -3,14 +3,14 @@
  * @author Maurice Herold (maurice.herold AT uni-jena.de)
  *
  * @section DESCRIPTION
- * Unit tests for the two-dimensional wave propagation patch.
+ * Unit tests for the two-dimensional wave propagation patch using OpenCL.
  **/
 
 #include <catch2/catch.hpp>
 #include "WavePropagation2d_kernel.h"
 #include "../../constants.h"
 
-TEST_CASE("Test the 2d wave propagation fwave-solver x-direction.", "[WaveProp2dFWavedX]")
+TEST_CASE("Test the 2d wave propagation fwave-solver x-direction. KERNEL", "[WaveProp2dFWavedXKernel]")
 {
     /*
      * Test case:
@@ -78,8 +78,11 @@ TEST_CASE("Test the 2d wave propagation fwave-solver x-direction.", "[WaveProp2d
         }
     }
 
+    m_waveProp.setData();
     // perform a time step
     m_waveProp.timeStep(0.1);
+
+    m_waveProp.getData();
 
     // steady state
     for (std::size_t l_cx = 1; l_cx < 50; l_cx++)
@@ -120,7 +123,7 @@ TEST_CASE("Test the 2d wave propagation fwave-solver x-direction.", "[WaveProp2d
     }
 }
 
-TEST_CASE("Test the 2d wave propagation fwave-solver y-direction.", "[WaveProp2dFWavedY]")
+TEST_CASE("Test the 2d wave propagation fwave-solver y-direction. KERNEL", "[WaveProp2dFWavedYKernel]")
 {
     /*
      * Test case:
@@ -188,8 +191,11 @@ TEST_CASE("Test the 2d wave propagation fwave-solver y-direction.", "[WaveProp2d
         }
     }
 
+    m_waveProp.setData();
     // perform a time step
     m_waveProp.timeStep(0.1);
+
+    m_waveProp.getData();
 
     // steady state
     for (std::size_t l_cy = 1; l_cy < 50; l_cy++)
@@ -230,7 +236,7 @@ TEST_CASE("Test the 2d wave propagation fwave-solver y-direction.", "[WaveProp2d
     }
 }
 
-TEST_CASE("Test the 2d wave propagation roe-solver x-direction.", "[WaveProp2dRoedX]")
+TEST_CASE("Test the 2d wave propagation roe-solver x-direction. KERNEL", "[WaveProp2dRoedXKernel]")
 {
     /*
      * Test case:
@@ -298,8 +304,11 @@ TEST_CASE("Test the 2d wave propagation roe-solver x-direction.", "[WaveProp2dRo
         }
     }
 
+    m_waveProp.setData();
     // perform a time step
     m_waveProp.timeStep(0.1);
+
+    m_waveProp.getData();
 
     // steady state
     for (std::size_t l_cx = 1; l_cx < 50; l_cx++)
@@ -340,7 +349,7 @@ TEST_CASE("Test the 2d wave propagation roe-solver x-direction.", "[WaveProp2dRo
     }
 }
 
-TEST_CASE("Test the 2d wave propagation roe-solver y-direction.", "[WaveProp2dRoeY]")
+TEST_CASE("Test the 2d wave propagation roe-solver y-direction. KERNEL", "[WaveProp2dRoeYKERNEL]")
 {
     /*
      * Test case:
@@ -408,8 +417,11 @@ TEST_CASE("Test the 2d wave propagation roe-solver y-direction.", "[WaveProp2dRo
         }
     }
 
+    m_waveProp.setData();
     // perform a time step
     m_waveProp.timeStep(0.1);
+
+    m_waveProp.getData();
 
     // steady state
     for (std::size_t l_cy = 1; l_cy < 50; l_cy++)

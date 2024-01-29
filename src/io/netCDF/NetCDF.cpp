@@ -38,7 +38,7 @@ void tsunami_lab::io::NetCdf::initialize(const std::string &filename,
 {
   m_out_file_name = filename;
 
-  handleNetCdfError(nc_create(m_out_file_name.c_str(), NC_CLOBBER, &m_ncid), "Error creat the NetCDF file: ");
+  handleNetCdfError(nc_create(m_out_file_name.c_str(), NC_CLOBBER | NC_NETCDF4, &m_ncid), "Error creat the NetCDF file: ");
 
   // Define the dimensions
   t_idx new_nx = i_nx / i_resolution_div;
