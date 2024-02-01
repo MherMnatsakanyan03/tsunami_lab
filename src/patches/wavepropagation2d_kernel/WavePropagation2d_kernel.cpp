@@ -169,6 +169,9 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
     knetUpdatesY = clCreateKernel(program, KERNEL_Y_AXIS_FUNC, &err);
 
     queue = clCreateCommandQueue(context, device, 0, &err);
+
+    global_size[0] = m_nCells_x + 2; // Gesamtanzahl der Work-Items in X-Richtung
+    global_size[1] = m_nCells_y + 2; // Gesamtanzahl der Work-Items in Y-Richtung
 }
 
 tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()
@@ -197,10 +200,6 @@ tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()
 void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
 {
     // set ghost cells
-    size_t global_size[2] = {m_nCells_x + 2, m_nCells_y + 2}; // Gesamtanzahl der Work-Items in X- und Y-Richtung
-    size_t local_size[2] = {1, 1};
-
-    // Set kernel arguments
     clSetKernelArg(ksetGhostOutflow, 0, sizeof(cl_mem), &m_h_buff);
     clSetKernelArg(ksetGhostOutflow, 1, sizeof(cl_mem), &m_hu_buff);
     clSetKernelArg(ksetGhostOutflow, 2, sizeof(cl_mem), &m_hv_buff);
@@ -212,7 +211,7 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(ksetGhostOutflow, 9, sizeof(int), &m_state_boundary_top);
     clSetKernelArg(ksetGhostOutflow, 10, sizeof(int), &m_state_boundary_bottom);
 
-    clEnqueueNDRangeKernel(queue, ksetGhostOutflow, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clEnqueueNDRangeKernel(queue, ksetGhostOutflow, 2, NULL, global_size, NULL, 0, NULL, NULL);
     clFinish(queue);
 
     // copy data
@@ -223,7 +222,7 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(kcopy, 4, sizeof(cl_mem), &m_hTemp_buff);
     clSetKernelArg(kcopy, 5, sizeof(cl_mem), &m_huvTemp_buff);
 
-    clEnqueueNDRangeKernel(queue, kcopy, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clEnqueueNDRangeKernel(queue, kcopy, 2, NULL, global_size, NULL, 0, NULL, NULL);
     clFinish(queue);
 
     // update x-axis
@@ -236,7 +235,7 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(knetUpdatesX, 6, sizeof(cl_mem), &m_h_buff);
     clSetKernelArg(knetUpdatesX, 7, sizeof(cl_mem), &m_hu_buff);
 
-    clEnqueueNDRangeKernel(queue, knetUpdatesX, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clEnqueueNDRangeKernel(queue, knetUpdatesX, 2, NULL, global_size, NULL, 0, NULL, NULL);
     clFinish(queue);
 
     // set ghost cells
@@ -251,7 +250,7 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(ksetGhostOutflow, 9, sizeof(int), &m_state_boundary_top);
     clSetKernelArg(ksetGhostOutflow, 10, sizeof(int), &m_state_boundary_bottom);
 
-    clEnqueueNDRangeKernel(queue, ksetGhostOutflow, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clEnqueueNDRangeKernel(queue, ksetGhostOutflow, 2, NULL, global_size, NULL, 0, NULL, NULL);
     clFinish(queue);
 
     // copy data
@@ -262,7 +261,7 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(kcopy, 4, sizeof(cl_mem), &m_hTemp_buff);
     clSetKernelArg(kcopy, 5, sizeof(cl_mem), &m_huvTemp_buff);
 
-    clEnqueueNDRangeKernel(queue, kcopy, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clEnqueueNDRangeKernel(queue, kcopy, 2, NULL, global_size, NULL, 0, NULL, NULL);
     clFinish(queue);
 
     // update y-axis
@@ -275,7 +274,7 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(knetUpdatesY, 6, sizeof(cl_mem), &m_h_buff);
     clSetKernelArg(knetUpdatesY, 7, sizeof(cl_mem), &m_hv_buff);
 
-    clEnqueueNDRangeKernel(queue, knetUpdatesY, 2, NULL, global_size, local_size, 0, NULL, NULL);
+    clEnqueueNDRangeKernel(queue, knetUpdatesY, 2, NULL, global_size, NULL, 0, NULL, NULL);
     clFinish(queue);
 }
 

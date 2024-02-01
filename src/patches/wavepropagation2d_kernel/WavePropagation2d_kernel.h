@@ -68,7 +68,7 @@ private:
     cl_kernel knetUpdatesY;
     cl_command_queue queue;
     cl_int i, err;
-    size_t local_size, global_size;
+    size_t global_size[2];
 
     cl_mem m_b_buff;
     cl_mem m_h_buff;
