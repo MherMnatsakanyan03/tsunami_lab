@@ -206,10 +206,10 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(ksetGhostOutflow, 3, sizeof(cl_mem), &m_b_buff);
     clSetKernelArg(ksetGhostOutflow, 4, sizeof(size_t), &m_nCells_x);
     clSetKernelArg(ksetGhostOutflow, 5, sizeof(size_t), &m_nCells_y);
-    clSetKernelArg(ksetGhostOutflow, 7, sizeof(int), &m_state_boundary_left);
-    clSetKernelArg(ksetGhostOutflow, 8, sizeof(int), &m_state_boundary_right);
-    clSetKernelArg(ksetGhostOutflow, 9, sizeof(int), &m_state_boundary_top);
-    clSetKernelArg(ksetGhostOutflow, 10, sizeof(int), &m_state_boundary_bottom);
+    clSetKernelArg(ksetGhostOutflow, 6, sizeof(int), &m_state_boundary_left);
+    clSetKernelArg(ksetGhostOutflow, 7, sizeof(int), &m_state_boundary_right);
+    clSetKernelArg(ksetGhostOutflow, 8, sizeof(int), &m_state_boundary_top);
+    clSetKernelArg(ksetGhostOutflow, 9, sizeof(int), &m_state_boundary_bottom);
 
     clEnqueueNDRangeKernel(queue, ksetGhostOutflow, 2, NULL, global_size, NULL, 0, NULL, NULL);
     clFinish(queue);
@@ -245,10 +245,10 @@ void tsunami_lab::patches::WavePropagation2d_kernel::timeStep(t_real i_scaling)
     clSetKernelArg(ksetGhostOutflow, 3, sizeof(cl_mem), &m_b_buff);
     clSetKernelArg(ksetGhostOutflow, 4, sizeof(size_t), &m_nCells_x);
     clSetKernelArg(ksetGhostOutflow, 5, sizeof(size_t), &m_nCells_y);
-    clSetKernelArg(ksetGhostOutflow, 7, sizeof(int), &m_state_boundary_left);
-    clSetKernelArg(ksetGhostOutflow, 8, sizeof(int), &m_state_boundary_right);
-    clSetKernelArg(ksetGhostOutflow, 9, sizeof(int), &m_state_boundary_top);
-    clSetKernelArg(ksetGhostOutflow, 10, sizeof(int), &m_state_boundary_bottom);
+    clSetKernelArg(ksetGhostOutflow, 6, sizeof(int), &m_state_boundary_left);
+    clSetKernelArg(ksetGhostOutflow, 7, sizeof(int), &m_state_boundary_right);
+    clSetKernelArg(ksetGhostOutflow, 8, sizeof(int), &m_state_boundary_top);
+    clSetKernelArg(ksetGhostOutflow, 9, sizeof(int), &m_state_boundary_bottom);
 
     clEnqueueNDRangeKernel(queue, ksetGhostOutflow, 2, NULL, global_size, NULL, 0, NULL, NULL);
     clFinish(queue);
