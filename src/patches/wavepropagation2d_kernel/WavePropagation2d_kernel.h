@@ -68,7 +68,6 @@ private:
     cl_kernel knetUpdatesY;
     cl_command_queue queue;
     cl_int i, err;
-    size_t global_size[2];
 
     cl_mem m_b_buff;
     cl_mem m_h_buff;
@@ -76,6 +75,9 @@ private:
     cl_mem m_hv_buff;
     cl_mem m_hTemp_buff;
     cl_mem m_huvTemp_buff;
+
+    size_t global_size[2] = {};
+    size_t *localWorker;
 
     t_idx m_size = sizeof(float) * (m_nCells_x + 2) * (m_nCells_y + 2);
 
