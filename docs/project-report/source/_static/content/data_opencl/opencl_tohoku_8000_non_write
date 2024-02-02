@@ -1,0 +1,53 @@
+./build/tsunami_lab -d 2d -s "tsunami2d" -o 1 8000
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+Device: NVIDIA Graphics Device
+Kernel path: /home/mnatsakanyan/Desktop/TsunamiLab/tsunami_lab/src/patches/wavepropagation2d_kernel/kernel.cl
+runtime configuration
+  number of cells in x-direction: 337
+  number of cells in y-direction: 187
+  cell size:                      8011.13
+entering time loop
+  simulation time / #time steps: 0 / 0
+write time: 2us 346ns 
+        Time since programm started: 0.812702s
+  simulation time / #time steps: 6546.37 / 500
+write time: 16us 834ns 
+        Time since programm started: 0.832811s
+  simulation time / #time steps: 13092.8 / 1000
+write time: 4us 546ns 
+        Time since programm started: 0.849998s
+  simulation time / #time steps: 19638.9 / 1500
+write time: 2us 641ns 
+        Time since programm started: 0.867453s
+  simulation time / #time steps: 26184.8 / 2000
+write time: 3us 93ns 
+        Time since programm started: 0.887334s
+  simulation time / #time steps: 32730.7 / 2500
+write time: 2us 283ns 
+        Time since programm started: 0.905307s
+total time: 913ms 834us 429ns 
+calc time : 101ms 102us 756ns 
+setup time: 812ms 699us 930ns 
+write time: 31us 743ns 
+checkpoint time: 
+finished time loop
+freeing memory: l_setup
+freeing memory: l_waveProp
+freeing memory: l_stations
+freeing memory: netcdf_manager
+delete checkpoints
+delete checkpoints
+finished, exiting

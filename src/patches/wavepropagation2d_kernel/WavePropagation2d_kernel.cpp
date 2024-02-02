@@ -21,6 +21,7 @@
 #include <string>
 #include <filesystem>
 #include "../../solvers/f-wave/F_wave.h"
+#include <cmath>
 
 cl_device_id create_device()
 {
@@ -131,6 +132,49 @@ size_t findMaxLocalSize(cl_device_id device)
     return maxLocalSize;
 }
 
+size_t findLargestFactor(size_t n, size_t maxFactor)
+{
+    if (n <= 1)
+        return n;
+
+    size_t largestFactor = 1;
+    for (size_t i = 1; i <= n && i <= maxFactor; ++i)
+    {
+        if (n % i == 0)
+        {
+            largestFactor = i;
+        }
+    }
+    return largestFactor;
+}
+
+size_t *findLocalWorker(cl_device_id device, size_t *global_size)
+{
+    size_t maxLocalSize = findMaxLocalSize(device);
+    size_t *localSize = new size_t[2]; // Dynamisch allozierte Array auf dem Heap
+
+    // Versuche, eine möglichst quadratische Form zu finden, indem du nahe der Quadratwurzel von maxLocalSize beginnst
+    size_t idealFactor = static_cast<size_t>(std::sqrt(maxLocalSize));
+
+    localSize[1] = findLargestFactor(global_size[1], idealFactor);
+    localSize[0] = findLargestFactor(global_size[0], maxLocalSize / localSize[1]);
+
+    // Wenn das Produkt zu groß ist, reduziere die Faktoren schrittweise
+    while (localSize[1] * localSize[0] > maxLocalSize)
+    {
+        if (localSize[1] > localSize[0])
+        {
+            localSize[1] = findLargestFactor(global_size[1], localSize[1] - 1);
+        }
+        else
+        {
+            localSize[0] = findLargestFactor(global_size[0], localSize[0] - 1);
+        }
+    }
+
+    return localSize;
+}
+
 tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i_nCells_x,
                                                                          t_idx i_nCells_y,
                                                                          int state_boundary_left,
@@ -170,8 +214,11 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
 
     queue = clCreateCommandQueue(context, device, 0, &err);
 
-    global_size[0] = m_nCells_x + 2; // Gesamtanzahl der Work-Items in X-Richtung
-    global_size[1] = m_nCells_y + 2; // Gesamtanzahl der Work-Items in Y-Richtung
+    global_size[0] = {m_nCells_x + 2};
+    global_size[1] = {m_nCells_y + 2};
+    localWorker = findLocalWorker(device, global_size);
+
+    std::cout << "Local size: " << localWorker[0] << " " << localWorker[1] << std::endl;
 }
 
 tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()

@@ -1,0 +1,71 @@
+./build/tsunami_lab -d 2d -s "tsunami2d" -o 1 4000
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+Device: NVIDIA Graphics Device
+Kernel path: /home/mnatsakanyan/Desktop/TsunamiLab/tsunami_lab/src/patches/wavepropagation2d_kernel/kernel.cl
+runtime configuration
+  number of cells in x-direction: 674
+  number of cells in y-direction: 374
+  cell size:                      4005.56
+entering time loop
+  simulation time / #time steps: 0 / 0
+write time: 3us 436ns 
+        Time since programm started: 0.817013s
+  simulation time / #time steps: 3254.77 / 500
+write time: 6us 800ns 
+        Time since programm started: 0.842485s
+  simulation time / #time steps: 6509.62 / 1000
+write time: 1us 938ns 
+        Time since programm started: 0.868996s
+  simulation time / #time steps: 9764.5 / 1500
+write time: 2us 51ns 
+        Time since programm started: 0.892396s
+  simulation time / #time steps: 13019.4 / 2000
+write time: 2us 502ns 
+        Time since programm started: 0.918718s
+  simulation time / #time steps: 16274.3 / 2500
+write time: 2us 241ns 
+        Time since programm started: 0.941983s
+  simulation time / #time steps: 19529.2 / 3000
+write time: 1us 739ns 
+        Time since programm started: 0.968547s
+  simulation time / #time steps: 22784 / 3500
+write time: 2us 242ns 
+        Time since programm started: 0.991888s
+  simulation time / #time steps: 26038.9 / 4000
+write time: 2us 559ns 
+        Time since programm started: 1.01823s
+  simulation time / #time steps: 29293.8 / 4500
+write time: 2us 666ns 
+        Time since programm started: 1.04155s
+  simulation time / #time steps: 32548.7 / 5000
+write time: 1us 937ns 
+        Time since programm started: 1.06646s
+  simulation time / #time steps: 35802.7 / 5500
+write time: 2us 325ns 
+        Time since programm started: 1.08779s
+total time: 1s 88ms 983us 666ns 
+calc time : 271ms 940us 589ns 
+setup time: 817ms 10us 641ns 
+write time: 32us 436ns 
+checkpoint time: 
+finished time loop
+freeing memory: l_setup
+freeing memory: l_waveProp
+freeing memory: l_stations
+freeing memory: netcdf_manager
+delete checkpoints
+delete checkpoints
+finished, exiting
