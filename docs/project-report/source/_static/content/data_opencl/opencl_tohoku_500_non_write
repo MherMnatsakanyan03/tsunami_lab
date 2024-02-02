@@ -1,0 +1,302 @@
+./build/tsunami_lab -d 2d -s "tsunami2d" -o 1 500
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+Device: NVIDIA Graphics Device
+Kernel path: /home/mnatsakanyan/Desktop/TsunamiLab/tsunami_lab/src/patches/wavepropagation2d_kernel/kernel.cl
+runtime configuration
+  number of cells in x-direction: 5399
+  number of cells in y-direction: 2999
+  cell size:                      500.046
+entering time loop
+  simulation time / #time steps: 0 / 0
+write time: 6us 820ns 
+        Time since programm started: 1.1081s
+  simulation time / #time steps: 406.203 / 500
+write time: 12us 653ns 
+        Time since programm started: 3.0482s
+  simulation time / #time steps: 812.396 / 1000
+write time: 4us 929ns 
+        Time since programm started: 4.86256s
+  simulation time / #time steps: 1218.59 / 1500
+write time: 2us 956ns 
+        Time since programm started: 6.67279s
+  simulation time / #time steps: 1624.77 / 2000
+write time: 3us 375ns 
+        Time since programm started: 8.48359s
+  simulation time / #time steps: 2030.96 / 2500
+write time: 11us 990ns 
+        Time since programm started: 10.6617s
+  simulation time / #time steps: 2437.21 / 3000
+write time: 8us 424ns 
+        Time since programm started: 12.5391s
+  simulation time / #time steps: 2843.46 / 3500
+write time: 9us 873ns 
+        Time since programm started: 14.3788s
+  simulation time / #time steps: 3249.71 / 4000
+write time: 2us 976ns 
+        Time since programm started: 16.1975s
+  simulation time / #time steps: 3655.96 / 4500
+write time: 5us 365ns 
+        Time since programm started: 18.02s
+  simulation time / #time steps: 4062.21 / 5000
+write time: 7us 409ns 
+        Time since programm started: 19.8478s
+  simulation time / #time steps: 4468.46 / 5500
+write time: 4us 202ns 
+        Time since programm started: 21.6687s
+  simulation time / #time steps: 4874.71 / 6000
+write time: 11us 25ns 
+        Time since programm started: 23.4961s
+  simulation time / #time steps: 5280.96 / 6500
+write time: 10us 516ns 
+        Time since programm started: 25.3128s
+  simulation time / #time steps: 5687.21 / 7000
+write time: 10us 985ns 
+        Time since programm started: 27.1355s
+  simulation time / #time steps: 6093.46 / 7500
+write time: 10us 319ns 
+        Time since programm started: 28.9593s
+  simulation time / #time steps: 6499.71 / 8000
+write time: 9us 479ns 
+        Time since programm started: 30.8164s
+  simulation time / #time steps: 6905.96 / 8500
+write time: 5us 540ns 
+        Time since programm started: 32.6906s
+  simulation time / #time steps: 7312.21 / 9000
+write time: 12us 614ns 
+        Time since programm started: 34.5479s
+  simulation time / #time steps: 7718.46 / 9500
+write time: 3us 974ns 
+        Time since programm started: 36.4398s
+  simulation time / #time steps: 8124.71 / 10000
+write time: 2us 549ns 
+        Time since programm started: 38.2707s
+  simulation time / #time steps: 8530.96 / 10500
+write time: 5us 695ns 
+        Time since programm started: 40.0835s
+  simulation time / #time steps: 8937.21 / 11000
+write time: 2us 661ns 
+        Time since programm started: 41.8958s
+  simulation time / #time steps: 9343.46 / 11500
+write time: 2us 450ns 
+        Time since programm started: 43.7081s
+  simulation time / #time steps: 9749.71 / 12000
+write time: 2us 606ns 
+        Time since programm started: 45.5178s
+  simulation time / #time steps: 10156 / 12500
+write time: 2us 571ns 
+        Time since programm started: 47.3278s
+  simulation time / #time steps: 10562.2 / 13000
+write time: 3us 280ns 
+        Time since programm started: 49.1396s
+  simulation time / #time steps: 10968.5 / 13500
+write time: 2us 478ns 
+        Time since programm started: 50.9517s
+  simulation time / #time steps: 11374.7 / 14000
+write time: 1us 618ns 
+        Time since programm started: 52.764s
+  simulation time / #time steps: 11781 / 14500
+write time: 4us 283ns 
+        Time since programm started: 54.5759s
+  simulation time / #time steps: 12187.2 / 15000
+write time: 4us 437ns 
+        Time since programm started: 56.3857s
+  simulation time / #time steps: 12593.5 / 15500
+write time: 2us 403ns 
+        Time since programm started: 58.2007s
+  simulation time / #time steps: 12999.7 / 16000
+write time: 4us 963ns 
+        Time since programm started: 60.0132s
+  simulation time / #time steps: 13406 / 16500
+write time: 2us 523ns 
+        Time since programm started: 61.8253s
+  simulation time / #time steps: 13812.2 / 17000
+write time: 2us 194ns 
+        Time since programm started: 63.6382s
+  simulation time / #time steps: 14218.5 / 17500
+write time: 10us 340ns 
+        Time since programm started: 65.4508s
+  simulation time / #time steps: 14624.7 / 18000
+write time: 3us 568ns 
+        Time since programm started: 67.2609s
+  simulation time / #time steps: 15031 / 18500
+write time: 3us 240ns 
+        Time since programm started: 69.0711s
+  simulation time / #time steps: 15437.2 / 19000
+write time: 3us 138ns 
+        Time since programm started: 70.8832s
+  simulation time / #time steps: 15843.5 / 19500
+write time: 12us 30ns 
+        Time since programm started: 72.6956s
+  simulation time / #time steps: 16249.7 / 20000
+write time: 5us 23ns 
+        Time since programm started: 74.5077s
+  simulation time / #time steps: 16656 / 20500
+write time: 2us 798ns 
+        Time since programm started: 76.3199s
+  simulation time / #time steps: 17062.2 / 21000
+write time: 2us 692ns 
+        Time since programm started: 78.1301s
+  simulation time / #time steps: 17468.5 / 21500
+write time: 3us 364ns 
+        Time since programm started: 79.9404s
+  simulation time / #time steps: 17874.7 / 22000
+write time: 2us 425ns 
+        Time since programm started: 81.7526s
+  simulation time / #time steps: 18281 / 22500
+write time: 2us 952ns 
+        Time since programm started: 83.5648s
+  simulation time / #time steps: 18687.2 / 23000
+write time: 3us 546ns 
+        Time since programm started: 85.377s
+  simulation time / #time steps: 19093.5 / 23500
+write time: 6us 416ns 
+        Time since programm started: 87.2559s
+  simulation time / #time steps: 19499.7 / 24000
+write time: 5us 133ns 
+        Time since programm started: 89.3111s
+  simulation time / #time steps: 19906 / 24500
+write time: 3us 851ns 
+        Time since programm started: 91.2465s
+  simulation time / #time steps: 20312.2 / 25000
+write time: 5us 334ns 
+        Time since programm started: 93.3003s
+  simulation time / #time steps: 20718.5 / 25500
+write time: 7us 863ns 
+        Time since programm started: 95.1117s
+  simulation time / #time steps: 21124.7 / 26000
+write time: 5us 683ns 
+        Time since programm started: 97.0626s
+  simulation time / #time steps: 21531 / 26500
+write time: 4us 337ns 
+        Time since programm started: 98.8749s
+  simulation time / #time steps: 21937.2 / 27000
+write time: 3us 462ns 
+        Time since programm started: 100.687s
+  simulation time / #time steps: 22343.5 / 27500
+write time: 8us 243ns 
+        Time since programm started: 102.499s
+  simulation time / #time steps: 22749.7 / 28000
+write time: 6us 483ns 
+        Time since programm started: 104.309s
+  simulation time / #time steps: 23156 / 28500
+write time: 4us 422ns 
+        Time since programm started: 106.122s
+  simulation time / #time steps: 23562.2 / 29000
+write time: 11us 432ns 
+        Time since programm started: 107.932s
+  simulation time / #time steps: 23968.5 / 29500
+write time: 5us 287ns 
+        Time since programm started: 109.744s
+  simulation time / #time steps: 24374.7 / 30000
+write time: 5us 244ns 
+        Time since programm started: 111.556s
+  simulation time / #time steps: 24781 / 30500
+write time: 2us 940ns 
+        Time since programm started: 113.368s
+  simulation time / #time steps: 25187.2 / 31000
+write time: 2us 997ns 
+        Time since programm started: 115.178s
+  simulation time / #time steps: 25593.5 / 31500
+write time: 2us 495ns 
+        Time since programm started: 116.991s
+  simulation time / #time steps: 25999.7 / 32000
+write time: 4us 392ns 
+        Time since programm started: 118.804s
+  simulation time / #time steps: 26406 / 32500
+write time: 4us 405ns 
+        Time since programm started: 120.616s
+  simulation time / #time steps: 26812.2 / 33000
+write time: 11us 891ns 
+        Time since programm started: 122.515s
+  simulation time / #time steps: 27218.5 / 33500
+write time: 8us 813ns 
+        Time since programm started: 124.55s
+  simulation time / #time steps: 27624.7 / 34000
+write time: 3us 464ns 
+        Time since programm started: 126.364s
+  simulation time / #time steps: 28031 / 34500
+write time: 3us 673ns 
+        Time since programm started: 128.176s
+  simulation time / #time steps: 28437.2 / 35000
+write time: 3us 678ns 
+        Time since programm started: 129.987s
+  simulation time / #time steps: 28843.5 / 35500
+write time: 2us 687ns 
+        Time since programm started: 131.8s
+  simulation time / #time steps: 29249.7 / 36000
+write time: 2us 179ns 
+        Time since programm started: 133.613s
+  simulation time / #time steps: 29656 / 36500
+write time: 3us 314ns 
+        Time since programm started: 135.426s
+  simulation time / #time steps: 30062.2 / 37000
+write time: 2us 328ns 
+        Time since programm started: 137.237s
+  simulation time / #time steps: 30468.5 / 37500
+write time: 2us 878ns 
+        Time since programm started: 139.049s
+  simulation time / #time steps: 30874.7 / 38000
+write time: 3us 70ns 
+        Time since programm started: 140.864s
+  simulation time / #time steps: 31281 / 38500
+write time: 4us 109ns 
+        Time since programm started: 142.677s
+  simulation time / #time steps: 31687.2 / 39000
+write time: 3us 912ns 
+        Time since programm started: 144.49s
+  simulation time / #time steps: 32093.5 / 39500
+write time: 2us 828ns 
+        Time since programm started: 146.303s
+  simulation time / #time steps: 32499.7 / 40000
+write time: 7us 808ns 
+        Time since programm started: 148.425s
+  simulation time / #time steps: 32906 / 40500
+write time: 8us 260ns 
+        Time since programm started: 150.351s
+  simulation time / #time steps: 33312.2 / 41000
+write time: 8us 899ns 
+        Time since programm started: 152.286s
+  simulation time / #time steps: 33718.5 / 41500
+write time: 3us 225ns 
+        Time since programm started: 154.319s
+  simulation time / #time steps: 34124.7 / 42000
+write time: 4us 709ns 
+        Time since programm started: 156.145s
+  simulation time / #time steps: 34531 / 42500
+write time: 14us 469ns 
+        Time since programm started: 158.243s
+  simulation time / #time steps: 34937.2 / 43000
+write time: 5us 963ns 
+        Time since programm started: 160.264s
+  simulation time / #time steps: 35343.5 / 43500
+write time: 4us 603ns 
+        Time since programm started: 162.078s
+  simulation time / #time steps: 35749.7 / 44000
+write time: 3us 42ns 
+        Time since programm started: 163.889s
+total time: 165s 9ms 494us 221ns 
+calc time : 163s 900ms 917us 418ns 
+setup time: 1s 108ms 99us 331ns 
+write time: 477us 472ns 
+checkpoint time: 
+finished time loop
+freeing memory: l_setup
+freeing memory: l_waveProp
+freeing memory: l_stations
+freeing memory: netcdf_manager
+delete checkpoints
+delete checkpoints
+finished, exiting
