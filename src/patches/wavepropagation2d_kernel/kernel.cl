@@ -171,7 +171,6 @@ setGhostOutflow(__global float *m_h, __global float *m_hu, __global float *m_hv,
   int l_coord, l_coord_l, l_coord_r;
 
   // set left boundary
-  // if (y < m_nCells_y) {
   switch (m_state_boundary_left) {
   // open
   case 0:
@@ -217,12 +216,10 @@ setGhostOutflow(__global float *m_h, __global float *m_hu, __global float *m_hv,
 
   default:
     break;
-    //}
   }
 
-  // set top boundary
-  // if (x < m_nCells_x) {
-  switch (m_state_boundary_top) {
+  // set bottom boundary
+  switch (m_state_boundary_bottom) {
   // open
   case 0:
     l_coord_l = getCoordinates(x, 0, m_nCells_x, m_nCells_y);
@@ -245,8 +242,8 @@ setGhostOutflow(__global float *m_h, __global float *m_hu, __global float *m_hv,
     break;
   }
 
-  // set bottom boundary
-  switch (m_state_boundary_bottom) {
+  // set top boundary
+  switch (m_state_boundary_top) {
   // open
   case 0:
     l_coord_l = getCoordinates(x, m_nCells_y, m_nCells_x, m_nCells_y);
@@ -268,7 +265,6 @@ setGhostOutflow(__global float *m_h, __global float *m_hu, __global float *m_hv,
   default:
     break;
   }
-  //}
 }
 
 __kernel void updateXAxisKernel(__global float *i_hTemp,
