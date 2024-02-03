@@ -155,3 +155,132 @@ To fix this, we needed to split our big WavePropagation2d-kernel into four small
 
 Justus helped us to split the kernel into four smaller kernels, which is why we included him
 as a co-contributor in the :code:`kernel.cl` file.
+
+Week 4:
+^^^^^^^
+
+Finally, we are in the last week. We encountereds a new issue that needed solving: The kernel
+ran well on the CPU with real results, but on the GPU, the results were not correct. After some
+more debugging and help from Justus, we found that the lack of an `attomic_add` function was
+detremental to the results. That was not very visible in the tsunami simulation, but after
+trying the dambreak-setup, we saw an inconsistent result with varying wavespeeds. This was
+fixed with the addition of an `atomic_add` function, that was found on `stackoverflow <https://stackoverflow.com/a/70822133/19465205>`_.
+
+And with that, here are our achievements from the implementation of OpenCL:
+
+Implementation
+--------------
+
+To add OpenCL to the project, we wanted to use the interface that was already implemented in the project.
+Our goal was to call the `waveprop`-constructor in the same way as the CPU-version.
+
+That was simple, because the main part of the OpenCL-implementation was the kernel and its calling
+which does not require any changes to the interface.
+
+We first look for a platform and a device, then we create a context and a command queue.
+
+.. code:: c++
+
+   device = create_device();
+
+   context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
+
+   std::filesystem::path currentPath = std::filesystem::current_path();
+   std::string kernel_path = currentPath.string() + "/src/patches/wavepropagation2d_kernel/kernel.cl";
+   const char *kernel_path_char = kernel_path.c_str();
+
+   std::cout << "Kernel path: " << kernel_path_char << std::endl;
+
+   program = build_program(context, device, kernel_path_char);
+   ksetGhostOutflowLR = clCreateKernel(program, KERNEL_GHOSTCELLS_LR, &err);
+   ksetGhostOutflowTB = clCreateKernel(program, KERNEL_GHOSTCELLS_TB, &err);
+   kcopy = clCreateKernel(program, KERNEL_COPY, &err);
+   knetUpdatesX = clCreateKernel(program, KERNEL_X_AXIS_FUNC, &err);
+   knetUpdatesY = clCreateKernel(program, KERNEL_Y_AXIS_FUNC, &err);
+
+   queue = clCreateCommandQueue(context, device, 0, &err);
+
+The kernel is loaded by taking the relative path of the project and then looking for the specific
+path of where the kernel is located. This means that launching the executable with a global path,
+i.e. "/home/user/tsunami_lab/build/tsunami_lab" will not work.
+
+After setting the global work size, which represents the total amount of threads that will be executed
+meaning the amount of cells in the simulation, we played around with the local work size. The last
+implementation can be seen as a depricated code snippit in :code:`wavepropagation2d_kernel.cpp`.
+The results were, that some local work sizes were faster than others and that it all was dependent
+on the simulation size. We were not able to find a general rule for the local work size, which is why
+we decided to use the integrated featture of OpenCL to automatically determine the local work size.
+This can be achieved by setting the local work size to `NULL` in the :code:`clEnqueueNDRangeKernel` function.
+
+The main part of the implementation lies in the `timeStep` function. The main idea was to 
+vectorize the for loops of the CPU-version to allow the thousands of workers to work on the
+same data at the same time.
+
+A kernel is the set of instructions given to the GPU which tells each individual worker what to do.
+Because there are steps in the simulation that are dependent on the previous step, we had to split
+the kernel into five smaller kernels with 6 kernel calls per timestep:
+
+* Setting the outflow boundary conditions for the left and right side
+* Copying the data from the array to a temporary array
+* Executing the x-sweep
+* Setting the outflow boundary conditions for the top and bottom side
+* Copying the data again to a temporary array
+* Executing the y-sweep
+
+The setting of the outflow boundary conditions was split for performance reasons. The x-sweep 
+is not requiering the top and bottom boundary conditions, which is why we dont need to set
+the boundary conditions for the top and bottom for the x-sweep. Vice versa for the y-sweep.
+
+The kernel-file itself includes the five different kernels and helping functions for the kernels.
+The helping functions are basically the FWave-solver, which we included in the same file for
+simplicity reasons (and maybe because we did not manage to include a kernel file inside a kernel file :P).
+
+.. code:: c
+
+   __kernel void updateXAxisKernel(__global float *i_hTemp,
+                                 __global float *i_huvTemp, __global float *i_b,
+                                 ulong m_nCells_x, ulong m_nCells_y,
+                                 float i_scaling, __global float *o_h,
+                                 __global float *o_hu) {
+
+      ulong x = get_global_id(0);
+      ulong y = get_global_id(1);
+
+      if (x >= m_nCells_x + 1 || y >= m_nCells_y + 2)
+         return;
+
+      ulong l_coord_L = getCoordinates(x, y, m_nCells_x, m_nCells_y);
+      ulong l_coord_R = getCoordinates(x + 1, y, m_nCells_x, m_nCells_y);
+
+      //   Define net updates array
+      float l_netUpdatesL[2];
+      float l_netUpdatesR[2];
+
+      netUpdates(i_hTemp[l_coord_L], i_hTemp[l_coord_R], i_huvTemp[l_coord_L],
+                  i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
+                  l_netUpdatesL, l_netUpdatesR);
+
+      atomic_add_f(&o_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
+      atomic_add_f(&o_hu[l_coord_L], -i_scaling * l_netUpdatesL[1]);
+      atomic_add_f(&o_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
+      atomic_add_f(&o_hu[l_coord_R], -i_scaling * l_netUpdatesR[1]);
+   }
+
+
+Benchmarking Results
+--------------------
+
+While we initially inteded to use a GPU Profilier to gain more insight into the performance of the
+OpenCL-implementation, we were not able to do so. The reason for this is, that the GPU Profilier
+for Nvidia (Nsight) does not support OpenCL. (You may ask yourself why we used Nsight instead of
+Radeon GPU Profilier, but the answer is simple: throughout the project we switched plattforms
+from AMD to Nvidia, the reason partly being the frustration with the lack of AMD-documentation
+for developpers)
+
+We tested the performance running the "tsunami2d" setup on the tohoku map with varying grid sizes
+and on two vastly different devices.
+
+* Personal Computer: Intel i5 11400KF + Nvidia RTX 4070 Super
+* Macbook Air (M2)
+
+The results were as follows:

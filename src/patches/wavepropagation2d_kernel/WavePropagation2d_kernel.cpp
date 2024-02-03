@@ -116,6 +116,7 @@ cl_program build_program(cl_context ctx, cl_device_id dev, const char *filename)
     return program;
 }
 
+// depricated
 size_t findMaxLocalSize(cl_device_id device)
 {
     size_t maxLocalSize;
@@ -175,6 +176,7 @@ size_t *findLocalWorker(cl_device_id device, size_t *global_size)
 
     return localSize;
 }
+//
 
 tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i_nCells_x,
                                                                          t_idx i_nCells_y,
@@ -218,9 +220,11 @@ tsunami_lab::patches::WavePropagation2d_kernel::WavePropagation2d_kernel(t_idx i
 
     global_size[0] = {m_nCells_x + 2};
     global_size[1] = {m_nCells_y + 2};
+
+    // depricated
     localWorker = findLocalWorker(device, global_size);
 
-    std::cout << "Local size: " << localWorker[0] << " " << localWorker[1] << std::endl;
+    std::cout << "Local size (depricated): " << localWorker[0] << " " << localWorker[1] << std::endl;
 }
 
 tsunami_lab::patches::WavePropagation2d_kernel::~WavePropagation2d_kernel()
