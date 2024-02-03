@@ -62,7 +62,8 @@ private:
     cl_device_id device;
     cl_context context;
     cl_program program;
-    cl_kernel ksetGhostOutflow;
+    cl_kernel ksetGhostOutflowLR;
+    cl_kernel ksetGhostOutflowTB;
     cl_kernel kcopy;
     cl_kernel knetUpdatesX;
     cl_kernel knetUpdatesY;

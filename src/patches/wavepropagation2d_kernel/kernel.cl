@@ -154,116 +154,149 @@ void netUpdates(float i_hL, float i_hR, float i_huL, float i_huR, float i_bL,
   }
 }
 
+
+// https://stackoverflow.com/a/70822133/19465205
+void __attribute__((always_inline))
+atomic_add_f(volatile global float *addr, const float val) {
+  union {
+    uint u32;
+    float f32;
+  } next, expected, current;
+  current.f32 = *addr;
+  do {
+    next.f32 = (expected.f32 = current.f32) + val; // ...*val for atomic_mul_f()
+    current.u32 =
+        atomic_cmpxchg((volatile global uint *)addr, expected.u32, next.u32);
+  } while (current.u32 != expected.u32);
+}
+
 inline int getCoordinates(ulong x, ulong y, ulong m_nCells_x,
                           ulong m_nCells_y) {
   return y * (m_nCells_x + 2) + x;
 }
 
+
 __kernel void
-setGhostOutflow(__global float *m_h, __global float *m_hu, __global float *m_hv,
+setGhostOutflowLeftRight(__global float *m_h, __global float *m_hu,
                 __global float *m_b, ulong m_nCells_x, ulong m_nCells_y,
-                int m_state_boundary_left, int m_state_boundary_right,
+                int m_state_boundary_left, int m_state_boundary_right) {
+
+  int x = get_global_id(0);
+  int y = get_global_id(1);
+
+  if (x >= m_nCells_x + 2 || y >= m_nCells_y + 2)
+    return;
+
+  int l_coord, l_coord_l, l_coord_r;
+
+  // set left boundary
+  if (x == 0) {
+    switch (m_state_boundary_left) {
+    // open
+    case 0:
+      l_coord_l = getCoordinates(0, y, m_nCells_x, m_nCells_y);
+      l_coord_r = getCoordinates(1, y, m_nCells_x, m_nCells_y);
+      m_h[l_coord_l] = m_h[l_coord_r];
+      m_hu[l_coord_l] = m_hu[l_coord_r];
+      m_b[l_coord_l] = m_b[l_coord_r];
+      break;
+    // closed
+    case 1:
+      l_coord = getCoordinates(0, y, m_nCells_x, m_nCells_y);
+      m_h[l_coord] = 0;
+      m_hu[l_coord] = 0;
+      m_b[l_coord] = 25;
+      break;
+
+    default:
+      break;
+    }
+  }
+
+  // set right boundary
+  if (x == m_nCells_x + 1) {
+    switch (m_state_boundary_right) {
+    // open
+    case 0:
+      l_coord_l = getCoordinates(m_nCells_x, y, m_nCells_x, m_nCells_y);
+      l_coord_r = getCoordinates(m_nCells_x + 1, y, m_nCells_x, m_nCells_y);
+      m_h[l_coord_r] = m_h[l_coord_l];
+      m_hu[l_coord_r] = m_hu[l_coord_l];
+      m_b[l_coord_r] = m_b[l_coord_l];
+      break;
+    // closed
+    case 1:
+      l_coord = getCoordinates(m_nCells_x + 1, y, m_nCells_x, m_nCells_y);
+      m_h[l_coord] = 0;
+      m_hu[l_coord] = 0;
+      m_b[l_coord] = 25;
+      break;
+
+    default:
+      break;
+    }
+  }
+}
+
+__kernel void
+setGhostOutflowTopBottom(__global float *m_h, __global float *m_hv,
+                __global float *m_b, ulong m_nCells_x, ulong m_nCells_y,
                 int m_state_boundary_top, int m_state_boundary_bottom) {
 
   int x = get_global_id(0);
   int y = get_global_id(1);
 
+  if (x >= m_nCells_x + 2 || y >= m_nCells_y + 2)
+    return;
+
   int l_coord, l_coord_l, l_coord_r;
 
-  // set left boundary
-  switch (m_state_boundary_left) {
-  // open
-  case 0:
-    l_coord_l = getCoordinates(0, y, m_nCells_x, m_nCells_y);
-    l_coord_r = getCoordinates(1, y, m_nCells_x, m_nCells_y);
-    m_h[l_coord_l] = m_h[l_coord_r];
-    m_hu[l_coord_l] = m_hu[l_coord_r];
-    m_hv[l_coord_l] = m_hv[l_coord_r];
-    m_b[l_coord_l] = m_b[l_coord_r];
-    break;
-  // closed
-  case 1:
-    l_coord = getCoordinates(0, y, m_nCells_x, m_nCells_y);
-    m_h[l_coord] = 0;
-    m_hu[l_coord] = 0;
-    m_hv[l_coord] = 0;
-    m_b[l_coord] = 25;
-    break;
-
-  default:
-    break;
-  }
-
-  // set right boundary
-  switch (m_state_boundary_right) {
-  // open
-  case 0:
-    l_coord_l = getCoordinates(m_nCells_x, y, m_nCells_x, m_nCells_y);
-    l_coord_r = getCoordinates(m_nCells_x + 1, y, m_nCells_x, m_nCells_y);
-    m_h[l_coord_r] = m_h[l_coord_l];
-    m_hu[l_coord_r] = m_hu[l_coord_l];
-    m_hv[l_coord_r] = m_hv[l_coord_l];
-    m_b[l_coord_r] = m_b[l_coord_l];
-    break;
-  // closed
-  case 1:
-    l_coord = getCoordinates(m_nCells_x + 1, y, m_nCells_x, m_nCells_y);
-    m_h[l_coord] = 0;
-    m_hu[l_coord] = 0;
-    m_hv[l_coord] = 0;
-    m_b[l_coord] = 25;
-    break;
-
-  default:
-    break;
-  }
-
   // set bottom boundary
-  switch (m_state_boundary_bottom) {
-  // open
-  case 0:
-    l_coord_l = getCoordinates(x, 0, m_nCells_x, m_nCells_y);
-    l_coord_r = getCoordinates(x, 1, m_nCells_x, m_nCells_y);
-    m_h[l_coord_l] = m_h[l_coord_r];
-    m_hu[l_coord_l] = m_hu[l_coord_r];
-    m_hv[l_coord_l] = m_hv[l_coord_r];
-    m_b[l_coord_l] = m_b[l_coord_r];
-    break;
-  // closed
-  case 1:
-    l_coord = getCoordinates(x, 0, m_nCells_x, m_nCells_y);
-    m_h[l_coord] = 0;
-    m_hu[l_coord] = 0;
-    m_hv[l_coord] = 0;
-    m_b[l_coord] = 25;
-    break;
+  if (y == 0) {
+    switch (m_state_boundary_bottom) {
+    // open
+    case 0:
+      l_coord_l = getCoordinates(x, 0, m_nCells_x, m_nCells_y);
+      l_coord_r = getCoordinates(x, 1, m_nCells_x, m_nCells_y);
+      m_h[l_coord_l] = m_h[l_coord_r];
+      m_hv[l_coord_l] = m_hv[l_coord_r];
+      m_b[l_coord_l] = m_b[l_coord_r];
+      break;
+    // closed
+    case 1:
+      l_coord = getCoordinates(x, 0, m_nCells_x, m_nCells_y);
+      m_h[l_coord] = 0;
+      m_hv[l_coord] = 0;
+      m_b[l_coord] = 25;
+      break;
 
-  default:
-    break;
+    default:
+      break;
+    }
   }
 
   // set top boundary
-  switch (m_state_boundary_top) {
-  // open
-  case 0:
-    l_coord_l = getCoordinates(x, m_nCells_y, m_nCells_x, m_nCells_y);
-    l_coord_r = getCoordinates(x, m_nCells_y + 1, m_nCells_x, m_nCells_y);
-    m_h[l_coord_r] = m_h[l_coord_l];
-    m_hu[l_coord_r] = m_hu[l_coord_l];
-    m_hv[l_coord_r] = m_hv[l_coord_l];
-    m_b[l_coord_r] = m_b[l_coord_l];
-    break;
-  // closed
-  case 1:
-    l_coord = getCoordinates(x, m_nCells_y + 1, m_nCells_x, m_nCells_y);
-    m_h[l_coord] = 0;
-    m_hu[l_coord] = 0;
-    m_hv[l_coord] = 0;
-    m_b[l_coord] = 25;
-    break;
+  if (y == m_nCells_y + 1) {
+    switch (m_state_boundary_top) {
+    // open
+    case 0:
+      l_coord_l = getCoordinates(x, m_nCells_y, m_nCells_x, m_nCells_y);
+      l_coord_r = getCoordinates(x, m_nCells_y + 1, m_nCells_x, m_nCells_y);
+      m_h[l_coord_r] = m_h[l_coord_l];
+      m_hv[l_coord_r] = m_hv[l_coord_l];
+      m_b[l_coord_r] = m_b[l_coord_l];
+      break;
+    // closed
+    case 1:
+      l_coord = getCoordinates(x, m_nCells_y + 1, m_nCells_x, m_nCells_y);
+      m_h[l_coord] = 0;
+      m_hv[l_coord] = 0;
+      m_b[l_coord] = 25;
+      break;
 
-  default:
-    break;
+    default:
+      break;
+    }
   }
 }
 
@@ -276,7 +309,7 @@ __kernel void updateXAxisKernel(__global float *i_hTemp,
   ulong x = get_global_id(0);
   ulong y = get_global_id(1);
 
-  if (x == m_nCells_x + 1)
+  if (x >= m_nCells_x + 1 || y >= m_nCells_y + 2)
     return;
 
   ulong l_coord_L = getCoordinates(x, y, m_nCells_x, m_nCells_y);
@@ -290,10 +323,10 @@ __kernel void updateXAxisKernel(__global float *i_hTemp,
              i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
              l_netUpdatesL, l_netUpdatesR);
 
-  o_h[l_coord_L] -= i_scaling * l_netUpdatesL[0];
-  o_hu[l_coord_L] -= i_scaling * l_netUpdatesL[1];
-  o_h[l_coord_R] -= i_scaling * l_netUpdatesR[0];
-  o_hu[l_coord_R] -= i_scaling * l_netUpdatesR[1];
+  atomic_add_f(&o_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
+  atomic_add_f(&o_hu[l_coord_L], -i_scaling * l_netUpdatesL[1]);
+  atomic_add_f(&o_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
+  atomic_add_f(&o_hu[l_coord_R], -i_scaling * l_netUpdatesR[1]);
 }
 __kernel void updateYAxisKernel(__global float *i_hTemp,
                                 __global float *i_huvTemp, __global float *i_b,
@@ -304,7 +337,7 @@ __kernel void updateYAxisKernel(__global float *i_hTemp,
   ulong x = get_global_id(0);
   ulong y = get_global_id(1);
 
-  if (y == m_nCells_y + 1)
+  if (y >= m_nCells_y + 1 || x >= m_nCells_x + 2)
     return;
 
   ulong l_coord_L = getCoordinates(x, y, m_nCells_x, m_nCells_y);
@@ -318,10 +351,10 @@ __kernel void updateYAxisKernel(__global float *i_hTemp,
              i_huvTemp[l_coord_R], i_b[l_coord_L], i_b[l_coord_R],
              l_netUpdatesL, l_netUpdatesR);
 
-  o_h[l_coord_L] -= i_scaling * l_netUpdatesL[0];
-  o_hv[l_coord_L] -= i_scaling * l_netUpdatesL[1];
-  o_h[l_coord_R] -= i_scaling * l_netUpdatesR[0];
-  o_hv[l_coord_R] -= i_scaling * l_netUpdatesR[1];
+  atomic_add_f(&o_h[l_coord_L], -i_scaling * l_netUpdatesL[0]);
+  atomic_add_f(&o_hv[l_coord_L], -i_scaling * l_netUpdatesL[1]);
+  atomic_add_f(&o_h[l_coord_R], -i_scaling * l_netUpdatesR[0]);
+  atomic_add_f(&o_hv[l_coord_R], -i_scaling * l_netUpdatesR[1]);
 }
 
 __kernel void copy(__global float *i_h, __global float *i_huv, ulong m_nCells_x,
@@ -330,6 +363,9 @@ __kernel void copy(__global float *i_h, __global float *i_huv, ulong m_nCells_x,
 
   ulong x = get_global_id(0);
   ulong y = get_global_id(1);
+
+  if (x >= m_nCells_x + 2 || y >= m_nCells_y + 2)
+    return;
 
   ulong l_coord = getCoordinates(x, y, m_nCells_x, m_nCells_y);
 
