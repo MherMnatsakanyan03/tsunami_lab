@@ -1,0 +1,168 @@
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+write normal
+runtime configuration
+  number of cells in x-direction: 2699
+  number of cells in y-direction: 1499
+  cell size:                      1000.28
+entering time loop
+  simulation time / #time steps: 0 / 0
+write time: 153ms 852us 
+	Time since programm started: 1.65159s
+  simulation time / #time steps: 813.598 / 500
+write time: 50ms 342us 
+	Time since programm started: 14.1396s
+  simulation time / #time steps: 1627.2 / 1000
+write time: 50ms 770us 
+	Time since programm started: 24.7046s
+  simulation time / #time steps: 2440.8 / 1500
+write time: 54ms 968us 
+	Time since programm started: 35.8675s
+  simulation time / #time steps: 3254.39 / 2000
+write time: 54ms 534us 
+	Time since programm started: 46.6523s
+  simulation time / #time steps: 4067.99 / 2500
+write time: 54ms 855us 
+	Time since programm started: 57.4302s
+  simulation time / #time steps: 4881.47 / 3000
+write time: 54ms 879us 
+	Time since programm started: 68.2853s
+  simulation time / #time steps: 5694.95 / 3500
+write time: 53ms 613us 
+	Time since programm started: 79.1955s
+  simulation time / #time steps: 6508.43 / 4000
+write time: 56ms 458us 
+	Time since programm started: 90.3609s
+  simulation time / #time steps: 7321.9 / 4500
+write time: 57ms 997us 
+	Time since programm started: 101.512s
+  simulation time / #time steps: 8135.38 / 5000
+write time: 60ms 294us 
+	Time since programm started: 112.589s
+  simulation time / #time steps: 8948.86 / 5500
+write time: 57ms 221us 
+	Time since programm started: 123.749s
+  simulation time / #time steps: 9762.33 / 6000
+write time: 54ms 841us 
+	Time since programm started: 134.913s
+  simulation time / #time steps: 10575.8 / 6500
+write time: 59ms 376us 
+	Time since programm started: 146.113s
+  simulation time / #time steps: 11389.3 / 7000
+write time: 66ms 661us 
+	Time since programm started: 157.288s
+  simulation time / #time steps: 12202.8 / 7500
+write time: 58ms 108us 
+	Time since programm started: 168.476s
+  simulation time / #time steps: 13016.2 / 8000
+write time: 56ms 924us 
+	Time since programm started: 179.798s
+  simulation time / #time steps: 13829.7 / 8500
+write time: 58ms 792us 
+	Time since programm started: 191.033s
+  simulation time / #time steps: 14643.2 / 9000
+write time: 57ms 107us 
+	Time since programm started: 202.284s
+  simulation time / #time steps: 15456.7 / 9500
+write time: 62ms 869us 
+	Time since programm started: 213.767s
+  simulation time / #time steps: 16270.1 / 10000
+write time: 63ms 151us 
+	Time since programm started: 225.489s
+  simulation time / #time steps: 17083.6 / 10500
+write time: 62ms 214us 
+	Time since programm started: 237.324s
+  simulation time / #time steps: 17897.1 / 11000
+write time: 68ms 904us 
+	Time since programm started: 249.296s
+  simulation time / #time steps: 18710.6 / 11500
+write time: 68ms 399us 
+	Time since programm started: 261.503s
+  simulation time / #time steps: 19524.1 / 12000
+write time: 65ms 606us 
+	Time since programm started: 273.838s
+  simulation time / #time steps: 20337.5 / 12500
+write time: 64ms 995us 
+	Time since programm started: 286.057s
+  simulation time / #time steps: 21151 / 13000
+write time: 66ms 422us 
+	Time since programm started: 298.302s
+  simulation time / #time steps: 21964.5 / 13500
+write time: 65ms 598us 
+	Time since programm started: 310.587s
+  simulation time / #time steps: 22778 / 14000
+write time: 69ms 227us 
+	Time since programm started: 322.757s
+  simulation time / #time steps: 23591.4 / 14500
+write time: 67ms 728us 
+	Time since programm started: 334.974s
+  simulation time / #time steps: 24404.9 / 15000
+write time: 81ms 148us 
+	Time since programm started: 347.217s
+  simulation time / #time steps: 25218.4 / 15500
+write time: 80ms 793us 
+	Time since programm started: 359.41s
+  simulation time / #time steps: 26031.9 / 16000
+write time: 77ms 243us 
+	Time since programm started: 371.57s
+  simulation time / #time steps: 26845.3 / 16500
+write time: 91ms 91us 
+	Time since programm started: 383.796s
+  simulation time / #time steps: 27658.8 / 17000
+write time: 97ms 688us 
+	Time since programm started: 395.957s
+  simulation time / #time steps: 28472.3 / 17500
+write time: 85ms 345us 
+	Time since programm started: 408.019s
+  simulation time / #time steps: 29285.8 / 18000
+write time: 83ms 840us 
+	Time since programm started: 420.076s
+  simulation time / #time steps: 30099.2 / 18500
+write time: 81ms 616us 
+	Time since programm started: 432.248s
+  simulation time / #time steps: 30912.7 / 19000
+write time: 78ms 501us 
+	Time since programm started: 444.272s
+  simulation time / #time steps: 31726.2 / 19500
+write time: 85ms 486us 
+	Time since programm started: 456.358s
+  simulation time / #time steps: 32539.7 / 20000
+write time: 81ms 883us 
+	Time since programm started: 468.435s
+  simulation time / #time steps: 33353.9 / 20500
+write time: 92ms 572us 
+	Time since programm started: 480.511s
+  simulation time / #time steps: 34168.3 / 21000
+write time: 86ms 64us 
+	Time since programm started: 492.628s
+  simulation time / #time steps: 34982.8 / 21500
+write time: 75ms 583us 
+	Time since programm started: 504.679s
+  simulation time / #time steps: 35797.2 / 22000
+write time: 70ms 472us 
+	Time since programm started: 516.774s
+total time: 519s 841ms 508us 
+calc time : 515s 43ms 892us 
+setup time: 1s 651ms 586us 
+total write time: 3s 146ms 30us 
+checkpoint time: 
+finished time loop
+freeing memory: l_setup
+freeing memory: l_waveProp
+freeing memory: l_stations
+freeing memory: netcdf_manager
+delete checkpoints
+delete checkpoints
+finished, exiting

@@ -1,0 +1,168 @@
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+write parallel
+runtime configuration
+  number of cells in x-direction: 2699
+  number of cells in y-direction: 1499
+  cell size:                      1000.28
+entering time loop
+  simulation time / #time steps: 0 / 0
+write time: 61us 
+	Time since programm started: 1.6045s
+  simulation time / #time steps: 813.598 / 500
+write time: 60us 
+	Time since programm started: 13.2937s
+  simulation time / #time steps: 1627.2 / 1000
+write time: 56us 
+	Time since programm started: 24.2518s
+  simulation time / #time steps: 2440.8 / 1500
+write time: 54us 
+	Time since programm started: 34.8061s
+  simulation time / #time steps: 3254.39 / 2000
+write time: 46us 
+	Time since programm started: 45.276s
+  simulation time / #time steps: 4067.99 / 2500
+write time: 46us 
+	Time since programm started: 56.5361s
+  simulation time / #time steps: 4881.47 / 3000
+write time: 65us 
+	Time since programm started: 67.8943s
+  simulation time / #time steps: 5694.95 / 3500
+write time: 47us 
+	Time since programm started: 78.3271s
+  simulation time / #time steps: 6508.43 / 4000
+write time: 55us 
+	Time since programm started: 88.9889s
+  simulation time / #time steps: 7321.9 / 4500
+write time: 65us 
+	Time since programm started: 100.448s
+  simulation time / #time steps: 8135.38 / 5000
+write time: 56us 
+	Time since programm started: 111.47s
+  simulation time / #time steps: 8948.86 / 5500
+write time: 67us 
+	Time since programm started: 122.401s
+  simulation time / #time steps: 9762.33 / 6000
+write time: 64us 
+	Time since programm started: 134.102s
+  simulation time / #time steps: 10575.8 / 6500
+write time: 456us 
+	Time since programm started: 145.778s
+  simulation time / #time steps: 11389.3 / 7000
+write time: 61us 
+	Time since programm started: 156.871s
+  simulation time / #time steps: 12202.8 / 7500
+write time: 67us 
+	Time since programm started: 167.752s
+  simulation time / #time steps: 13016.2 / 8000
+write time: 61us 
+	Time since programm started: 178.533s
+  simulation time / #time steps: 13829.7 / 8500
+write time: 52us 
+	Time since programm started: 189.366s
+  simulation time / #time steps: 14643.2 / 9000
+write time: 60us 
+	Time since programm started: 200.316s
+  simulation time / #time steps: 15456.7 / 9500
+write time: 55us 
+	Time since programm started: 211.423s
+  simulation time / #time steps: 16270.1 / 10000
+write time: 47us 
+	Time since programm started: 222.742s
+  simulation time / #time steps: 17083.6 / 10500
+write time: 128us 
+	Time since programm started: 234.184s
+  simulation time / #time steps: 17897.1 / 11000
+write time: 46us 
+	Time since programm started: 245.857s
+  simulation time / #time steps: 18710.6 / 11500
+write time: 67us 
+	Time since programm started: 257.133s
+  simulation time / #time steps: 19524.1 / 12000
+write time: 62us 
+	Time since programm started: 268.346s
+  simulation time / #time steps: 20337.5 / 12500
+write time: 59us 
+	Time since programm started: 279.625s
+  simulation time / #time steps: 21151 / 13000
+write time: 61us 
+	Time since programm started: 291.521s
+  simulation time / #time steps: 21964.5 / 13500
+write time: 296us 
+	Time since programm started: 303.539s
+  simulation time / #time steps: 22778 / 14000
+write time: 58us 
+	Time since programm started: 315.384s
+  simulation time / #time steps: 23591.4 / 14500
+write time: 62us 
+	Time since programm started: 327.379s
+  simulation time / #time steps: 24404.9 / 15000
+write time: 70us 
+	Time since programm started: 339.175s
+  simulation time / #time steps: 25218.4 / 15500
+write time: 53us 
+	Time since programm started: 350.778s
+  simulation time / #time steps: 26031.9 / 16000
+write time: 63us 
+	Time since programm started: 362.253s
+  simulation time / #time steps: 26845.3 / 16500
+write time: 64us 
+	Time since programm started: 373.5s
+  simulation time / #time steps: 27658.8 / 17000
+write time: 62us 
+	Time since programm started: 384.693s
+  simulation time / #time steps: 28472.3 / 17500
+write time: 278us 
+	Time since programm started: 395.782s
+  simulation time / #time steps: 29285.8 / 18000
+write time: 61us 
+	Time since programm started: 406.817s
+  simulation time / #time steps: 30099.2 / 18500
+write time: 52us 
+	Time since programm started: 417.946s
+  simulation time / #time steps: 30912.7 / 19000
+write time: 61us 
+	Time since programm started: 428.997s
+  simulation time / #time steps: 31726.2 / 19500
+write time: 51us 
+	Time since programm started: 440.024s
+  simulation time / #time steps: 32539.7 / 20000
+write time: 49us 
+	Time since programm started: 451.093s
+  simulation time / #time steps: 33353.9 / 20500
+write time: 52us 
+	Time since programm started: 462.16s
+  simulation time / #time steps: 34168.3 / 21000
+write time: 64us 
+	Time since programm started: 473.205s
+  simulation time / #time steps: 34982.8 / 21500
+write time: 61us 
+	Time since programm started: 484.274s
+  simulation time / #time steps: 35797.2 / 22000
+write time: 373us 
+	Time since programm started: 495.435s
+total time: 498s 208ms 768us 
+calc time : 496s 600ms 418us 
+setup time: 1s 604ms 496us 
+total write time: 3ms 854us 
+checkpoint time: 
+finished time loop
+freeing memory: l_setup
+freeing memory: l_waveProp
+freeing memory: l_stations
+freeing memory: netcdf_manager
+delete checkpoints
+delete checkpoints
+finished, exiting

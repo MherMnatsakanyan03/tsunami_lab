@@ -1,0 +1,51 @@
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+write normal
+runtime configuration
+  number of cells in x-direction: 337
+  number of cells in y-direction: 187
+  cell size:                      8011.13
+entering time loop
+  simulation time / #time steps: 0 / 0
+write time: 997us 
+	Time since programm started: 0.725465s
+  simulation time / #time steps: 6546.37 / 500
+write time: 1ms 471us 
+	Time since programm started: 0.957894s
+  simulation time / #time steps: 13092.8 / 1000
+write time: 1ms 700us 
+	Time since programm started: 1.19285s
+  simulation time / #time steps: 19638.9 / 1500
+write time: 1ms 893us 
+	Time since programm started: 1.43929s
+  simulation time / #time steps: 26184.8 / 2000
+write time: 1ms 907us 
+	Time since programm started: 1.68991s
+  simulation time / #time steps: 32730.7 / 2500
+write time: 2ms 441us 
+	Time since programm started: 1.96822s
+total time: 2s 94ms 952us 
+calc time : 1s 359ms 79us 
+setup time: 725ms 464us 
+total write time: 10ms 409us 
+checkpoint time: 
+finished time loop
+freeing memory: l_setup
+freeing memory: l_waveProp
+freeing memory: l_stations
+freeing memory: netcdf_manager
+delete checkpoints
+delete checkpoints
+finished, exiting

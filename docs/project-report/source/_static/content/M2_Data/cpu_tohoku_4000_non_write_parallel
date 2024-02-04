@@ -1,0 +1,69 @@
+####################################
+### Tsunami Lab                  ###
+###                              ###
+### https://scalable.uni-jena.de ###
+####################################
+simulating in 2d
+tsunami2d
+using TsunamiEvent2d() setup
+Entering TsunamiEvent2d
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_bath.nc
+NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
+delete checkpoints
+Width: 2.69975e+06
+Height: 1.49975e+06
+write parallel
+runtime configuration
+  number of cells in x-direction: 674
+  number of cells in y-direction: 374
+  cell size:                      4005.56
+entering time loop
+  simulation time / #time steps: 0 / 0
+write time: 13us 
+	Time since programm started: 0.827396s
+  simulation time / #time steps: 3254.77 / 500
+write time: 37us 
+	Time since programm started: 1.54804s
+  simulation time / #time steps: 6509.62 / 1000
+write time: 38us 
+	Time since programm started: 2.33805s
+  simulation time / #time steps: 9764.5 / 1500
+write time: 27us 
+	Time since programm started: 3.10997s
+  simulation time / #time steps: 13019.4 / 2000
+write time: 32us 
+	Time since programm started: 3.84672s
+  simulation time / #time steps: 16274.3 / 2500
+write time: 38us 
+	Time since programm started: 4.58707s
+  simulation time / #time steps: 19529.2 / 3000
+write time: 31us 
+	Time since programm started: 5.32598s
+  simulation time / #time steps: 22784 / 3500
+write time: 29us 
+	Time since programm started: 6.0683s
+  simulation time / #time steps: 26038.9 / 4000
+write time: 35us 
+	Time since programm started: 6.80882s
+  simulation time / #time steps: 29293.8 / 4500
+write time: 34us 
+	Time since programm started: 7.5686s
+  simulation time / #time steps: 32548.7 / 5000
+write time: 31us 
+	Time since programm started: 8.30671s
+  simulation time / #time steps: 35802.7 / 5500
+write time: 25us 
+	Time since programm started: 9.04242s
+total time: 9s 88ms 948us 
+calc time : 8s 261ms 182us 
+setup time: 827ms 396us 
+total write time: 370us 
+checkpoint time: 
+finished time loop
+freeing memory: l_setup
+freeing memory: l_waveProp
+freeing memory: l_stations
+freeing memory: netcdf_manager
+delete checkpoints
+delete checkpoints
+finished, exiting
