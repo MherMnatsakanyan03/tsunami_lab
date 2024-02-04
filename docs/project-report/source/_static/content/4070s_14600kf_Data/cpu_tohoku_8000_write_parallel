@@ -1,4 +1,3 @@
-./build/tsunami_lab -d 2d -s "tsunami2d" -o 0 8000
 ####################################
 ### Tsunami Lab                  ###
 ###                              ###
@@ -13,33 +12,34 @@ NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
 delete checkpoints
 Width: 2.69975e+06
 Height: 1.49975e+06
+write parallel
 runtime configuration
   number of cells in x-direction: 337
   number of cells in y-direction: 187
   cell size:                      8011.13
 entering time loop
   simulation time / #time steps: 0 / 0
-write time: 2us 458ns 
-        Time since programm started: 0.714058s
+write time: 54us 626ns 
+	Time since programm started: 0.714255s
   simulation time / #time steps: 6546.37 / 500
-write time: 18us 450ns 
-        Time since programm started: 0.888846s
+write time: 84us 954ns 
+	Time since programm started: 0.847555s
   simulation time / #time steps: 13092.8 / 1000
-write time: 17us 863ns 
-        Time since programm started: 1.46337s
+write time: 79us 142ns 
+	Time since programm started: 0.971713s
   simulation time / #time steps: 19638.9 / 1500
-write time: 44us 81ns 
-        Time since programm started: 1.69957s
+write time: 26us 224ns 
+	Time since programm started: 1.13588s
   simulation time / #time steps: 26184.8 / 2000
-write time: 111us 858ns 
-        Time since programm started: 1.80031s
+write time: 89us 658ns 
+	Time since programm started: 1.26327s
   simulation time / #time steps: 32730.7 / 2500
-write time: 123us 285ns 
-        Time since programm started: 2.10343s
-total time: 2s 550ms 696us 637ns 
-calc time : 1s 836ms 321us 917ns 
-setup time: 714ms 56us 725ns 
-write time: 317us 995ns 
+write time: 86us 586ns 
+	Time since programm started: 1.39408s
+total time: 1s 458ms 369us 723ns 
+total calc time : 743ms 694us 380ns 
+setup time: 714ms 254us 153ns 
+total write time: 421us 190ns 
 checkpoint time: 
 finished time loop
 freeing memory: l_setup

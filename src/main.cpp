@@ -963,7 +963,7 @@ int main(int i_argc,
     auto l_duration_loop = l_end - l_setup_time;
     auto l_duration_calc = l_duration_loop - l_duration_write - l_duration_checkpoint;
     printTime(l_duration_total, "total time");
-    printTime(l_duration_calc, "calc time ");
+    printTime(l_duration_calc, "total calc time ");
     printTime(l_duration_setup, "setup time");
     printTime(l_duration_write, "total write time");
     printTime(l_duration_checkpoint, "checkpoint time");

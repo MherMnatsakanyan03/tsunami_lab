@@ -1,4 +1,3 @@
-./build/tsunami_lab -d 2d -s "tsunami2d" -o 1 4000
 ####################################
 ### Tsunami Lab                  ###
 ###                              ###
@@ -13,53 +12,52 @@ NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
 delete checkpoints
 Width: 2.69975e+06
 Height: 1.49975e+06
-Device: NVIDIA Graphics Device
-Kernel path: /home/mnatsakanyan/Desktop/TsunamiLab/tsunami_lab/src/patches/wavepropagation2d_kernel/kernel.cl
+write parallel
 runtime configuration
   number of cells in x-direction: 674
   number of cells in y-direction: 374
   cell size:                      4005.56
 entering time loop
   simulation time / #time steps: 0 / 0
-write time: 827us 566ns 
-        Time since programm started: 0.811112s
+write time: 37us 292ns 
+	Time since programm started: 0.715019s
   simulation time / #time steps: 3254.77 / 500
-write time: 339us 412ns 
-        Time since programm started: 0.843889s
+write time: 130us 744ns 
+	Time since programm started: 1.26964s
   simulation time / #time steps: 6509.62 / 1000
-write time: 345us 89ns 
-        Time since programm started: 0.875627s
+write time: 129us 403ns 
+	Time since programm started: 1.80866s
   simulation time / #time steps: 9764.5 / 1500
-write time: 336us 590ns 
-        Time since programm started: 0.907171s
+write time: 34us 161ns 
+	Time since programm started: 2.26235s
   simulation time / #time steps: 13019.4 / 2000
-write time: 341us 223ns 
-        Time since programm started: 0.942101s
+write time: 32us 629ns 
+	Time since programm started: 2.61177s
   simulation time / #time steps: 16274.3 / 2500
-write time: 335us 132ns 
-        Time since programm started: 0.975973s
+write time: 32us 915ns 
+	Time since programm started: 2.95947s
   simulation time / #time steps: 19529.2 / 3000
-write time: 342us 628ns 
-        Time since programm started: 1.00837s
+write time: 33us 176ns 
+	Time since programm started: 3.30983s
   simulation time / #time steps: 22784 / 3500
-write time: 333us 607ns 
-        Time since programm started: 1.0426s
+write time: 34us 660ns 
+	Time since programm started: 3.65837s
   simulation time / #time steps: 26038.9 / 4000
-write time: 335us 124ns 
-        Time since programm started: 1.0742s
+write time: 33us 290ns 
+	Time since programm started: 4.00364s
   simulation time / #time steps: 29293.8 / 4500
-write time: 338us 344ns 
-        Time since programm started: 1.10149s
+write time: 33us 425ns 
+	Time since programm started: 4.3515s
   simulation time / #time steps: 32548.7 / 5000
-write time: 329us 97ns 
-        Time since programm started: 1.13093s
+write time: 33us 550ns 
+	Time since programm started: 4.69996s
   simulation time / #time steps: 35802.7 / 5500
-write time: 369us 756ns 
-        Time since programm started: 1.16092s
-total time: 1s 162ms 850us 587ns 
-calc time : 347ms 166us 516ns 
-setup time: 811ms 110us 503ns 
-write time: 4ms 573us 568ns 
+write time: 32us 601ns 
+	Time since programm started: 5.04571s
+total time: 5s 70ms 166us 75ns 
+total calc time : 4s 354ms 550us 451ns 
+setup time: 715ms 17us 778ns 
+total write time: 597us 846ns 
 checkpoint time: 
 finished time loop
 freeing memory: l_setup

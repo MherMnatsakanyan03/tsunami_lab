@@ -1,4 +1,3 @@
-./build/tsunami_lab -d 2d -s "tsunami2d" -o 1 8000
 ####################################
 ### Tsunami Lab                  ###
 ###                              ###
@@ -13,35 +12,34 @@ NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
 delete checkpoints
 Width: 2.69975e+06
 Height: 1.49975e+06
-Device: NVIDIA Graphics Device
-Kernel path: /home/mnatsakanyan/Desktop/TsunamiLab/tsunami_lab/src/patches/wavepropagation2d_kernel/kernel.cl
+write parallel
 runtime configuration
   number of cells in x-direction: 337
   number of cells in y-direction: 187
   cell size:                      8011.13
 entering time loop
   simulation time / #time steps: 0 / 0
-write time: 292us 322ns 
-        Time since programm started: 0.814584s
+write time: 3us 45ns 
+	Time since programm started: 0.712744s
   simulation time / #time steps: 6546.37 / 500
-write time: 115us 635ns 
-        Time since programm started: 0.837286s
+write time: 97us 203ns 
+	Time since programm started: 0.803807s
   simulation time / #time steps: 13092.8 / 1000
-write time: 105us 17ns 
-        Time since programm started: 0.862238s
+write time: 78us 689ns 
+	Time since programm started: 0.895259s
   simulation time / #time steps: 19638.9 / 1500
-write time: 108us 424ns 
-        Time since programm started: 0.884648s
+write time: 76us 982ns 
+	Time since programm started: 0.984473s
   simulation time / #time steps: 26184.8 / 2000
-write time: 105us 301ns 
-        Time since programm started: 0.909116s
+write time: 24us 253ns 
+	Time since programm started: 1.19905s
   simulation time / #time steps: 32730.7 / 2500
-write time: 107us 188ns 
-        Time since programm started: 0.933788s
-total time: 947ms 223us 97ns 
-calc time : 131ms 806us 566ns 
-setup time: 814ms 582us 644ns 
-write time: 833us 887ns 
+write time: 8us 360ns 
+	Time since programm started: 1.28838s
+total time: 1s 334ms 301us 925ns 
+total calc time : 621ms 270us 226ns 
+setup time: 712ms 743us 167ns 
+total write time: 288us 532ns 
 checkpoint time: 
 finished time loop
 freeing memory: l_setup

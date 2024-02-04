@@ -1,4 +1,3 @@
-./build/tsunami_lab -d 2d -s "tsunami2d" -o 1 8000
 ####################################
 ### Tsunami Lab                  ###
 ###                              ###
@@ -13,35 +12,34 @@ NetCDF:: Looking for file: data/real_tsunamis/tohoku_gebco20_usgs_250m_displ.nc
 delete checkpoints
 Width: 2.69975e+06
 Height: 1.49975e+06
-Device: NVIDIA Graphics Device
-Kernel path: /home/mnatsakanyan/Desktop/TsunamiLab/tsunami_lab/src/patches/wavepropagation2d_kernel/kernel.cl
+write normal
 runtime configuration
   number of cells in x-direction: 337
   number of cells in y-direction: 187
   cell size:                      8011.13
 entering time loop
   simulation time / #time steps: 0 / 0
-write time: 2us 346ns 
-        Time since programm started: 0.812702s
+write time: 955us 679ns 
+	Time since programm started: 0.713541s
   simulation time / #time steps: 6546.37 / 500
-write time: 16us 834ns 
-        Time since programm started: 0.832811s
+write time: 1ms 884us 230ns 
+	Time since programm started: 0.84585s
   simulation time / #time steps: 13092.8 / 1000
-write time: 4us 546ns 
-        Time since programm started: 0.849998s
+write time: 1ms 709us 517ns 
+	Time since programm started: 0.968701s
   simulation time / #time steps: 19638.9 / 1500
-write time: 2us 641ns 
-        Time since programm started: 0.867453s
+write time: 1ms 949us 59ns 
+	Time since programm started: 1.63311s
   simulation time / #time steps: 26184.8 / 2000
-write time: 3us 93ns 
-        Time since programm started: 0.887334s
+write time: 1ms 772us 812ns 
+	Time since programm started: 1.75911s
   simulation time / #time steps: 32730.7 / 2500
-write time: 2us 283ns 
-        Time since programm started: 0.905307s
-total time: 913ms 834us 429ns 
-calc time : 101ms 102us 756ns 
-setup time: 812ms 699us 930ns 
-write time: 31us 743ns 
+write time: 1ms 948us 173ns 
+	Time since programm started: 1.89068s
+total time: 1s 954ms 465us 646ns 
+total calc time : 1s 230ms 705us 560ns 
+setup time: 713ms 540us 616ns 
+total write time: 10ms 219us 470ns 
 checkpoint time: 
 finished time loop
 freeing memory: l_setup

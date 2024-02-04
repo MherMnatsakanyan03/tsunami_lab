@@ -283,4 +283,445 @@ and on two vastly different devices.
 * Personal Computer: Intel i5 11400KF + Nvidia RTX 4070 Super
 * Macbook Air (M2)
 
+We also implemented a feature that creates
 The results were as follows:
+
+Personal Computer
+^^^^^^^^^^^^^^^^^
+
+Parallel Writing:
+
+.. list-table:: CPU Parallel Writing
+   :widths: 25 25 25 25
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Write time
+   * - 500
+     - 
+     -
+     - 
+   * - 1000
+     - 289.32s
+     - 288.50s
+     - 0.00767s
+   * - 2000
+     - 36.35s
+     - 35.62s
+     - 0.00276s
+   * - 4000
+     - 5.07s
+     - 4.35s
+     - 0.00060s
+   * - 8000
+     - 1.46s
+     - 0.74s
+     - 0.00042s
+
+.. list-table:: GPU Parallel Writing
+   :widths: 25 25 25 25 15
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Write time
+     - Boost (for Total time)
+   * - 500
+     - 263.43s
+     - 185.70s
+     - 76.53s
+     -
+   * - 1000
+     - 34.49s
+     - 24.39s
+     - 8.87s
+     - 8.4x
+   * - 2000
+     - 2.87s
+     - 1.68s
+     - 0.02180s
+     - 12.7x
+   * - 4000
+     - 1.28s
+     - 0.51s
+     - 0.00452s
+     - 3.9x
+   * - 8000
+     - 0.89s
+     - 0.13s
+     - 0.00082s
+     - 1.6x
+
+----------------------------------------------------
+
+Serialized Writing:
+
+.. list-table:: CPU Serialized Writing
+   :widths: 25 25 25 25
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Write time
+   * - 500
+     - 
+     -
+     - 
+   * - 1000
+     - 293.89s
+     - 288.24s
+     - 4.83s
+   * - 2000
+     - 38.30s
+     - 37.09s
+     - 0.47s
+   * - 4000
+     - 7.60s
+     - 6.82s
+     - 0.066s
+   * - 8000
+     - 1.46s
+     - 1.23s
+     - 0.01022s
+
+.. list-table:: GPU Serialized Writing
+   :widths: 25 25 25 25 15
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Write time
+     - Boost (for Total time)
+   * - 500
+     - 252.41s
+     - 194.57s
+     - 56.66s
+     - 
+   * - 1000
+     - 34.25s
+     - 25.70s
+     - 5.43s
+     - 8.6x
+   * - 2000
+     - 3.33s
+     - 1.79s
+     - 0.44s
+     - 11.5x
+   * - 4000
+     - 1.29s
+     - 0.48s
+     - 0.0428s
+     - 5.9x
+   * - 8000
+     - 0.92s
+     - 0.15s
+     - 0.00747s
+     - 1.6x
+
+----------------------------------------------------
+
+No Writing:
+
+.. list-table:: CPU No Writing
+   :widths: 25 25 25
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+   * - 500
+     - 2231.40s
+     - 2230.40s
+   * - 1000
+     - 266.99s
+     - 266.19s
+   * - 2000
+     - 34.74s
+     - 34.00s
+   * - 4000
+     - 6.86s
+     - 6.14s
+   * - 8000
+     - 1.33s
+     - 0.42s
+
+.. list-table:: GPU No Writing
+   :widths: 25 25 25 15
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Boost (for Total time)
+   * - 500
+     - 178.82s
+     - 177.42s
+     - 12.5x
+   * - 1000
+     - 25.26s
+     - 24.42s
+     - 10.56x
+   * - 2000
+     - 2.36s
+     - 1.6s
+     - 14.7x
+   * - 4000
+     - 1.08s
+     - 0.33s
+     - 6.35x
+   * - 8000
+     - 0.85s
+     - 0.10s
+     - 1.56x
+
+====================================================
+
+Macbook Air (M2)
+^^^^^^^^^^^^^^^^
+
+Parallel Writing:
+
+.. list-table:: CPU Parallel Writing
+   :widths: 25 25 25 25
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Write time
+   * - 500
+     - 
+     -
+     - 
+   * - 1000
+     - 498.21s
+     - 496.60s
+     - 0.00385s
+   * - 2000
+     - 64.72s
+     - 63.96s
+     - 0.00102s
+   * - 4000
+     - 10.00s
+     - 9.29s
+     - 0.00035s
+   * - 8000
+     - 1.99s
+     - 1.27s
+     - 0.00012s
+
+.. list-table:: GPU Parallel Writing
+   :widths: 25 25 25 25 15
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Write time
+     - Boost (for Total time)
+   * - 500
+     - 940.45s
+     - 938.21s
+     - 1.07s
+     -
+   * - 1000
+     - 140.98s
+     - 139.81s
+     - 0.143s
+     - 3.5x
+   * - 2000
+     - 26.48s
+     - 25.57s
+     - 0.0287s
+     - 2.44x
+   * - 4000
+     - 7.44s
+     - 6.67s
+     - 0.0092s
+     - 1.34x
+   * - 8000
+     - 3.17s
+     - 2.40s
+     - 0.0034s
+     - 0.62x
+
+----------------------------------------------------
+
+Serialized Writing:
+
+.. list-table:: CPU Serialized Writing
+   :widths: 25 25 25 25
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Write time
+   * - 500
+     - 
+     -
+     - 
+   * - 1000
+     - 519.84s
+     - 515.04s
+     - 3.14s
+   * - 2000
+     - 68.07s
+     - 66.89s
+     - 0.40642s
+   * - 4000
+     - 9.93s
+     - 9.15s
+     - 0.05405s
+   * - 8000
+     - 2.09s
+     - 1.36s
+     - 0.01041s
+
+.. list-table:: GPU Serialized Writing
+   :widths: 25 25 25 25 15
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Write time
+     - Boost (for Total time)
+   * - 500
+     - 971.59s
+     - 932.71s
+     - 37.76s
+     - 
+   * - 1000
+     - 141.33s
+     - 136.78s
+     - 0.40642s
+     - 3.67x
+   * - 2000
+     - 26.48s
+     - 25.10s
+     - 0.417s
+     - 2.57x
+   * - 4000
+     - 7.66s
+     - 6.79s
+     - 0.06154s
+     - 1.29x
+   * - 8000
+     - 3.19s
+     - 2.40s
+     - 0.01650s
+     - 0.65x
+
+----------------------------------------------------
+
+No Writing:
+
+.. list-table:: CPU No Writing
+   :widths: 25 25 25
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+   * - 500
+     - 4044.68s
+     - 4043.35s
+   * - 1000
+     - 514.32s
+     - 513.41s
+   * - 2000
+     - 64.47s
+     - 63.61s
+   * - 4000
+     - 9.09s
+     - 8.26s
+   * - 8000
+     - 2.003s
+     - 1.268s
+
+.. list-table:: GPU No Writing
+   :widths: 25 25 25 15
+   :header-rows: 1
+
+   * - Cell Size
+     - Total time
+     - Calculation time
+     - Boost (for Total time)
+   * - 500
+     - 915.26s
+     - 914.198s
+     - 4.42x
+   * - 1000
+     - 135.95s
+     - 135.036s
+     - 3.78x
+   * - 2000
+     - 26.36s
+     - 25.58s
+     - 2.45x
+   * - 4000
+     - 8.06s
+     - 7.29s
+     - 1.13x
+   * - 8000
+     - 3.67s
+     - 2.91s
+     - 0.55x
+
+
+We can see a significant speedup for the GPU-implementation, especially for the larger simulations.
+It is interesting to observe how differently the two devices perform. The difference in performance
+gain on the Personal Computer is much larger than on the Macbook Air.
+
+This shows us that the i5 and the 4070 Super more apart in terms of performance than the M2 and the
+iGPU inside the M2.
+
+We can also clearly see that the smaller the simulation gets, the less the GPU is able to help and
+the higher the overhead becomes. This is mostly visible on the M2 which loses performance with OpenCL
+on the smaller simulations.
+
+Our initial estimate was to get a speedup of around 4-5x on the PC, which we luckily surpassed with
+the average speedup being around 8x. Since we didn't look at the datasheet of the M2, we did not
+have an estimate for the M2, but we are happy with the results, since we were able to get a speedup
+of around 4x on the larger simulations.
+
+We did learn that the performance is highly bottlenecked by the writing, which shows in the simulations
+where the writing is turned off. This also means that if we were to write at a higher frequency, the
+speedup would be exponentially lower. To fix that we would need to implement a parallel writing system,
+which would be a whole project of its own.
+
+To verify the correctness of the results, we ran the 1000-cell-size simulation on the CPU and the GPU:
+
+.. video:: _static/content/videos/opencl/tohoku_1000_14600kf.mp4
+   :width: 700
+   :loop:
+   :autoplay:
+   :muted:
+
+.. video:: _static/content/videos/opencl/tohoku_1000_4070s.mp4
+   :width: 700
+   :loop:
+   :autoplay:
+   :muted:
+
+Top: 14600KF, Bottom: 4070 Super
+
+To verify further correctness, we copied the tests for :code:`WavePropagation2d.cpp` to :code:`WavePropagation2d_kernel.cpp`
+and ran the tests. The tests ran through, which means that the OpenCL-implementation is correct, assuming that the
+CPU-implementation is correct.
+
+With this we have achieved the goals of the project, which for us were:
+
+* To learn how to run optimized code on a GPU
+* To learn how to write a kernel
+* To get a speedup of around 4-5x on the PC
+* Dont break the simulation accuracy while doing so
+
+We are dissapointed that we were not able to use a GPU Profilier to gain more insight into the performance of the
+OpenCL-implementation, but we are happy with the results we were able to achieve.

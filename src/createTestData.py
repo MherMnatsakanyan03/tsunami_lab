@@ -5,7 +5,7 @@ import os
 #target_directory = "/Users/ibyton/Desktop/Uni/tsunami_lab/docs/project-report/source/_static/content/M2_Data"
 
 current_dir = os.path.dirname(__file__)
-data_folder = '../docs/project-report/source/_static/content/M2_Data'
+data_folder = '../docs/project-report/source/_static/content/4070s_14600kf_Data'
 target_directory = os.path.join(current_dir, data_folder)
 
 # Funktion, um einen Befehl auszuführen und den Output in einer Datei zu speichern
@@ -33,10 +33,16 @@ commands = [
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p1', '-w1', '2000'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p1', '-w1', '4000'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p1', '-w1', '8000'],
+    #ERROR['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p1', '-w0', '500'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p1', '-w0', '1000'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p1', '-w0', '2000'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p1', '-w0', '4000'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p1', '-w0', '8000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '500'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '1000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '2000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '4000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '8000'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w1', '500'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w1', '1000'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w1', '2000'],
@@ -44,19 +50,14 @@ commands = [
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w1', '8000'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w0', '500'],
     #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w0', '1000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w0', '2000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w0', '4000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w0', '8000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '500'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '1000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '2000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '4000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '8000'],
-    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '500'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '1000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '2000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '4000'],
-    #['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o0', '-p0', '-w0', '8000']
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w0', '2000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w0', '4000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p1', '-w0', '8000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '500'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '1000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '2000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '4000'],
+    ['./build/tsunami_lab', '-d', '2d', '-s', 'tsunami2d', '-o1', '-p0', '-w0', '8000'],
 ]
 
 
