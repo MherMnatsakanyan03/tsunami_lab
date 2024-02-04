@@ -151,10 +151,10 @@ int main(int i_argc,
     std::cout << "### https://scalable.uni-jena.de ###" << std::endl;
     std::cout << "####################################" << std::endl;
 
-    if (std::filesystem::exists("checkpoints") && !std::filesystem::is_empty("checkpoints"))
+    /*if (std::filesystem::exists("checkpoints") && !std::filesystem::is_empty("checkpoints"))
     {
         checkpointing = true;
-    }
+    }*/
 
     if (((i_argc < 4) || (i_argv[i_argc - 1][0] == '-')) && !checkpointing)
     {
@@ -175,7 +175,8 @@ int main(int i_argc,
         std::cerr << "-i STATION = 'path'" << std::endl;
         std::cerr << "-k RESOLUTION, where the higher the input, the lower the resolution" << std::endl;
         std::cerr << "-o OPENCL, 0 = CPU and 1 = GPU" << std::endl;
-        std::cerr << "-w write parallel, 0 = parallel and 1 = normal" << std::endl;
+        std::cerr << "-p write parallel, 0 = parallel and 1 = normal" << std::endl;
+        std::cerr << "-w write, 0 = no write and 1 = write" << std::endl;
         return EXIT_FAILURE;
     }
     else if (!checkpointing)
@@ -241,7 +242,7 @@ int main(int i_argc,
     else
     {
 
-        while ((opt = getopt(i_argc, i_argv, "d:s:l:r:t:b:i:k:o:w:")) != -1)
+        while ((opt = getopt(i_argc, i_argv, "d:s:l:r:t:b:i:k:o:p:w:")) != -1)
         {
             switch (opt)
             {
@@ -531,7 +532,7 @@ int main(int i_argc,
 
                 break;
             }
-            case 'w':
+            case 'p':
             {
                 if (std::string(optarg) == "1")
                 {
@@ -551,6 +552,18 @@ int main(int i_argc,
                         << "possible options are: '0' or '1'" << std::endl
                         << "be sure to only type in lower-case" << std::endl;
                     return EXIT_FAILURE;
+                }
+                break;
+            }
+            case 'w':
+            {
+                if (std::string(optarg) == "1")
+                {
+                    do_write = false;
+                }
+                if (std::string(optarg) == "0")
+                {
+                    do_write = true;
                 }
                 break;
             }
@@ -952,7 +965,7 @@ int main(int i_argc,
     printTime(l_duration_total, "total time");
     printTime(l_duration_calc, "calc time ");
     printTime(l_duration_setup, "setup time");
-    printTime(l_duration_write, "write time");
+    printTime(l_duration_write, "total write time");
     printTime(l_duration_checkpoint, "checkpoint time");
 
     std::cout << "finished time loop" << std::endl;
