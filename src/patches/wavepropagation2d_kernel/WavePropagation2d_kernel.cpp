@@ -60,6 +60,7 @@ cl_device_id create_device()
     return dev;
 }
 
+// build program from https://github.com/rsnemmen/OpenCL-examples
 cl_program build_program(cl_context ctx, cl_device_id dev, const char *filename)
 
 {
